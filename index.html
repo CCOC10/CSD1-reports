@@ -1,0 +1,3912 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
+<title>รายงานผลการปฏิบัติงาน กก.1 บก.ป.</title>
+<link rel="icon" type="image/png" href="web logo.png">
+<link rel="apple-touch-icon" href="web logo.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM Plex Sans Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+(() => {
+  try {
+    const t = localStorage.getItem('CSD1_THEME');
+    if (t === 'light' || t === 'dark') {
+      document.documentElement.setAttribute('data-theme', t);
+    }
+  } catch (_) {}
+})();
+</script>
+<style>
+/* ==================== THEME VARIABLES ==================== */
+:root {
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --primary: #0f172a;
+  --primary-deep: #020617;
+  --primary-surface: #1e293b;
+  --accent: #FFD400;
+  --accent-dim: #b8990a;
+  --accent-glow: rgba(255, 212, 0, 0.5);
+  --accent-glow-soft: rgba(255, 212, 0, 0.15);
+  --success: #22c55e;
+  --success-bg: rgba(34,197,94,0.12);
+  --danger: #ef4444;
+  --danger-bg: rgba(239,68,68,0.12);
+  --text: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(255,212,0,0.2);
+  --card-bg: rgba(15, 23, 42, 0.7);
+  --card-bg-solid: #1e293b;
+  --input-bg: rgba(0,0,0,0.25);
+  --input-bg-focus: rgba(0,0,0,0.35);
+  --body-bg: linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --header-bg: linear-gradient(135deg, #001029 0%, #000a1a 100%);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 25px rgba(0,0,0,0.4);
+  --shadow-lg: 0 15px 40px rgba(0,0,0,0.5);
+  --toast-bg: #1e293b;
+  --overlay: rgba(2, 6, 23, 0.85);
+}
+
+[data-theme="light"] {
+  --primary: #f8fafc;
+  --primary-deep: #e2e8f0;
+  --primary-surface: #ffffff;
+  --accent: #d4a800;
+  --accent-dim: #a38200;
+  --accent-glow: rgba(180, 140, 0, 0.35);
+  --accent-glow-soft: rgba(180, 140, 0, 0.08);
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.1);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.1);
+  --text: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border: rgba(0,0,0,0.1);
+  --border-accent: rgba(180,140,0,0.25);
+  --card-bg: rgba(255,255,255,0.8);
+  --card-bg-solid: #ffffff;
+  --input-bg: rgba(0,0,0,0.04);
+  --input-bg-focus: rgba(0,0,0,0.06);
+  --body-bg: linear-gradient(160deg, #e8ecf2 0%, #f0f3f7 40%, #e2e8f0 100%);
+  --header-bg: linear-gradient(135deg, #00264B 0%, #001a33 100%);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
+  --shadow-lg: 0 15px 40px rgba(0,0,0,0.12);
+  --toast-bg: #1e293b;
+  --overlay: rgba(0, 0, 0, 0.5);
+}
+
+/* ==================== RESET ==================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  background-color: var(--primary-deep);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--body-bg);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.6;
+  transition: background 0.5s, color 0.3s;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 4px var(--accent-glow-soft); }
+  50% { box-shadow: 0 0 0 8px var(--accent-glow-soft), 0 0 25px var(--accent-glow-soft); }
+}
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ==================== LOGIN PAGE ==================== */
+.login-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2,6,23,0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 2000;
+  padding: 1rem;
+  padding-top: calc(1rem + env(safe-area-inset-top));
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+[data-theme="light"] .login-wrapper {
+  background: #ffffff !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.login-wrapper.hidden { display: none; }
+
+.login-card {
+  background: rgba(15,23,42,0.75);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset, 0 0 50px var(--accent-glow-soft);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="light"] .login-card {
+  background: #00264B;
+  border-color: rgba(255, 212, 0, 0.35);
+  box-shadow:
+    0 28px 60px rgba(0, 38, 75, 0.28),
+    0 0 0 1px rgba(255,255,255,0.05) inset,
+    0 0 42px rgba(255, 212, 0, 0.12);
+}
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease infinite;
+}
+
+.login-logo {
+  width: 100px; height: 100px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 15px var(--accent-glow));
+}
+.login-card h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+.login-card .login-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+[data-theme="light"] .login-card .login-subtitle {
+  color: rgba(226, 232, 240, 0.82);
+}
+.login-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+  margin-top: 0.75rem;
+  min-height: 1.2em;
+}
+
+.login-settings-link {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+[data-theme="light"] .login-settings-link {
+  color: rgba(226, 232, 240, 0.82);
+}
+.login-settings-link:hover { color: var(--accent); }
+
+/* ==================== SETTINGS MODAL ==================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-card {
+  background: var(--card-bg-solid);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay.show .modal-card {
+  transform: scale(1) translateY(0);
+}
+.modal-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  background: var(--header-bg);
+  padding: 1.5rem 1rem 1.25rem;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  border-bottom: 1px solid var(--border-accent);
+  position: relative;
+  z-index: 100;
+}
+.header-logo {
+  width: 100px; height: 100px;
+  object-fit: contain;
+  /* ดึงตัวหนังสือขึ้นมาให้ชิดโลโก้มากขึ้น (ถ้ายังห่างไปปรับเป็น -10px หรือ -15px ได้ครับ) */
+  margin-bottom: -5px; 
+  filter: drop-shadow(0 0 12px var(--accent-glow));
+  transition: filter 0.3s;
+}
+
+.header h1 {
+  /* เพิ่มขนาดหัวข้อหลักจาก 1.35rem เป็น 1.6rem */
+  font-size: 1.6rem; 
+  margin-top: 0; /* บังคับไม่ให้มีระยะขอบบน */
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+
+.header p {
+  /* เพิ่มขนาดหัวข้อรองจาก 0.85rem เป็น 0.95rem */
+  font-size: 0.95rem; 
+  color: #94a3b8;
+  margin-top: 0.1rem; /* ขยับให้ชิดหัวข้อหลักมากขึ้น */
+}
+
+/* User info bar - Glassmorphism */
+.user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: var(--transition);
+}
+.user-bar:hover {
+  border-color: rgba(255,212,0,0.15);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+[data-theme="light"] .user-bar {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 20px rgba(15,23,42,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+[data-theme="light"] .user-bar:hover {
+  border-color: rgba(255,212,0,0.15);
+  box-shadow: 0 4px 24px rgba(15,23,42,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+[data-theme="light"] .user-bar .user-name {
+  color: #f1f5f9;
+}
+[data-theme="light"] .user-bar .user-meta {
+  color: #94a3b8;
+}
+.user-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+.user-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #f59e0b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(255,212,0,0.25);
+  text-transform: uppercase;
+  overflow: hidden;
+}
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  text-align: right;
+  align-items: flex-end;
+}
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  margin: 2px 0;
+}
+.user-role-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.user-role-badge.admin {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.25));
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+.user-role-badge.user {
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.2));
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.2);
+}
+[data-theme="light"] .user-role-badge.admin {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.25));
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+[data-theme="light"] .user-role-badge.user {
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.2));
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.2);
+}
+.online-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  animation: dotPulse 2s ease-in-out infinite;
+  position: absolute;
+  bottom: -1px; right: -1px;
+  border: 2px solid rgba(15,23,42,0.8);
+}
+[data-theme="light"] .online-dot {
+  border-color: rgba(15,23,42,0.8);
+}
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(34,197,94,0.4); }
+  50% { box-shadow: 0 0 10px rgba(34,197,94,0.7), 0 0 20px rgba(34,197,94,0.3); }
+}
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* ==================== PROFILE DROPDOWN ==================== */
+.user-profile-wrap {
+  position: relative;
+}
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+.user-profile-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
+}
+[data-theme="light"] .user-profile-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--card-bg-solid);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: scale(0.85) translateY(-6px);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 5000;
+  min-width: 160px;
+}
+.profile-menu.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+.profile-menu-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+.profile-menu-option:hover {
+  background: rgba(255,255,255,0.08);
+}
+.profile-menu-option.logout {
+  color: #f87171;
+}
+.profile-menu-option.logout:hover {
+  background: rgba(239,68,68,0.12);
+}
+.pm-icon { font-size: 0.95rem; }
+.pm-icon-svg {
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(248,113,113,0.6));
+}
+.profile-menu-option.logout:hover .pm-icon-svg {
+  filter: drop-shadow(0 0 8px rgba(248,113,113,0.9));
+}
+
+/* ==================== SIDEBAR THEME SWITCH ==================== */
+.app-sidebar-theme {
+  margin-top: 0.9rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.14));
+}
+.app-sidebar-theme-label {
+  margin: 0 0 0.55rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary, #94a3b8);
+}
+.app-theme-switch {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid #bcc1ca;
+  background: #d8dce1;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.app-theme-switch:hover {
+  box-shadow: 0 0 0 2px rgba(255, 212, 0, 0.22), 0 0 16px rgba(255, 212, 0, 0.28);
+}
+.app-theme-switch:hover .app-theme-switch-thumb {
+  box-shadow: 0 0 0 2px rgba(255, 212, 0, 0.3), 0 0 18px rgba(255, 212, 0, 0.35);
+}
+[data-theme="dark"] .app-theme-switch {
+  background: #252c36;
+  border-color: #3d4654;
+}
+[data-theme="light"] .app-theme-switch {
+  background: #d8dce1;
+  border-color: #bcc1ca;
+}
+.app-theme-switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.app-theme-switch-track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+.app-theme-switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.96);
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+  transition: transform 0.28s ease, background 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
+}
+[data-theme="dark"] .app-theme-switch-thumb {
+  transform: translate(24px, -50%);
+  background: #05070b;
+  color: #f8fafc;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.app-theme-switch-sun,
+.app-theme-switch-moon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.app-theme-switch-moon {
+  display: none;
+}
+[data-theme="dark"] .app-theme-switch-sun {
+  display: none;
+}
+[data-theme="dark"] .app-theme-switch-moon {
+  display: block;
+}
+
+/* ==================== APP SIDEBAR ==================== */
+body.nav-open {
+  overflow: hidden;
+}
+.app-nav-fab {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 0.9rem);
+  left: 1rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border-accent);
+  background: var(--card-bg-solid);
+  color: var(--accent);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  z-index: 4305;
+  transition: var(--transition);
+}
+body.nav-open .app-nav-fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-10px) scale(0.92);
+}
+.app-nav-fab:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 18px var(--accent-glow-soft), var(--shadow-md);
+}
+.app-nav-fab svg {
+  width: 20px;
+  height: 20px;
+}
+.app-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 18% 14%, rgba(255, 212, 0, 0.14), rgba(2, 6, 23, 0.72) 42%, rgba(2, 6, 23, 0.84) 100%);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  z-index: 4200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.app-sidebar-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: min(320px, 86vw);
+  padding: calc(env(safe-area-inset-top) + 1rem) 0.9rem calc(env(safe-area-inset-bottom) + 1rem);
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.02) 36%),
+    linear-gradient(180deg, rgba(0, 38, 75, 0.8), rgba(2, 18, 44, 0.78));
+  border-right: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(26px) saturate(150%);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  transform: translateX(-105%);
+  transition: transform 0.28s ease;
+  z-index: 4301;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  overflow: hidden;
+}
+.app-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: -12% -42% auto -28%;
+  height: 42%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 72%);
+  pointer-events: none;
+}
+.app-sidebar::after {
+  content: "";
+  position: absolute;
+  inset: auto -24% 14% -26%;
+  height: 40%;
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.16) 0%, rgba(255, 212, 0, 0) 70%);
+  pointer-events: none;
+}
+.app-sidebar > * {
+  position: relative;
+  z-index: 1;
+}
+.app-sidebar.show {
+  transform: translateX(0);
+}
+.app-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.35rem 0.55rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+.app-sidebar-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+.app-sidebar-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: var(--transition);
+}
+.app-sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 212, 0, 0.46);
+  color: var(--accent);
+  box-shadow: 0 0 16px rgba(255, 212, 0, 0.26);
+}
+.app-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.app-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.72rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.app-sidebar-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.app-sidebar-link:hover {
+  transform: translateX(2px);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+[data-theme="light"] .app-sidebar-link:hover {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.52));
+}
+.app-sidebar-link.active {
+  background: linear-gradient(145deg, rgba(255, 212, 0, 0.32), rgba(255, 212, 0, 0.16));
+  border-color: rgba(255, 212, 0, 0.52);
+  color: var(--accent);
+  box-shadow: 0 0 18px rgba(255, 212, 0, 0.22);
+}
+[data-theme="light"] .app-sidebar {
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.55) 36%),
+    linear-gradient(180deg, rgba(227, 237, 249, 0.9), rgba(214, 229, 245, 0.86));
+  border-right-color: rgba(10, 51, 87, 0.2);
+  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+[data-theme="light"] .app-sidebar-head {
+  border-bottom-color: rgba(10, 51, 87, 0.12);
+}
+[data-theme="light"] .app-sidebar-close {
+  border-color: rgba(10, 51, 87, 0.2);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+/* ==================== CONTAINER ==================== */
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+}
+
+/* ==================== STEPPER ==================== */
+.stepper {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0 1.75rem;
+}
+.step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+.step::before {
+  content: '';
+  position: absolute;
+  top: 19px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+  transition: background 0.4s;
+}
+.step:first-child::before { display: none; }
+.step.done::before,
+.step.active::before { background: var(--accent); }
+
+.step-circle {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--primary-surface);
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 1;
+  transition: var(--transition);
+}
+.step.active .step-circle {
+  background: var(--accent);
+  color: #001a33;
+  border-color: var(--accent);
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+.step.done .step-circle {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+.step-label {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+.step.active .step-label { color: var(--accent); font-weight: 600; }
+.step.done .step-label { color: var(--success); }
+
+/* ==================== CARD ==================== */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+  animation: fadeIn 0.35s ease;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), 0 0 20px var(--accent-glow-soft);
+  border-color: var(--border-accent);
+}
+
+.card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.card-title .icon { font-size: 1.15rem; }
+
+/* ==================== FORM FIELDS ==================== */
+.field { margin-bottom: 1rem; }
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.35rem;
+}
+.field label .req { color: var(--danger); margin-left: 2px; }
+
+/* Error highlight glow */
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+.field-error input,
+.field-error select,
+.field-error textarea {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.25), 0 0 12px rgba(239,68,68,0.15) !important;
+}
+.field-error .radio-group {
+  border: 1.5px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.25), 0 0 12px rgba(239,68,68,0.15);
+}
+.field-error {
+  animation: errorShake 0.4s ease;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  -webkit-appearance: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-soft), 0 0 15px var(--accent-glow-soft);
+  background: var(--input-bg-focus);
+}
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: rgba(255,212,0,0.3);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+.field input[type="date"],
+.field input[type="time"] {
+  min-height: 2.75rem;
+}
+.field input[type="date"]::-webkit-datetime-edit-text,
+.field input[type="date"]::-webkit-datetime-edit-month-field,
+.field input[type="date"]::-webkit-datetime-edit-day-field,
+.field input[type="date"]::-webkit-datetime-edit-year-field,
+.field input[type="time"]::-webkit-datetime-edit-text,
+.field input[type="time"]::-webkit-datetime-edit-hour-field,
+.field input[type="time"]::-webkit-datetime-edit-minute-field {
+  color: var(--text);
+}
+.field input[type="date"]:invalid::-webkit-datetime-edit,
+.field input[type="time"]:invalid::-webkit-datetime-edit {
+  color: var(--text-muted);
+}
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+.field .hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* ===== INPUT WITH BUTTON (Coordinates) ===== */
+.input-with-btn {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+.input-with-btn input {
+  flex: 1;
+  min-width: 0;
+}
+.btn-map {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(255,212,0,0.08), rgba(255,212,0,0.15));
+  color: var(--accent);
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-map:hover {
+  background: linear-gradient(135deg, rgba(255,212,0,0.15), rgba(255,212,0,0.25));
+  box-shadow: 0 0 12px var(--accent-glow-soft);
+  transform: translateY(-1px);
+}
+.btn-map:active {
+  transform: translateY(0);
+}
+.btn-map svg {
+  flex-shrink: 0;
+}
+.field-hint {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+  opacity: 0.7;
+}
+.foreign-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+.foreign-toggle input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+.foreign-fields,
+.row.foreign-fields {
+  display: none;
+}
+.foreign-fields.active,
+.row.foreign-fields.active {
+  display: grid;
+}
+.identity-toggle-field {
+  margin-top: 0.25rem;
+  margin-bottom: 0.9rem;
+}
+.identity-toggle-field .pill-group {
+  margin-top: 0;
+}
+.identity-toggle-field .pill-option label {
+  padding: 0.45rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.identity-toggle-field .pill-option input:checked + label {
+  color: #001a33;
+}
+.identity-thai-field {
+  display: block;
+}
+.identity-thai-field.hidden {
+  display: none;
+}
+.warrant-list,
+.suspect-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.warrant-item,
+.suspect-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  background: rgba(0, 38, 75, 0.12);
+}
+[data-theme="light"] .warrant-item,
+[data-theme="light"] .suspect-item {
+  background: rgba(0, 38, 75, 0.04);
+}
+.warrant-item-head,
+.suspect-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+.warrant-item-title,
+.suspect-item-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.warrant-remove-btn,
+.suspect-remove-btn {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.warrant-remove-btn:hover,
+.suspect-remove-btn:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.warrant-work-title {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-accent);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.warrant-actions {
+  margin-top: 0.85rem;
+}
+.btn-add-warrant {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  width: 100%;
+}
+.global-work-hidden {
+  display: none !important;
+}
+.warrant-only-note {
+  display: none;
+}
+.warrant-only-note.show {
+  display: block;
+}
+.sungna-media-note {
+  display: none;
+}
+.sungna-media-note.show {
+  display: block;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* ==================== RADIO GROUP ==================== */
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+.radio-option { position: relative; }
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+.radio-option label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--input-bg);
+  transition: var(--transition);
+  user-select: none;
+}
+.radio-option label:hover {
+  border-color: var(--accent-dim);
+  color: var(--text);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+.radio-option input:checked + label {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #001a33;
+  font-weight: 600;
+  box-shadow: 0 0 15px var(--accent-glow-soft);
+}
+
+/* ==================== BUTTONS ==================== */
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.btn-row-half {
+  margin-top: 1.5rem;
+}
+.btn-row-half + .btn-row {
+  margin-top: 0.75rem;
+}
+/* Navigation rows: back button left on desktop via order */
+.btn-row-nav .btn-back { order: -1; }
+
+.btn {
+  flex: 1;
+  padding: 0.8rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn:hover::after {
+  opacity: 1;
+  animation: shimmer 1.5s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #001a33;
+  font-weight: 700;
+}
+.btn-primary:hover {
+  box-shadow: 0 0 25px var(--accent-glow), 0 5px 15px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+}
+.btn-primary:active { transform: translateY(0) scale(0.98); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow-soft);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: rgba(0,26,51,0.8);
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+.btn-success:hover {
+  background: rgba(0,38,75,0.9);
+  box-shadow: 0 0 20px var(--accent-glow-soft);
+  transform: translateY(-1px);
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: #001a33;
+  font-weight: 700;
+}
+.btn-accent:hover {
+  box-shadow: 0 0 25px var(--accent-glow), 0 5px 15px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+}
+
+.btn-line {
+  background: #06c755;
+  color: #fff;
+  font-weight: 700;
+}
+.btn-line:hover {
+  background: #05b34c;
+  box-shadow: 0 0 20px rgba(6,199,85,0.4), 0 5px 15px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ==================== SECTION TOGGLE ==================== */
+.section-hidden { display: none; }
+
+/* ==================== LEADER INFO ==================== */
+.leader-info {
+  background: var(--accent-glow-soft);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: none;
+  transition: var(--transition);
+}
+.leader-info.visible { display: block; animation: fadeIn 0.3s ease; }
+.leader-info strong { color: var(--accent); }
+
+/* ==================== REPORT BOX ==================== */
+.report-warning {
+  font-size: 0.78rem;
+  color: var(--danger);
+  margin: 0.25rem 0 0.6rem 0;
+  font-weight: 500;
+}
+.report-box {
+  background: var(--input-bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  white-space: pre-wrap;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--text);
+  width: 100%;
+  min-height: 300px;
+  max-height: 600px;
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+  resize: vertical;
+  transition: var(--transition);
+  box-sizing: border-box;
+}
+.report-box:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-soft), 0 0 15px var(--accent-glow-soft);
+}
+.report-box.edited {
+  border-color: rgba(255, 212, 0, 0.35);
+}
+
+/* ---- Report meta bar ---- */
+.report-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  padding: 0 0.25rem;
+}
+.report-edited-badge {
+  background: var(--accent-glow-soft);
+  color: var(--accent);
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.report-box.edited ~ .report-meta .report-edited-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---- Regenerate button ---- */
+.btn-regen {
+  margin-left: auto;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.3rem 0.45rem;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+.btn-regen:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow-soft);
+  transform: rotate(-30deg);
+}
+
+/* ---- Action label ---- */
+.action-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+/* ==================== RESULT MODAL ==================== */
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.result-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.result-modal {
+  background: var(--card-bg-solid);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.5), 0 0 40px rgba(34,197,94,0.1);
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.result-overlay.show .result-modal {
+  transform: scale(1) translateY(0);
+}
+.result-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: rgba(34,197,94,0.15);
+  color: #22c55e;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 0 20px rgba(34,197,94,0.2);
+}
+.result-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #22c55e;
+  margin-bottom: 0.5rem;
+}
+.result-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ==================== TOAST ==================== */
+.toast {
+  position: fixed;
+  bottom: calc(2rem + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--toast-bg);
+  color: var(--text);
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 5000;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .app-nav-fab {
+    display: none;
+  }
+  .header {
+    padding-top: calc(1rem + env(safe-area-inset-top));
+  }
+}
+
+@media (max-width: 500px) {
+  .container { padding: 0.75rem; }
+  .card { padding: 1.25rem; }
+  .row { grid-template-columns: 1fr; }
+  .header { padding-top: calc(0.85rem + env(safe-area-inset-top)); }
+  .header h1 { font-size: 1.15rem; }
+  .btn-row { flex-direction: column; }
+  .btn-row-half { flex-direction: row; }
+  .btn-row-nav .btn-back { order: 0; }
+  .step-label { font-size: 0.62rem; }
+  .login-card { padding: 2rem 1.5rem; }
+  .report-box { min-height: 220px; }
+  .input-with-btn { flex-direction: column; }
+  .btn-map { justify-content: center; }
+}
+
+/* ==================== CHECKBOX PILLS ==================== */
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+.pill-option { position: relative; }
+.pill-option input[type="checkbox"],
+.pill-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+.pill-option label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--input-bg);
+  transition: var(--transition);
+  user-select: none;
+}
+.pill-option label:hover {
+  border-color: var(--accent-dim);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+/* สีเริ่มต้น (สีเหลืองทอง) */
+.pill-option input:checked + label {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #001a33;
+  font-weight: 700;
+  box-shadow: 0 0 12px var(--accent-glow-soft);
+}
+
+/* 🎨 ชุดสีพิเศษ สำหรับหน้างานศูนย์ */
+.pill-purple input:checked + label { background: #af64d1; border-color: #af64d1; color: white; box-shadow: 0 0 12px rgba(175,100,209,0.4); }
+.pill-orange input:checked + label { background: #fc7b4f; border-color: #fc7b4f; color: white; box-shadow: 0 0 12px rgba(252,123,79,0.4); }
+.pill-red input:checked + label { background: #eb3b2e; border-color: #eb3b2e; color: white; box-shadow: 0 0 12px rgba(235,59,46,0.4); }
+.pill-yellow input:checked + label { background: #fabd05; border-color: #fabd05; color: #000; box-shadow: 0 0 12px rgba(250,189,5,0.4); }
+.pill-blue input:checked + label { background: #35a4f4; border-color: #35a4f4; color: white; box-shadow: 0 0 12px rgba(53,164,244,0.4); }
+.pill-green input:checked + label { background: #108a28; border-color: #108a28; color: white; box-shadow: 0 0 12px rgba(16,138,40,0.4); }
+
+/* Layout Grid สำหรับหน้างานศูนย์ */
+.center-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem 0.5rem;
+  margin-top: 0.75rem;
+}
+@media (max-width: 500px) {
+  .center-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.center-grid .pill-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.center-grid .pill-option label {
+  width: 100%;
+  padding: 0.4rem 0.2rem;
+}
+.pill-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  line-height: 1.3;
+}
+</style>
+</head>
+<body>
+
+<div class="login-wrapper" id="loginWrapper">
+  <div class="login-card">
+    <img src="logo.png" alt="Logo" class="login-logo">
+    <h2>เข้าสู่ระบบ</h2>
+    <p class="login-subtitle">ระบบรายงานผลการปฏิบัติงาน กก.1 บก.ป.</p>
+
+    <div id="g_id_onload"
+         data-client_id="108806756839-iv4nrrfk4355ogcl2p2ehkh5f6a1u90b.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+
+    <div style="display: flex; justify-content: center; margin: 1.5rem 0;">
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="filled_blue"
+           data-text="signin_with"
+           data-size="large"
+           data-logo_alignment="left">
+      </div>
+    </div>
+
+    <div class="login-error" id="loginError"></div>
+    <button class="login-settings-link" onclick="openSettings()" style="display: none;">&#9881; ตั้งค่าเชื่อมต่อ Google Sheets</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-card">
+    <h3>&#9881; ตั้งค่าระบบ</h3>
+    <div class="field">
+      <label>Google Apps Script URL</label>
+      <input type="url" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+      <div class="hint">วาง URL ที่ได้จาก Deploy Google Apps Script (Web app)</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeSettings()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveSettings()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div id="mainApp" style="display:none;">
+
+<button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+</button>
+<div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
+<aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
+  <div class="app-sidebar-head">
+    <div class="app-sidebar-title">เมนูหลัก</div>
+    <button class="app-sidebar-close" type="button" onclick="closeAppSidebar()" aria-label="ปิดเมนู">&times;</button>
+  </div>
+  <nav class="app-sidebar-nav">
+    <a class="app-sidebar-link" href="dashboard.html" onclick="return navigateViaSidebar(event, 'dashboard.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>Dashboard</span>
+    </a>
+    <a class="app-sidebar-link" href="compare.html" onclick="return navigateViaSidebar(event, 'compare.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      <span>เปรียบเทียบ</span>
+    </a>
+    <a class="app-sidebar-link" href="rank.html" onclick="return navigateViaSidebar(event, 'rank.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
+      <span>HALL OF FAM</span>
+    </a>
+    <a class="app-sidebar-link active" href="index.html" onclick="return navigateViaSidebar(event, 'index.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+      <span>หน้ากรอกแบบฟอร์ม</span>
+    </a>
+  </nav>
+  <div class="app-sidebar-theme">
+    <div class="app-sidebar-theme-label">Theme</div>
+    <label class="app-theme-switch" for="sidebarThemeToggle" title="สลับโหมดสว่าง/มืด">
+      <input type="checkbox" id="sidebarThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
+      <span class="app-theme-switch-track">
+        <span class="app-theme-switch-thumb">
+          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
+            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
+            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
+            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
+            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
+            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
+            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
+            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
+          </svg>
+          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
+          </svg>
+        </span>
+      </span>
+    </label>
+  </div>
+</aside>
+
+<div class="header">
+  <img src="logo.png" alt="โลโก้กองปราบปราม" class="header-logo">
+  <h1>รายงานผลการปฏิบัติงาน</h1>
+  <p>กองกำกับการ 1 กองบังคับการปราบปราม</p>
+  <div class="user-bar">
+    <div class="user-bar-left"></div>
+    <div class="user-profile-wrap" id="userProfileWrap">
+      <button class="user-profile-btn" onclick="toggleProfileMenu()">
+        <div class="user-details">
+          <span class="user-name" id="userDisplayName">-</span>
+          <span class="user-role-badge user" id="userRoleBadge">user</span>
+        </div>
+        <span class="user-divider"></span>
+        <div class="avatar-wrap">
+          <div class="user-avatar" id="userAvatar">-</div>
+          <span class="online-dot"></span>
+        </div>
+      </button>
+      <div class="profile-menu" id="profileMenu">
+        <button class="profile-menu-option logout" onclick="handleLogout()">
+          <svg class="pm-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> ออกจากระบบ
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="stepper">
+    <div class="step active" id="step1indicator">
+      <div class="step-circle">1</div>
+      <div class="step-label">ข้อมูลชุดฯ</div>
+    </div>
+    <div class="step" id="step2indicator">
+      <div class="step-circle">2</div>
+      <div class="step-label">รายละเอียด</div>
+    </div>
+    <div class="step" id="step3indicator">
+      <div class="step-circle">3</div>
+      <div class="step-label">รายงาน</div>
+    </div>
+  </div>
+
+  <div id="step1">
+    <div class="card">
+      <div class="card-title"><span class="icon">👮</span> ข้อมูลชุดปฏิบัติการ</div>
+
+      <div class="field">
+        <label>ชุดปฏิบัติการ <span class="req">*</span></label>
+        <select name="unit" id="unitSelect">
+          <option value="">-- เลือกชุดปฏิบัติการ --</option>
+          <option value="ชป.10">ชป.10</option>
+          <option value="ชป.11">ชป.11</option>
+          <option value="ชป.12">ชป.12</option>
+          <option value="ชป.13">ชป.13</option>
+          <option value="ชป.14">ชป.14</option>
+          <option value="ชป.15">ชป.15</option>
+          <option value="ชป.16">ชป.16</option>
+          <option value="ชป.17">ชป.17</option>
+          <option value="ชป.18">ชป.18</option>
+          <option value="ชป.19">ชป.19</option>
+        </select>
+      </div>
+
+      <div class="leader-info" id="leaderInfo">
+        <strong>หัวหน้าชุด:</strong> <span id="leaderName"></span><br>
+        <strong>โทร:</strong> <span id="leaderPhone"></span>
+      </div>
+
+      <div class="field" style="margin-top: 1rem;">
+        <label>ประเภทการปฏิบัติ <span class="req">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="actionType" id="actionArrest" value="จับซึ่งหน้า">
+            <label for="actionArrest">จับซึ่งหน้า</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="actionType" id="actionWarrant" value="จับตามหมาย">
+            <label for="actionWarrant">จับตามหมาย</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="actionType" id="actionInspect" value="ตรวจสอบสถานประกอบการ">
+            <label for="actionInspect">ตรวจสอบสถานประกอบการ</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 0.5rem;">
+        <div class="field">
+          <label>วันที่ <span class="req">*</span></label>
+          <input type="date" id="actionDate" name="actionDate">
+        </div>
+        <div class="field">
+          <label>เวลา <span class="req">*</span></label>
+          <input type="time" name="time" id="timeInput">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>สถานที่ (จับกุม/ตรวจสอบ) <span class="req">*</span></label>
+        <textarea name="location" placeholder="ระบุสถานที่จับกุมหรือตรวจสอบ"></textarea>
+      </div>
+
+      <div class="field">
+        <label>📍 พิกัด Google Maps</label>
+        <div class="input-with-btn">
+          <input type="text" name="coordinates" placeholder="วาง Link หรือพิกัด เช่น 13.7563, 100.5018">
+          <button type="button" class="btn-map" onclick="openGoogleMap()" title="เปิด Google Maps">
+            🗺️ เปิดแผนที่
+          </button>
+        </div>
+        <small class="field-hint">วาง link จาก Google Maps หรือพิกัด lat, lng</small>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="goToStep(2)">ถัดไป &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="step2" style="display:none;">
+
+    <div id="arrestSection">
+      <div class="card">
+        <div class="card-title"><span class="icon">⛓️</span> ข้อมูลผู้ต้องหา</div>
+        <div class="field">
+          <label>ชื่อ-สกุล ผู้ต้องหา <span class="req">*</span></label>
+          <input type="text" name="personName" placeholder="คำนำหน้า ชื่อ สกุล">
+        </div>
+        <div class="field identity-toggle-field">
+          <div class="pill-group">
+            <div class="pill-option">
+              <input type="radio" id="personIdentityThai" name="personIdentityType" value="thai" checked>
+              <label for="personIdentityThai">คนไทย</label>
+            </div>
+            <div class="pill-option">
+              <input type="radio" id="personIdentityForeign" name="personIdentityType" value="foreign">
+              <label for="personIdentityForeign">ต่างชาติ</label>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>อายุ (ปี) <span class="req">*</span></label>
+          <input type="number" name="personAge" placeholder="อายุ" min="1" max="120" step="1" inputmode="numeric">
+        </div>
+        <div class="field identity-thai-field" id="personThaiIdField">
+          <label>เลขประจำตัวประชาชน <span class="req">*</span></label>
+          <input type="text" name="personID" maxlength="13" inputmode="numeric" pattern="[0-9]*" placeholder="เลขบัตร 13 หลัก (ไม่ต้องใส่ขีด)">
+          <small class="field-hint">กรอกเฉพาะตัวเลข 13 หลัก</small>
+        </div>
+        <div class="row foreign-fields" id="personForeignFields">
+          <div class="field">
+            <label>หมายเลข Passport <span class="req">*</span></label>
+            <input type="text" name="personPassport" placeholder="เช่น AB1234567">
+          </div>
+          <div class="field">
+            <label>สัญชาติ <span class="req">*</span></label>
+            <input type="text" name="personNationality" placeholder="เช่น เมียนมา">
+          </div>
+        </div>
+        <div class="field">
+          <label>ที่อยู่ (ตามบัตร)</label>
+          <textarea name="personAddress" placeholder="ที่อยู่ตามบัตรประชาชน"></textarea>
+        </div>
+        <div class="field" id="globalChargesField">
+          <label>ข้อหา (ฐานความผิด) <span class="req">*</span></label>
+          <textarea name="charges" placeholder="ระบุข้อหา"></textarea>
+        </div>
+        <div class="field">
+          <label>พร้อมของกลาง (ถ้ามี)</label>
+          <textarea name="evidence" placeholder="รายการของกลาง (ถ้าไม่มีให้เว้นว่าง)"></textarea>
+        </div>
+      </div>
+
+      <div class="card section-hidden" id="suspectSection">
+        <div class="card-title"><span class="icon">👥</span> ผู้ต้องหาเพิ่มเติม (1 คดี หลายราย)</div>
+        <small class="field-hint">หากจับ 1 คดีมีผู้ต้องหา หลายคนให้กดเพิ่มผู้ต้องหา ระบบจะบันทึกข้อมูลเพิ่มตามจำนวนคน</small>
+        <div id="suspectList" class="suspect-list"></div>
+        <div class="warrant-actions">
+          <button type="button" class="btn btn-outline btn-add-warrant" onclick="addSuspectItem()">
+            + เพิ่มผู้ต้องหา
+          </button>
+        </div>
+      </div>
+
+      <div class="card section-hidden" id="warrantSection">
+        <div class="card-title"><span class="icon">📜</span> ข้อมูลหมายจับ</div>
+        <small class="field-hint">เพิ่มหมายจับได้หลายรายการ พร้อมระบุข้อหาและหน้างานแยกตามหมาย</small>
+        <div id="warrantList" class="warrant-list"></div>
+        <div class="warrant-actions">
+          <button type="button" class="btn btn-outline btn-add-warrant" onclick="addWarrantItem()">
+            + เพิ่มหมายจับ
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🔍</span> การตรวจค้น</div>
+        <div class="field">
+          <label>ตรวจค้นโดย <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="searchBy" id="searchConsent" value="โดยยินยอม">
+              <label for="searchConsent">โดยยินยอม</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="searchBy" id="searchWarrant" value="ตามหมายค้น">
+              <label for="searchWarrant">ตามหมายค้น</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="searchBy" id="searchNone" value="ไม่มีการค้น">
+              <label for="searchNone">ไม่มีการค้น</label>
+            </div>
+          </div>
+        </div>
+        <div class="section-hidden" id="searchWarrantSection">
+          <div class="field">
+            <label>ศาลที่ออกหมายค้น <span class="req">*</span></label>
+            <input type="text" name="searchCourt" placeholder="ศาลที่ออกหมายค้น" value="ศาล">
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>เลขที่หมายค้น <span class="req">*</span></label>
+              <input type="text" name="searchNo" placeholder="เลขที่">
+            </div>
+            <div class="field">
+              <label>วันที่ออกหมายค้น <span class="req">*</span></label>
+              <input type="date" id="searchDate" name="searchDate">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">📋</span> พนักงานสอบสวน</div>
+        <div class="field">
+          <label>นำส่ง พงส. <span class="req">*</span></label>
+          <input type="text" name="investigator" placeholder="ระบุชื่อหน่วย เช่น กก.1 บก.ป. / สภ.เมืองนนทบุรี">
+        </div>
+      </div>
+    </div>
+
+    <div id="inspectSection" style="display:none;">
+      <div class="card">
+        <div class="card-title"><span class="icon">🏭</span> ข้อมูลสถานประกอบการ</div>
+        <div class="field">
+          <label>ชื่อ-สกุล เจ้าของสถานที่ / ผู้นำตรวจ <span class="req">*</span></label>
+          <input type="text" name="ownerName" placeholder="ชื่อ-สกุล">
+        </div>
+        <div class="field identity-toggle-field">
+          <div class="pill-group">
+            <div class="pill-option">
+              <input type="radio" id="ownerIdentityThai" name="ownerIdentityType" value="thai" checked>
+              <label for="ownerIdentityThai">คนไทย</label>
+            </div>
+            <div class="pill-option">
+              <input type="radio" id="ownerIdentityForeign" name="ownerIdentityType" value="foreign">
+              <label for="ownerIdentityForeign">ต่างชาติ</label>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>อายุ (ปี) <span class="req">*</span></label>
+          <input type="number" name="ownerAge" placeholder="อายุ" min="1" max="120" step="1" inputmode="numeric">
+        </div>
+        <div class="field identity-thai-field" id="ownerThaiIdField">
+          <label>เลขประจำตัวประชาชน <span class="req">*</span></label>
+          <input type="text" name="ownerID" maxlength="13" inputmode="numeric" pattern="[0-9]*" placeholder="เลขบัตร 13 หลัก (ไม่ต้องใส่ขีด)">
+          <small class="field-hint">กรอกเฉพาะตัวเลข 13 หลัก</small>
+        </div>
+        <div class="row foreign-fields" id="ownerForeignFields">
+          <div class="field">
+            <label>หมายเลข Passport <span class="req">*</span></label>
+            <input type="text" name="ownerPassport" placeholder="เช่น AB1234567">
+          </div>
+          <div class="field">
+            <label>สัญชาติ <span class="req">*</span></label>
+            <input type="text" name="ownerNationality" placeholder="เช่น เมียนมา">
+          </div>
+        </div>
+        <div class="field">
+          <label>ที่อยู่ (ตามบัตร)</label>
+          <textarea name="ownerAddress" placeholder="ที่อยู่ตามบัตรประชาชน"></textarea>
+        </div>
+        <div class="field">
+          <label>ผลการตรวจสอบ <span class="req">*</span></label>
+          <textarea name="inspectionResult" placeholder="ระบุรายละเอียดผลการตรวจสอบ เช่น จำนวนแรงงาน ใบอนุญาต ฯลฯ"></textarea>
+        </div>
+      </div>
+    </div>
+    
+   <div class="card" id="globalWorkSectionCard">
+        <div class="card-title"><span class="icon">🏷️</span> ข้อมูลหน้างาน</div>
+
+        <div class="field warrant-only-note" id="warrantWorkHint">
+          <small class="field-hint">โหมดจับตามหมาย: กรุณากรอกหน้างานต่างด้าว/ห้วงระดม/ศูนย์ ตร. ในแต่ละหมายจับด้านบน</small>
+        </div>
+
+        <div class="field" id="globalWorkAlienField">
+          <label>หน้างานต่างด้าว</label>
+          <div class="pill-group">
+            <div class="pill-option">
+              <input type="checkbox" id="alien1" name="workAlien" value="ตรวจสถานประกอบการ">
+              <label for="alien1">ตรวจสถานประกอบการ</label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="alien2" name="workAlien" value="จับกุมลูกจ้าง">
+              <label for="alien2">จับกุมลูกจ้าง</label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="alien3" name="workAlien" value="จับกุมนายจ้าง">
+              <label for="alien3">จับกุมนายจ้าง</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" id="globalWorkMobilizeField">
+          <label>หน้างานห้วงระดม</label>
+          <div class="pill-group">
+            <div class="pill-option">
+              <input type="checkbox" id="mob1" name="workMobilize" value="พ.ร.บ.ยาเสพติด">
+              <label for="mob1">พ.ร.บ.ยาเสพติด</label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="mob2" name="workMobilize" value="พ.ร.บ.อาวุธปืน">
+              <label for="mob2">พ.ร.บ.อาวุธปืน</label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="mob3" name="workMobilize" value="พ.ร.บ.หนี้นอกระบบ">
+              <label for="mob3">พ.ร.บ.หนี้นอกระบบ</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" id="globalWorkCenterField" style="margin-top: 1.5rem; border-top: 1px solid var(--border-accent); padding-top: 1rem;">
+          <label>หน้างานศูนย์ ตร.</label>
+          <div class="center-grid">
+            <div class="pill-option pill-purple">
+              <input type="checkbox" id="center1" name="workCenter" value="ศปอส.ตร.">
+              <label for="center1">ศปอส.ตร.</label>
+              <div class="pill-desc">ปราบปรามอาชญากรรมทางเทคโนโลยี<br>(ฉ้อโกงออนไลน์ ทุกรูปแบบ,ไม่รวมคดีบัญชีม้า)</div>
+            </div>
+            
+            <div class="pill-option pill-orange">
+              <input type="checkbox" id="center2" name="workCenter" value="ศปปง.ตร.">
+              <label for="center2">ศปปง.ตร.</label>
+              <div class="pill-desc">ป้องกันและปราบปรามการฟอกเงินทุกประเภท</div>
+            </div>
+            
+            <div class="pill-option pill-red">
+              <input type="checkbox" id="center3" name="workCenter" value="ศปชก.ตร.">
+              <label for="center3">ศปชก.ตร.</label>
+              <div class="pill-desc">คนร้ายข้ามชาติและ<br>เข้าเมืองผิดกฎหมาย</div>
+            </div>
+            
+            <div class="pill-option pill-yellow">
+              <input type="checkbox" id="center4" name="workCenter" value="ศตคม.ตร.">
+              <label for="center4">ศตคม.ตร.</label>
+              <div class="pill-desc">ต่อต้านการค้ามนุษย์<br>(หลบหนีเข้าเมือง, ค้ามนุษย์, ข่มขืน, อนาจาร ฯลฯ)</div>
+            </div>
+            
+            <div class="pill-option pill-blue">
+              <input type="checkbox" id="center5" name="workCenter" value="ศปน.ตร.">
+              <label for="center5">ศปน.ตร.</label>
+              <div class="pill-desc">ความผิดเกี่ยวกับ<br>หนี้นอกระบบ</div>
+            </div>
+            
+            <div class="pill-option pill-green">
+              <input type="checkbox" id="center6" name="workCenter" value="ศอ.ปส.ตร.">
+              <label for="center6">ศอ.ปส.ตร.</label>
+              <div class="pill-desc">คดีเกี่ยวกับ<br>ยาเสพติดทั้งหมด</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>หน้างานออกสื่อ</label>
+          <div class="pill-group">
+            <div class="pill-option">
+              <input type="checkbox" id="media1" name="workMedia" value="ประชาสัมพันธ์ข่าว">
+              <label for="media1">ประชาสัมพันธ์ข่าว</label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="media2" name="workMedia" value="แถลงข่าว">
+              <label for="media2">แถลงข่าว</label>
+            </div>
+          </div>
+          <small class="field-hint sungna-media-note" id="sungNaMediaHint">หมายเหตุ: กรณีคดีเดียวจับหลายราย งานออกสื่อจะให้แต้มแค่ 1 รายแรก</small>
+        </div>
+      </div>
+      
+    <div class="btn-row btn-row-nav">
+      <button class="btn btn-primary" onclick="goToStep(3)">สร้างรายงาน &rarr;</button>
+      <button class="btn btn-outline btn-back" onclick="goToStep(1)">&larr; ย้อนกลับ</button>
+    </div>
+  </div>
+
+  <div id="step3" style="display:none;">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">📝</span> ข้อความรายงาน
+        <button class="btn-regen" onclick="regenerateReport()" title="สร้างข้อความใหม่">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6a6 6 0 016 6 6 6 0 01-6 6 6 6 0 01-6-6H4a8 8 0 008 8 8 8 0 008-8 8 8 0 00-8-8z"/></svg>
+        </button>
+      </div>
+      <p class="report-warning">*โปรดตรวจสอบรายละเอียดอีกครั้ง โดยสามารถแก้ไขเพิ่มเติมได้</p>
+      <textarea class="report-box" id="reportOutput" rows="20"></textarea>
+      <div class="report-meta">
+        <span id="reportCharCount">0 ตัวอักษร</span>
+        <span class="report-edited-badge" id="editedBadge">แก้ไขแล้ว</span>
+      </div>
+      <div class="action-label">ดำเนินการ</div>
+      <div class="btn-row btn-row-half">
+        <button class="btn btn-success" onclick="copyReport()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          คัดลอก
+        </button>
+        <button class="btn btn-line" onclick="shareToLine()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.4c0 4.17 3.68 7.66 8.66 8.32.34.07.79.22.91.51.11.26.07.67.04.93l-.15.88c-.04.25-.2.99.87.54s5.79-3.41 7.89-5.84C22.07 13.62 22 12.07 22 10.4 22 5.81 17.52 2 12 2z"/></svg>
+          ส่ง LINE
+        </button>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-accent" onclick="submitToSheet()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 3v12m0 0l-4-4m4 4l4-4"/></svg>
+          บันทึกข้อมูล
+        </button>
+      </div>
+    </div>
+
+    <div class="btn-row btn-row-nav">
+      <button class="btn btn-primary" onclick="resetForm()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6a6 6 0 016 6 6 6 0 01-6 6 6 6 0 01-6-6H4a8 8 0 008 8 8 8 0 008-8 8 8 0 00-8-8z"/></svg>
+        เริ่มรายงานใหม่
+      </button>
+      <button class="btn btn-outline btn-back" onclick="goToStep(2)">&larr; แก้ไขข้อมูล</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+<div class="result-overlay" id="resultSection">
+  <div class="result-modal">
+    <div class="result-icon">&#10003;</div>
+    <h3 class="result-title">บันทึกสำเร็จ</h3>
+    <p class="result-desc">ข้อมูลรายงานถูกบันทึกเข้าระบบเรียบร้อยแล้ว</p>
+    <button class="btn btn-primary" onclick="closeResultModal()" style="width:100%; margin-top:1.25rem;">ตกลง</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  CONSTANTS
+// ============================================================
+const unitLeaders = {
+  "ชป.10": { name: "ว่าที่ พ.ต.ท.หญิง รัชฎาวรรณ สีไพสน", phone: "089-643-8999" },
+  "ชป.11": { name: "พ.ต.ท.เดชวุฒิ อุตรศาสตร์", phone: "094-391-4940" },
+  "ชป.12": { name: "ว่าที่ พ.ต.ต.ธีรเดช อรุณนพรัตน์", phone: "081-693-9151" },
+  "ชป.13": { name: "พ.ต.ท.เรืองวิทย์ ดวงจินดา", phone: "086-894-4447" },
+  "ชป.14": { name: "พ.ต.ต.นภชลัน เกิดเอี่ยม", phone: "080-726-4444" },
+  "ชป.15": { name: "พ.ต.ต.มณเฑียร ธงเทียน", phone: "061-659-1447" },
+  "ชป.16": { name: "พ.ต.ต.ธนบดี ดวงจิตต์", phone: "085-539-3999" },
+  "ชป.17": { name: "ว่าที่ พ.ต.ต.จักรพันธ์ ใบพิมาย", phone: "093-607-9393" },
+  "ชป.18": { name: "พ.ต.ท.ฉัตรชัย เหมวิลัย", phone: "08-1666-5345" },
+  "ชป.19": { name: "พ.ต.ต.เอกรัฐ จันทร์มณี", phone: "081-745-2627" }
+};
+
+const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbytUmPr668UwcPsbmwtZm9wSL3qnhDjYJG8b7DzIiqxqyo6vKLVtDgGdmdvA2hE00xX9Q/exec";
+const IS_LOCAL_DEV_HOST = /^(localhost|127\.0\.0\.1|::1)$/.test(window.location.hostname);
+const DEV_BYPASS_MODE = IS_LOCAL_DEV_HOST && new URLSearchParams(window.location.search).get('dev') === '1';
+const DEV_BYPASS_USER = {
+  name: 'Developer',
+  email: 'dev@localhost',
+  unit: 'ชป.10',
+  role: 'dev',
+  __devBypass: true
+};
+
+function navigateInApp(evt, targetPath) {
+  if (evt) evt.preventDefault();
+  const nextUrl = new URL(targetPath, window.location.href);
+  const standaloneMode =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (standaloneMode && nextUrl.origin === window.location.origin) {
+    window.location.assign(nextUrl.pathname + nextUrl.search + nextUrl.hash);
+    return false;
+  }
+  window.location.assign(nextUrl.href);
+  return false;
+}
+
+// ============================================================
+//  THEME SYSTEM
+// ============================================================
+let appSidebarOpen = false;
+function openAppSidebar() {
+  appSidebarOpen = true;
+  document.body.classList.add('nav-open');
+  document.getElementById('appSidebar')?.classList.add('show');
+  document.getElementById('appSidebarOverlay')?.classList.add('show');
+}
+function closeAppSidebar() {
+  appSidebarOpen = false;
+  document.body.classList.remove('nav-open');
+  document.getElementById('appSidebar')?.classList.remove('show');
+  document.getElementById('appSidebarOverlay')?.classList.remove('show');
+}
+function toggleAppSidebar(evt) {
+  if (evt) evt.stopPropagation();
+  if (appSidebarOpen) closeAppSidebar();
+  else openAppSidebar();
+}
+function navigateViaSidebar(evt, targetPath) {
+  closeAppSidebar();
+  return navigateInApp(evt, targetPath);
+}
+
+const SIDEBAR_SWIPE_EDGE_PX = 24;
+const SIDEBAR_SWIPE_TRIGGER_PX = 58;
+const SIDEBAR_SWIPE_CANCEL_Y_PX = 88;
+let sidebarSwipeTracking = false;
+let sidebarSwipeStartX = 0;
+let sidebarSwipeStartY = 0;
+
+function isMobileSidebarGestureEnabled() {
+  return window.matchMedia('(max-width: 900px)').matches;
+}
+
+function setupSidebarEdgeSwipe() {
+  document.addEventListener('touchstart', function(e) {
+    if (!isMobileSidebarGestureEnabled() || appSidebarOpen) {
+      sidebarSwipeTracking = false;
+      return;
+    }
+    if (!e.touches || e.touches.length !== 1) {
+      sidebarSwipeTracking = false;
+      return;
+    }
+    const t = e.touches[0];
+    if (t.clientX > SIDEBAR_SWIPE_EDGE_PX) {
+      sidebarSwipeTracking = false;
+      return;
+    }
+    const target = e.target;
+    if (target && target.closest && target.closest('.app-sidebar, .app-sidebar-overlay')) {
+      sidebarSwipeTracking = false;
+      return;
+    }
+    sidebarSwipeTracking = true;
+    sidebarSwipeStartX = t.clientX;
+    sidebarSwipeStartY = t.clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!sidebarSwipeTracking || appSidebarOpen || !e.touches || !e.touches.length) return;
+    const t = e.touches[0];
+    const dx = t.clientX - sidebarSwipeStartX;
+    const dy = Math.abs(t.clientY - sidebarSwipeStartY);
+    if (dy > SIDEBAR_SWIPE_CANCEL_Y_PX || dx < -12) {
+      sidebarSwipeTracking = false;
+      return;
+    }
+    if (dx >= SIDEBAR_SWIPE_TRIGGER_PX && dx > dy * 1.15) {
+      sidebarSwipeTracking = false;
+      openAppSidebar();
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', function() {
+    sidebarSwipeTracking = false;
+  }, { passive: true });
+
+  document.addEventListener('touchcancel', function() {
+    sidebarSwipeTracking = false;
+  }, { passive: true });
+}
+
+setupSidebarEdgeSwipe();
+
+function getPreferredTheme() {
+  const stored = localStorage.getItem('CSD1_THEME') || 'dark';
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function syncThemeSwitch(mode) {
+  const toggleEl = document.getElementById('sidebarThemeToggle');
+  if (toggleEl) toggleEl.checked = mode === 'dark';
+}
+
+function applyTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', normalized);
+  syncThemeSwitch(normalized);
+  const themeColor = normalized === 'dark' ? '#020617' : '#e8ecf2';
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.setAttribute('content', themeColor);
+}
+
+function setTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  localStorage.setItem('CSD1_THEME', normalized);
+  applyTheme(normalized);
+}
+
+function toggleThemeSwitch(evt) {
+  const isDark = !!evt?.target?.checked;
+  setTheme(isDark ? 'dark' : 'light');
+}
+
+// ============================================================
+//  PROFILE DROPDOWN
+// ============================================================
+let profileMenuOpen = false;
+
+function toggleProfileMenu() {
+  profileMenuOpen = !profileMenuOpen;
+  document.getElementById('profileMenu').classList.toggle('show', profileMenuOpen);
+}
+function closeProfileMenu() {
+  profileMenuOpen = false;
+  document.getElementById('profileMenu').classList.remove('show');
+}
+
+document.addEventListener('click', (e) => {
+  if (profileMenuOpen && !e.target.closest('.user-profile-wrap')) closeProfileMenu();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeAppSidebar();
+  }
+});
+
+// ============================================================
+//  SETTINGS
+// ============================================================
+function getSheetUrl() {
+  return localStorage.getItem('CSD1_SHEET_URL') || DEFAULT_SHEET_URL;
+}
+function openSettings() {
+  document.getElementById('sheetUrlInput').value = getSheetUrl();
+  document.getElementById('settingsModal').classList.add('show');
+}
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('show');
+}
+function saveSettings() {
+  const url = document.getElementById('sheetUrlInput').value.trim();
+  if (url) {
+    localStorage.setItem('CSD1_SHEET_URL', url);
+    showToast('บันทึก URL สำเร็จ');
+  }
+  closeSettings();
+}
+
+// ============================================================
+//  LOGIN SYSTEM (Google Sign-In)
+// ============================================================
+function decodeJwtResponse(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  return JSON.parse(jsonPayload);
+}
+
+async function handleCredentialResponse(response) {
+  const responsePayload = decodeJwtResponse(response.credential);
+  const email = responsePayload.email;
+  
+  const url = getSheetUrl();
+  const loginError = document.getElementById('loginError');
+  
+  if (!url) {
+    loginError.textContent = 'กรุณาตั้งค่า Google Apps Script URL ก่อน';
+    openSettings();
+    return;
+  }
+
+  loginError.style.color = 'var(--text-muted)';
+  loginError.textContent = 'กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...';
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'login', email: email })
+    });
+    const result = await res.json();
+
+    if (result.status === 'success') {
+      result.email = email;
+      result.googlePhoto = responsePayload.picture || '';
+      localStorage.setItem('CSD1_USER', JSON.stringify(result));
+      showMainApp();
+      showToast('ยินดีต้อนรับ ' + result.name);
+    } else {
+      loginError.style.color = 'var(--danger)';
+      loginError.textContent = result.message || 'อีเมลนี้ไม่มีสิทธิ์เข้าใช้งานระบบ';
+    }
+  } catch (err) {
+    loginError.style.color = 'var(--danger)';
+    loginError.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ ตรวจสอบ URL หรืออินเทอร์เน็ต';
+  }
+}
+
+function showMainApp() {
+  document.getElementById('loginWrapper').classList.add('hidden');
+  document.getElementById('mainApp').style.display = 'block';
+
+  const user = JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+
+  const displayName = user.name || 'ผู้ใช้';
+  document.getElementById('userDisplayName').textContent = displayName;
+
+  // Avatar: Drive → Google Profile Photo → ตัวอักษรแรก
+  const avatarEl = document.getElementById('userAvatar');
+  const photoUrl = user.avatarUrl || user.googlePhoto || '';
+  if (photoUrl) {
+    const initial = displayName.charAt(0);
+    avatarEl.innerHTML = `<img src="${photoUrl}" alt="${displayName}" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${initial}'">`;
+  } else {
+    avatarEl.textContent = displayName.charAt(0);
+  }
+
+  // Unit badge (ข้างชื่อ)
+  const roleBadge = document.getElementById('userRoleBadge');
+  roleBadge.textContent = user.unit || '-';
+  roleBadge.className = 'user-role-badge user';
+
+  // Position (บรรทัดล่าง)
+  // position removed from UI
+
+  if (user.unit) {
+    const sel = document.getElementById('unitSelect');
+    sel.value = user.unit;
+    sel.dispatchEvent(new Event('change'));
+  }
+}
+
+function showLoginPage() {
+  document.getElementById('loginWrapper').classList.remove('hidden');
+  document.getElementById('mainApp').style.display = 'none';
+}
+
+function handleLogout() {
+  localStorage.removeItem('CSD1_USER');
+  showLoginPage();
+  showToast('ออกจากระบบแล้ว');
+  
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
+}
+
+function checkAuth() {
+  if (DEV_BYPASS_MODE) {
+    localStorage.setItem('CSD1_USER', JSON.stringify(DEV_BYPASS_USER));
+    showMainApp();
+    return;
+  }
+
+  const userRaw = localStorage.getItem('CSD1_USER');
+  if (userRaw) {
+    try {
+      const parsedUser = JSON.parse(userRaw);
+      if (parsedUser && parsedUser.__devBypass) {
+        localStorage.removeItem('CSD1_USER');
+        showLoginPage();
+        return;
+      }
+    } catch (_) {}
+    showMainApp();
+  } else {
+    showLoginPage();
+  }
+}
+
+// ============================================================
+//  THAI DATE
+// ============================================================
+function formatThaiDate(dateStr) {
+  if (!dateStr) return "";
+  const months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+                   "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  const d = new Date(dateStr);
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
+}
+
+function formatThaiDateShort(dateStr) {
+  if (!dateStr) return "";
+  const months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.",
+                   "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+  const d = new Date(dateStr);
+  return `${d.getDate()} ${months[d.getMonth()]} ${(d.getFullYear() + 543) % 100}`;
+}
+
+function joinWithThaiAnd(items) {
+  const cleaned = (items || []).map((item) => String(item || '').trim()).filter(Boolean);
+  if (!cleaned.length) return '';
+  if (cleaned.length === 1) return cleaned[0];
+  if (cleaned.length === 2) return `${cleaned[0]} และ ${cleaned[1]}`;
+  return `${cleaned.slice(0, -1).join(', ')} และ ${cleaned[cleaned.length - 1]}`;
+}
+
+// ============================================================
+//  GOOGLE MAPS COORDINATES
+// ============================================================
+function parseCoordinates(input) {
+  if (!input) return null;
+  input = input.trim();
+
+  // Pattern 1: "13.7563, 100.5018" or "13.7563,100.5018"
+  const latLngMatch = input.match(/^(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)$/);
+  if (latLngMatch) {
+    return { lat: parseFloat(latLngMatch[1]), lng: parseFloat(latLngMatch[2]) };
+  }
+
+  // Pattern 2: Google Maps URL with @lat,lng
+  const atMatch = input.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+  if (atMatch) {
+    return { lat: parseFloat(atMatch[1]), lng: parseFloat(atMatch[2]) };
+  }
+
+  // Pattern 3: Google Maps URL with ?q=lat,lng or &ll=lat,lng
+  const qMatch = input.match(/[?&](?:q|ll)=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+  if (qMatch) {
+    return { lat: parseFloat(qMatch[1]), lng: parseFloat(qMatch[2]) };
+  }
+
+  // Pattern 4: Google Maps URL with /place/.../ followed by lat,lng
+  const placeMatch = input.match(/\/place\/[^/]+\/(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+  if (placeMatch) {
+    return { lat: parseFloat(placeMatch[1]), lng: parseFloat(placeMatch[2]) };
+  }
+
+  return null;
+}
+
+function formatCoordinatesForMap(input) {
+  const coords = parseCoordinates(input);
+  if (coords) {
+    return `https://www.google.com/maps?q=${coords.lat},${coords.lng}`;
+  }
+  // If it's already a URL, return as-is
+  if (input.trim().startsWith('http')) {
+    return input.trim();
+  }
+  // Otherwise search Google Maps
+  return `https://www.google.com/maps/search/${encodeURIComponent(input.trim())}`;
+}
+
+function openGoogleMap() {
+  const input = document.querySelector('[name="coordinates"]');
+  const val = input.value.trim();
+
+  let url;
+  if (!val) {
+    url = 'https://www.google.com/maps';
+    showToast('เปิด Google Maps — วาง link กลับมาได้เลย');
+  } else {
+    url = formatCoordinatesForMap(val);
+  }
+
+  // ใน PWA standalone mode ใช้ link element แทน window.open
+  // เพื่อป้องกันหน้าจอขาวเมื่อย้อนกลับ
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+
+  if (isStandalone) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+// ============================================================
+//  UNIT LEADER DISPLAY
+// ============================================================
+document.getElementById('unitSelect').addEventListener('change', function() {
+  const leader = unitLeaders[this.value];
+  const info = document.getElementById('leaderInfo');
+  if (leader) {
+    document.getElementById('leaderName').textContent = leader.name;
+    document.getElementById('leaderPhone').textContent = leader.phone;
+    info.classList.add('visible');
+  } else {
+    info.classList.remove('visible');
+  }
+});
+
+// ============================================================
+//  CONDITIONAL SECTIONS
+// ============================================================
+const WARRANT_WORK_OPTIONS = {
+  alien: [
+    "ตรวจสถานประกอบการ",
+    "จับกุมลูกจ้าง",
+    "จับกุมนายจ้าง"
+  ],
+  mobilize: [
+    "พ.ร.บ.ยาเสพติด",
+    "พ.ร.บ.อาวุธปืน",
+    "พ.ร.บ.หนี้นอกระบบ"
+  ],
+  center: [
+    { value: "ศปอส.ตร.", colorClass: "pill-purple", desc: "ปราบปรามอาชญากรรมทางเทคโนโลยี<br>(ฉ้อโกงออนไลน์ ทุกรูปแบบ,ไม่รวมคดีบัญชีม้า)" },
+    { value: "ศปปง.ตร.", colorClass: "pill-orange", desc: "ป้องกันและปราบปรามการฟอกเงินทุกประเภท" },
+    { value: "ศปชก.ตร.", colorClass: "pill-red", desc: "คนร้ายข้ามชาติและ<br>เข้าเมืองผิดกฎหมาย" },
+    { value: "ศตคม.ตร.", colorClass: "pill-yellow", desc: "ต่อต้านการค้ามนุษย์<br>(หลบหนีเข้าเมือง, ค้ามนุษย์, ข่มขืน, อนาจาร ฯลฯ)" },
+    { value: "ศปน.ตร.", colorClass: "pill-blue", desc: "ความผิดเกี่ยวกับ<br>หนี้นอกระบบ" },
+    { value: "ศอ.ปส.ตร.", colorClass: "pill-green", desc: "คดีเกี่ยวกับ<br>ยาเสพติดทั้งหมด" }
+  ]
+};
+
+let warrantItemSeq = 0;
+let suspectItemSeq = 0;
+const DEFAULT_COURT_PREFIX = 'ศาล';
+
+function getWarrantPillGroupHtml(itemId, groupKey, options) {
+  const containerClass = groupKey === 'center' ? 'center-grid' : 'pill-group';
+  const pills = options.map((opt, idx) => {
+    const value = typeof opt === 'string' ? opt : opt.value;
+    const colorClass = typeof opt === 'string' ? '' : (opt.colorClass || '');
+    const desc = typeof opt === 'string' ? '' : (opt.desc || '');
+    const inputId = `warrant-${itemId}-${groupKey}-${idx}`;
+    const pillClass = colorClass ? `pill-option ${colorClass}` : 'pill-option';
+    return `
+      <div class="${pillClass}">
+        <input type="checkbox" id="${inputId}" class="warrant-work-input" data-work-group="${groupKey}" value="${value}">
+        <label for="${inputId}">${value}</label>
+        ${desc ? `<div class="pill-desc">${desc}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+  return `<div class="${containerClass}">${pills}</div>`;
+}
+
+function updateWarrantItemMeta() {
+  const items = Array.from(document.querySelectorAll('#warrantList .warrant-item'));
+  items.forEach((item, idx) => {
+    const title = item.querySelector('.warrant-item-title');
+    if (title) title.textContent = `หมายจับที่ ${idx + 1}`;
+    const removeBtn = item.querySelector('.warrant-remove-btn');
+    if (removeBtn) removeBtn.style.display = items.length > 1 ? 'inline-flex' : 'none';
+  });
+}
+
+function addWarrantItem(initial = {}) {
+  const list = document.getElementById('warrantList');
+  if (!list) return;
+  const warrantCourtValue = String(initial.arrestCourt || '').trim() ? String(initial.arrestCourt) : DEFAULT_COURT_PREFIX;
+
+  const itemId = ++warrantItemSeq;
+  const item = document.createElement('div');
+  item.className = 'warrant-item';
+  item.dataset.warrantId = String(itemId);
+  item.innerHTML = `
+    <div class="warrant-item-head">
+      <div class="warrant-item-title">หมายจับที่ ?</div>
+      <button type="button" class="warrant-remove-btn" onclick="removeWarrantItem(this)">ลบหมาย</button>
+    </div>
+
+    <div class="field">
+      <label>ศาลที่ออกหมายจับ <span class="req">*</span></label>
+      <input type="text" class="warrant-court" placeholder="เช่น ศาลอาญา, ศาลจังหวัด..." value="${warrantCourtValue}">
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>เลขที่หมายจับ <span class="req">*</span></label>
+        <input type="text" class="warrant-no" placeholder="เช่น 1/2569" value="${initial.arrestNo || ''}">
+      </div>
+      <div class="field">
+        <label>วันที่ออกหมาย <span class="req">*</span></label>
+        <input type="date" class="warrant-date" value="${initial.warrantDateRaw || ''}">
+      </div>
+    </div>
+    <div class="field">
+      <label>ประเภทหมายจับ</label>
+      <select class="warrant-type">
+        <option value="">-- เลือก --</option>
+        <option value="หมายจับทั่วไป">หมายจับทั่วไป</option>
+        <option value="หมายใน(ใหม่)">หมายใน(ใหม่)</option>
+        <option value="หมายใน(เก่า)">หมายใน(เก่า)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>ข้อหา (ฐานความผิด) <span class="req">*</span></label>
+      <textarea class="warrant-charges" placeholder="ระบุข้อหาของหมายจับนี้"></textarea>
+    </div>
+
+    <div class="warrant-work-title">หน้างานของหมายจับนี้</div>
+    <div class="field">
+      <label>หน้างานต่างด้าว</label>
+      ${getWarrantPillGroupHtml(itemId, 'alien', WARRANT_WORK_OPTIONS.alien)}
+    </div>
+    <div class="field">
+      <label>หน้างานห้วงระดม</label>
+      ${getWarrantPillGroupHtml(itemId, 'mobilize', WARRANT_WORK_OPTIONS.mobilize)}
+    </div>
+    <div class="field">
+      <label>หน้างานศูนย์ ตร.</label>
+      ${getWarrantPillGroupHtml(itemId, 'center', WARRANT_WORK_OPTIONS.center)}
+    </div>
+  `;
+
+  list.appendChild(item);
+  const typeSelect = item.querySelector('.warrant-type');
+  if (typeSelect && initial.warrantType) {
+    typeSelect.value = initial.warrantType;
+  }
+  bindSingleSelectAlienPills(item);
+  applyAlienWorkConstraints(document.querySelector('[name="actionType"]:checked')?.value || '');
+  updateWarrantItemMeta();
+  applyDefaultCourtPrefixes();
+}
+
+function applyDefaultCourtPrefixes() {
+  const searchCourtInput = document.querySelector('[name="searchCourt"]');
+  if (searchCourtInput && !String(searchCourtInput.value || '').trim()) {
+    searchCourtInput.value = DEFAULT_COURT_PREFIX;
+  }
+  document.querySelectorAll('#warrantList .warrant-court').forEach((input) => {
+    if (input && !String(input.value || '').trim()) {
+      input.value = DEFAULT_COURT_PREFIX;
+    }
+  });
+}
+
+function removeWarrantItem(trigger) {
+  const list = document.getElementById('warrantList');
+  if (!list) return;
+  const item = trigger?.closest('.warrant-item');
+  if (item) item.remove();
+  if (!list.children.length) addWarrantItem();
+  updateWarrantItemMeta();
+}
+
+function getCheckedValuesIn(root, selector) {
+  if (!root) return '';
+  return Array.from(root.querySelectorAll(selector))
+    .filter((el) => el.checked)
+    .map((el) => el.value)
+    .join(', ');
+}
+
+function getWarrantEntries() {
+  const items = Array.from(document.querySelectorAll('#warrantList .warrant-item'));
+  return items.map((item) => ({
+    arrestCourt: item.querySelector('.warrant-court')?.value.trim() || '',
+    arrestNo: item.querySelector('.warrant-no')?.value.trim() || '',
+    warrantDateRaw: item.querySelector('.warrant-date')?.value || '',
+    warrantType: item.querySelector('.warrant-type')?.value || '',
+    charges: item.querySelector('.warrant-charges')?.value.trim() || '',
+    workAlien: getCheckedValuesIn(item, '.warrant-work-input[data-work-group="alien"]'),
+    workMobilize: getCheckedValuesIn(item, '.warrant-work-input[data-work-group="mobilize"]'),
+    workCenter: getCheckedValuesIn(item, '.warrant-work-input[data-work-group="center"]')
+  }));
+}
+
+function updateSuspectItemMeta() {
+  const items = Array.from(document.querySelectorAll('#suspectList .suspect-item'));
+  items.forEach((item, idx) => {
+    const title = item.querySelector('.suspect-item-title');
+    if (title) title.textContent = `ผู้ต้องหาเพิ่มเติมรายที่ ${idx + 2}`;
+    const removeBtn = item.querySelector('.suspect-remove-btn');
+    if (removeBtn) removeBtn.style.display = 'inline-flex';
+  });
+}
+
+function addSuspectItem(initial = {}) {
+  const list = document.getElementById('suspectList');
+  if (!list) return;
+
+  const itemId = ++suspectItemSeq;
+  const identityName = `suspectIdentityType-${itemId}`;
+  const isForeignInitial = initial.isForeign === true;
+  const item = document.createElement('div');
+  item.className = 'suspect-item';
+  item.dataset.suspectId = String(itemId);
+  item.innerHTML = `
+    <div class="suspect-item-head">
+      <div class="suspect-item-title">ผู้ต้องหาเพิ่มเติมรายที่ ?</div>
+      <button type="button" class="suspect-remove-btn" onclick="removeSuspectItem(this)">ลบผู้ต้องหา</button>
+    </div>
+
+    <div class="field">
+      <label>ชื่อ-สกุล ผู้ต้องหา <span class="req">*</span></label>
+      <input type="text" class="suspect-name" placeholder="คำนำหน้า ชื่อ สกุล" value="${initial.personName || ''}">
+    </div>
+
+    <div class="field identity-toggle-field">
+      <div class="pill-group">
+        <div class="pill-option">
+          <input type="radio" id="suspectIdentityThai-${itemId}" name="${identityName}" class="suspect-identity-input" value="thai" ${isForeignInitial ? '' : 'checked'}>
+          <label for="suspectIdentityThai-${itemId}">คนไทย</label>
+        </div>
+        <div class="pill-option">
+          <input type="radio" id="suspectIdentityForeign-${itemId}" name="${identityName}" class="suspect-identity-input" value="foreign" ${isForeignInitial ? 'checked' : ''}>
+          <label for="suspectIdentityForeign-${itemId}">ต่างชาติ</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>อายุ (ปี) <span class="req">*</span></label>
+      <input type="number" class="suspect-age" placeholder="อายุ" min="1" max="120" step="1" inputmode="numeric" value="${initial.personAge || ''}">
+    </div>
+
+    <div class="field identity-thai-field suspect-thai-field">
+      <label>เลขประจำตัวประชาชน <span class="req">*</span></label>
+      <input type="text" class="suspect-id" maxlength="13" inputmode="numeric" pattern="[0-9]*" placeholder="เลขบัตร 13 หลัก (ไม่ต้องใส่ขีด)" value="${initial.thaiId || ''}">
+      <small class="field-hint">กรอกเฉพาะตัวเลข 13 หลัก</small>
+    </div>
+
+    <div class="row foreign-fields suspect-foreign-fields">
+      <div class="field">
+        <label>หมายเลข Passport <span class="req">*</span></label>
+        <input type="text" class="suspect-passport" placeholder="เช่น AB1234567" value="${initial.passport || ''}">
+      </div>
+      <div class="field">
+        <label>สัญชาติ <span class="req">*</span></label>
+        <input type="text" class="suspect-nationality" placeholder="เช่น เมียนมา" value="${initial.nationality || ''}">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>ที่อยู่ (ตามบัตร)</label>
+      <textarea class="suspect-address" placeholder="ที่อยู่ตามบัตรประชาชน">${initial.personAddress || ''}</textarea>
+    </div>
+  `;
+
+  list.appendChild(item);
+
+  const ageInput = item.querySelector('.suspect-age');
+  if (ageInput) {
+    ageInput.addEventListener('input', () => {
+      const cleaned = String(ageInput.value || '').replace(/\D/g, '').slice(0, 3);
+      ageInput.value = cleaned;
+    });
+    ageInput.addEventListener('change', () => normalizeAgeField(ageInput));
+    ageInput.addEventListener('blur', () => normalizeAgeField(ageInput));
+  }
+
+  const idInput = item.querySelector('.suspect-id');
+  if (idInput) {
+    idInput.addEventListener('input', () => normalizeThaiIdField(idInput));
+    idInput.addEventListener('change', () => normalizeThaiIdField(idInput));
+    idInput.addEventListener('blur', () => normalizeThaiIdField(idInput));
+  }
+
+  item.querySelectorAll('.suspect-identity-input').forEach((input) => {
+    input.addEventListener('change', () => applySuspectIdentityState(item));
+  });
+
+  applySuspectIdentityState(item);
+  updateSuspectItemMeta();
+}
+
+function applySuspectIdentityState(item) {
+  if (!item) return;
+  const isForeign = item.querySelector('.suspect-identity-input:checked')?.value === 'foreign';
+  const thaiField = item.querySelector('.suspect-thai-field');
+  const foreignFields = item.querySelector('.suspect-foreign-fields');
+  const idInput = item.querySelector('.suspect-id');
+  const passportInput = item.querySelector('.suspect-passport');
+  const nationalityInput = item.querySelector('.suspect-nationality');
+
+  foreignFields?.classList.toggle('active', isForeign);
+  thaiField?.classList.toggle('hidden', isForeign);
+
+  if (idInput) {
+    idInput.disabled = isForeign;
+    idInput.required = !isForeign;
+  }
+  if (passportInput) passportInput.required = isForeign;
+  if (nationalityInput) nationalityInput.required = isForeign;
+
+  if (isForeign) {
+    thaiField?.classList.remove('field-error');
+  } else {
+    foreignFields?.querySelectorAll('.field-error').forEach((field) => field.classList.remove('field-error'));
+  }
+}
+
+function removeSuspectItem(trigger) {
+  const item = trigger?.closest('.suspect-item');
+  if (item) item.remove();
+  updateSuspectItemMeta();
+}
+
+function getPrimarySuspectEntry() {
+  const identity = getIdentityState('person');
+  return {
+    personName: document.querySelector('[name="personName"]')?.value.trim() || '',
+    personAge: document.querySelector('[name="personAge"]')?.value.trim() || '',
+    personID: identity.sheetValue || '',
+    personAddress: document.querySelector('[name="personAddress"]')?.value.trim() || '',
+    identityText: formatIdentityTextFromState(identity)
+  };
+}
+
+function getAdditionalSuspectEntries() {
+  const items = Array.from(document.querySelectorAll('#suspectList .suspect-item'));
+  return items.map((item) => {
+    const isForeign = item.querySelector('.suspect-identity-input:checked')?.value === 'foreign';
+    const idInput = item.querySelector('.suspect-id');
+    const passportInput = item.querySelector('.suspect-passport');
+    const nationalityInput = item.querySelector('.suspect-nationality');
+    const thaiId = normalizeThaiIdField(idInput);
+    const passport = passportInput?.value.trim() || '';
+    const nationality = nationalityInput?.value.trim() || '';
+    const identityState = { isForeign, thaiId, passport, nationality };
+
+    return {
+      personName: item.querySelector('.suspect-name')?.value.trim() || '',
+      personAge: item.querySelector('.suspect-age')?.value.trim() || '',
+      personID: buildIdentitySheetValue(identityState),
+      personAddress: item.querySelector('.suspect-address')?.value.trim() || '',
+      identityText: formatIdentityTextFromState(identityState)
+    };
+  });
+}
+
+function getArrestSuspectEntries(actionType = document.querySelector('[name="actionType"]:checked')?.value || '') {
+  const entries = [getPrimarySuspectEntry()];
+  if (actionType === 'จับซึ่งหน้า') {
+    entries.push(...getAdditionalSuspectEntries());
+  }
+  return entries;
+}
+
+function validateAdditionalSuspectItems() {
+  const items = Array.from(document.querySelectorAll('#suspectList .suspect-item'));
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const rowNo = i + 2;
+    const nameInput = item.querySelector('.suspect-name');
+    const ageInput = item.querySelector('.suspect-age');
+    const idInput = item.querySelector('.suspect-id');
+    const passportInput = item.querySelector('.suspect-passport');
+    const nationalityInput = item.querySelector('.suspect-nationality');
+    const isForeign = item.querySelector('.suspect-identity-input:checked')?.value === 'foreign';
+
+    if (!nameInput?.value.trim()) {
+      highlightError(nameInput, `กรุณาระบุชื่อผู้ต้องหา (รายที่ ${rowNo})`);
+      return false;
+    }
+    if (!ageInput || !validateAgeField(ageInput, `ผู้ต้องหา (รายที่ ${rowNo})`)) {
+      return false;
+    }
+
+    if (isForeign) {
+      if (!passportInput?.value.trim()) {
+        highlightError(passportInput, `กรุณาระบุหมายเลข Passport ของผู้ต้องหา (รายที่ ${rowNo})`);
+        return false;
+      }
+      if (!nationalityInput?.value.trim()) {
+        highlightError(nationalityInput, `กรุณาระบุสัญชาติของผู้ต้องหา (รายที่ ${rowNo})`);
+        return false;
+      }
+    } else {
+      const thaiId = normalizeThaiIdField(idInput);
+      if (!thaiId) {
+        highlightError(idInput, `กรุณาระบุเลขประจำตัวประชาชนของผู้ต้องหา (รายที่ ${rowNo})`);
+        return false;
+      }
+      if (!/^\d{13}$/.test(thaiId)) {
+        highlightError(idInput, `เลขประจำตัวประชาชนของผู้ต้องหา (รายที่ ${rowNo}) ต้องเป็นตัวเลข 13 หลัก`);
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function bindSingleSelectAlienPills(root = document) {
+  const targets = root.querySelectorAll('input[name="workAlien"], .warrant-work-input[data-work-group="alien"]');
+  targets.forEach((input) => {
+    if (input.dataset.singleBound === '1') return;
+    input.dataset.singleBound = '1';
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      if (input.matches('input[name="workAlien"]')) {
+        document.querySelectorAll('input[name="workAlien"]').forEach((el) => {
+          if (el !== input) el.checked = false;
+        });
+        return;
+      }
+      const warrantItem = input.closest('.warrant-item');
+      if (!warrantItem) return;
+      warrantItem.querySelectorAll('.warrant-work-input[data-work-group="alien"]').forEach((el) => {
+        if (el !== input) el.checked = false;
+      });
+    });
+  });
+}
+
+function bindSingleSelectMediaPills(root = document) {
+  const targets = root.querySelectorAll('input[name="workMedia"]');
+  targets.forEach((input) => {
+    if (input.dataset.singleMediaBound === '1') return;
+    input.dataset.singleMediaBound = '1';
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      document.querySelectorAll('input[name="workMedia"]').forEach((el) => {
+        if (el !== input) el.checked = false;
+      });
+    });
+  });
+}
+
+function applyAlienWorkConstraints(actionType) {
+  const isWarrantMode = actionType === 'จับตามหมาย';
+  const isSungNaMode = actionType === 'จับซึ่งหน้า';
+  const isInspectMode = actionType === 'ตรวจสอบสถานประกอบการ';
+  const shouldHideInspectAlien = isWarrantMode || isSungNaMode;
+
+  const inspectAlienInputs = document.querySelectorAll(
+    'input[name="workAlien"][value="ตรวจสถานประกอบการ"], #warrantList .warrant-work-input[data-work-group="alien"][value="ตรวจสถานประกอบการ"]'
+  );
+  inspectAlienInputs.forEach((input) => {
+    const option = input.closest('.pill-option');
+    if (option) option.classList.toggle('global-work-hidden', shouldHideInspectAlien);
+    if (shouldHideInspectAlien && input.checked) input.checked = false;
+  });
+
+  if (isInspectMode) {
+    document.querySelectorAll('input[name="workAlien"], #warrantList .warrant-work-input[data-work-group="alien"]').forEach((el) => {
+      el.checked = false;
+    });
+  }
+}
+
+function ensureWarrantListReady() {
+  const list = document.getElementById('warrantList');
+  if (!list) return;
+  if (!list.children.length) addWarrantItem();
+}
+
+function updateWorkSectionByActionType(actionType) {
+  const isWarrantMode = actionType === 'จับตามหมาย';
+  const isSungNaMode = actionType === 'จับซึ่งหน้า';
+  const isInspectMode = actionType === 'ตรวจสอบสถานประกอบการ';
+  const globalWorkCard = document.getElementById('globalWorkSectionCard');
+  const suspectSection = document.getElementById('suspectSection');
+  const sungNaMediaHint = document.getElementById('sungNaMediaHint');
+
+  if (globalWorkCard) globalWorkCard.classList.toggle('global-work-hidden', isInspectMode);
+  if (suspectSection) suspectSection.classList.toggle('section-hidden', !isSungNaMode);
+  if (sungNaMediaHint) sungNaMediaHint.classList.toggle('show', isSungNaMode);
+
+  const globalAlienField = document.getElementById('globalWorkAlienField');
+  if (globalAlienField) globalAlienField.classList.toggle('global-work-hidden', isWarrantMode || isInspectMode);
+
+  ['globalWorkMobilizeField', 'globalWorkCenterField', 'globalChargesField'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('global-work-hidden', isWarrantMode);
+  });
+  const hint = document.getElementById('warrantWorkHint');
+  if (hint) hint.classList.toggle('show', isWarrantMode);
+  if (isWarrantMode) ensureWarrantListReady();
+  applyAlienWorkConstraints(actionType);
+}
+
+document.querySelectorAll('[name="actionType"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    const val = this.value;
+    document.getElementById('arrestSection').style.display = val === 'ตรวจสอบสถานประกอบการ' ? 'none' : 'block';
+    document.getElementById('inspectSection').style.display = val === 'ตรวจสอบสถานประกอบการ' ? 'block' : 'none';
+    document.getElementById('warrantSection').classList.toggle('section-hidden', val !== 'จับตามหมาย');
+    updateWorkSectionByActionType(val);
+  });
+});
+
+document.querySelectorAll('[name="searchBy"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    document.getElementById('searchWarrantSection').classList.toggle('section-hidden', this.value !== 'ตามหมายค้น');
+  });
+});
+
+// ============================================================
+//  STEPPER
+// ============================================================
+let currentStep = 1;
+let originalReportText = '';
+
+function goToStep(step) {
+  if (step > currentStep) {
+    if (currentStep === 1 && !validateStep1()) return;
+    if (currentStep === 2 && !validateStep2()) return;
+  }
+
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('step' + step).style.display = 'block';
+
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('step' + i + 'indicator');
+    el.classList.remove('active', 'done');
+    if (i < step) el.classList.add('done');
+    if (i === step) el.classList.add('active');
+  }
+
+  currentStep = step;
+
+  if (step === 3) {
+    const text = generateReportText();
+    const output = document.getElementById('reportOutput');
+    output.value = text;
+    originalReportText = text;
+    output.classList.remove('edited');
+    updateReportMeta(output);
+    document.getElementById('resultSection').classList.remove('show');
+  }
+
+  // Step transition animation
+  const activeStep = document.getElementById('step' + step);
+  activeStep.style.animation = 'none';
+  activeStep.offsetHeight;
+  activeStep.style.animation = 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+//  VALIDATION
+// ============================================================
+function highlightError(el, msg) {
+  // ลบ error เก่าทั้งหมดก่อน
+  document.querySelectorAll('.field-error').forEach(f => f.classList.remove('field-error'));
+
+  const field = el.closest('.field');
+  if (field) {
+    field.classList.add('field-error');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // ลบ error เมื่อผู้ใช้เริ่มกรอก
+    const clear = () => { field.classList.remove('field-error'); el.removeEventListener('input', clear); el.removeEventListener('change', clear); };
+    el.addEventListener('input', clear);
+    el.addEventListener('change', clear);
+  }
+  showToast(msg);
+}
+
+function highlightRadioError(name, msg) {
+  document.querySelectorAll('.field-error').forEach(f => f.classList.remove('field-error'));
+  const radio = document.querySelector(`[name="${name}"]`);
+  const field = radio?.closest('.field');
+  if (field) {
+    field.classList.add('field-error');
+    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelectorAll(`[name="${name}"]`).forEach(r => {
+      r.addEventListener('change', () => field.classList.remove('field-error'), { once: true });
+    });
+  }
+  showToast(msg);
+}
+
+function validateStep1() {
+  const unit = document.querySelector('[name="unit"]');
+  const actionType = document.querySelector('[name="actionType"]:checked');
+  const date = document.getElementById('actionDate');
+  const time = document.querySelector('[name="time"]');
+  const location = document.querySelector('[name="location"]');
+
+  if (!unit.value) { highlightError(unit, 'กรุณาเลือกชุดปฏิบัติการ'); return false; }
+  if (!actionType) { highlightRadioError('actionType', 'กรุณาเลือกประเภทการปฏิบัติ'); return false; }
+  if (!date.value) { highlightError(date, 'กรุณาระบุวันที่'); return false; }
+  if (!time.value) { highlightError(time, 'กรุณาระบุเวลา'); return false; }
+  if (!location.value.trim()) { highlightError(location, 'กรุณาระบุสถานที่'); return false; }
+  return true;
+}
+
+function normalizeAgeField(el) {
+  if (!el) return null;
+  const raw = String(el.value || '').trim();
+  if (!raw) {
+    el.value = '';
+    return null;
+  }
+  const digits = raw.replace(/\D/g, '').slice(0, 3);
+  if (!digits) {
+    el.value = '';
+    return null;
+  }
+  const parsed = Number.parseInt(digits, 10);
+  if (!Number.isFinite(parsed)) {
+    el.value = '';
+    return null;
+  }
+  const clamped = Math.min(120, Math.max(1, parsed));
+  el.value = String(clamped);
+  return clamped;
+}
+
+function validateAgeField(el, label) {
+  if (!el.value.trim()) {
+    highlightError(el, `กรุณาระบุอายุ${label}`);
+    return false;
+  }
+  const age = normalizeAgeField(el);
+  if (!Number.isInteger(age) || age < 1 || age > 120) {
+    highlightError(el, `กรุณาระบุอายุ${label}เป็นตัวเลข 1-120 ปี`);
+    return false;
+  }
+  return true;
+}
+
+function normalizeThaiIdField(el) {
+  if (!el) return '';
+  const digits = String(el.value || '').replace(/\D/g, '').slice(0, 13);
+  el.value = digits;
+  return digits;
+}
+
+function isForeignIdentity(prefix) {
+  return document.querySelector(`input[name="${prefix}IdentityType"]:checked`)?.value === 'foreign';
+}
+
+function buildIdentitySheetValue(identity) {
+  return identity.isForeign
+    ? `Passport: ${identity.passport || '-'} | สัญชาติ: ${identity.nationality || '-'}`
+    : identity.thaiId;
+}
+
+function formatIdentityTextFromState(identity) {
+  if (identity.isForeign) {
+    const passportText = identity.passport || '........';
+    const nationalityText = identity.nationality || '........';
+    return `Passport ${passportText} สัญชาติ ${nationalityText}`;
+  }
+  return `เลขประจำตัวประชาชน ${identity.thaiId || '.............'}`;
+}
+
+function getIdentityState(prefix) {
+  const isForeign = isForeignIdentity(prefix);
+  const idInput = document.querySelector(`[name="${prefix}ID"]`);
+  const passportInput = document.querySelector(`[name="${prefix}Passport"]`);
+  const nationalityInput = document.querySelector(`[name="${prefix}Nationality"]`);
+  const thaiId = normalizeThaiIdField(idInput);
+  const passport = passportInput?.value.trim() || '';
+  const nationality = nationalityInput?.value.trim() || '';
+  const sheetValue = buildIdentitySheetValue({ isForeign, thaiId, passport, nationality });
+  return { isForeign, thaiId, passport, nationality, sheetValue };
+}
+
+function formatIdentityForReport(prefix) {
+  return formatIdentityTextFromState(getIdentityState(prefix));
+}
+
+function applyForeignIdentityState(prefix) {
+  const idInput = document.querySelector(`[name="${prefix}ID"]`);
+  const passportInput = document.querySelector(`[name="${prefix}Passport"]`);
+  const nationalityInput = document.querySelector(`[name="${prefix}Nationality"]`);
+  const foreignFields = document.getElementById(`${prefix}ForeignFields`);
+  const thaiField = document.getElementById(`${prefix}ThaiIdField`);
+  if (!idInput || !foreignFields) return;
+
+  const isForeign = isForeignIdentity(prefix);
+  foreignFields.classList.toggle('active', isForeign);
+  thaiField?.classList.toggle('hidden', isForeign);
+  idInput.disabled = isForeign;
+  idInput.required = !isForeign;
+  idInput.placeholder = 'เลขบัตร 13 หลัก (ไม่ต้องใส่ขีด)';
+  if (passportInput) passportInput.required = isForeign;
+  if (nationalityInput) nationalityInput.required = isForeign;
+
+  if (isForeign) {
+    thaiField?.classList.remove('field-error');
+  } else {
+    foreignFields.querySelectorAll('.field-error').forEach((field) => field.classList.remove('field-error'));
+  }
+}
+
+function validateIdentityInputs(prefix, subjectLabel) {
+  const identity = getIdentityState(prefix);
+
+  if (identity.isForeign) {
+    const passportInput = document.querySelector(`[name="${prefix}Passport"]`);
+    const nationalityInput = document.querySelector(`[name="${prefix}Nationality"]`);
+    if (!identity.passport) {
+      highlightError(passportInput, `กรุณาระบุหมายเลข Passport${subjectLabel}`);
+      return false;
+    }
+    if (!identity.nationality) {
+      highlightError(nationalityInput, `กรุณาระบุสัญชาติ${subjectLabel}`);
+      return false;
+    }
+    return true;
+  }
+
+  const idInput = document.querySelector(`[name="${prefix}ID"]`);
+  if (!identity.thaiId) {
+    highlightError(idInput, `กรุณาระบุเลขประจำตัวประชาชน${subjectLabel}`);
+    return false;
+  }
+  if (!/^\d{13}$/.test(identity.thaiId)) {
+    highlightError(idInput, `เลขประจำตัวประชาชน${subjectLabel}ต้องเป็นตัวเลข 13 หลัก (ไม่ต้องใส่ขีด)`);
+    return false;
+  }
+  return true;
+}
+
+function validateStep2() {
+  const actionType = document.querySelector('[name="actionType"]:checked')?.value;
+
+  if (actionType === 'ตรวจสอบสถานประกอบการ') {
+    const ownerName = document.querySelector('[name="ownerName"]');
+    const ownerAge = document.querySelector('[name="ownerAge"]');
+    const inspectionResult = document.querySelector('[name="inspectionResult"]');
+    if (!ownerName.value.trim()) { highlightError(ownerName, 'กรุณาระบุชื่อเจ้าของสถานที่'); return false; }
+    if (!validateAgeField(ownerAge, 'เจ้าของสถานที่')) return false;
+    if (!validateIdentityInputs('owner', 'ของเจ้าของสถานที่')) return false;
+    if (!inspectionResult.value.trim()) { highlightError(inspectionResult, 'กรุณาระบุผลการตรวจสอบ'); return false; }
+  } else {
+    const personName = document.querySelector('[name="personName"]');
+    const personAge = document.querySelector('[name="personAge"]');
+    const charges = document.querySelector('[name="charges"]');
+    const investigator = document.querySelector('[name="investigator"]');
+    if (!personName.value.trim()) { highlightError(personName, 'กรุณาระบุชื่อผู้ต้องหา'); return false; }
+    if (!validateAgeField(personAge, 'ผู้ต้องหา')) return false;
+    if (!validateIdentityInputs('person', 'ของผู้ต้องหา')) return false;
+    if (!investigator.value.trim()) { highlightError(investigator, 'กรุณาระบุพนักงานสอบสวน'); return false; }
+    if (actionType === 'จับซึ่งหน้า' && !validateAdditionalSuspectItems()) return false;
+
+    if (actionType === 'จับตามหมาย') {
+      const warrantItems = Array.from(document.querySelectorAll('#warrantList .warrant-item'));
+      if (!warrantItems.length) {
+        showToast('กรุณาเพิ่มข้อมูลหมายจับอย่างน้อย 1 รายการ');
+        return false;
+      }
+      for (let i = 0; i < warrantItems.length; i++) {
+        const item = warrantItems[i];
+        const courtInput = item.querySelector('.warrant-court');
+        const noInput = item.querySelector('.warrant-no');
+        const dateInput = item.querySelector('.warrant-date');
+        const warrantChargesInput = item.querySelector('.warrant-charges');
+        if (!courtInput?.value.trim()) {
+          highlightError(courtInput, `กรุณาระบุศาลที่ออกหมายจับ (หมายที่ ${i + 1})`);
+          return false;
+        }
+        if (!noInput?.value.trim()) {
+          highlightError(noInput, `กรุณาระบุเลขที่หมายจับ (หมายที่ ${i + 1})`);
+          return false;
+        }
+        if (!dateInput?.value) {
+          highlightError(dateInput, `กรุณาระบุวันที่ออกหมาย (หมายที่ ${i + 1})`);
+          return false;
+        }
+        if (!warrantChargesInput?.value.trim()) {
+          highlightError(warrantChargesInput, `กรุณาระบุข้อหา (หมายที่ ${i + 1})`);
+          return false;
+        }
+      }
+    } else {
+      if (!charges.value.trim()) { highlightError(charges, 'กรุณาระบุข้อหา'); return false; }
+    }
+
+    const searchBy = document.querySelector('[name="searchBy"]:checked')?.value;
+    if (!searchBy) { highlightRadioError('searchBy', 'กรุณาเลือกวิธีการตรวจค้น'); return false; }
+    if (searchBy === 'ตามหมายค้น') {
+      const searchCourt = document.querySelector('[name="searchCourt"]');
+      const searchNo = document.querySelector('[name="searchNo"]');
+      if (!searchCourt.value.trim()) { highlightError(searchCourt, 'กรุณาระบุศาลที่ออกหมายค้น'); return false; }
+      if (!searchNo.value.trim()) { highlightError(searchNo, 'กรุณาระบุเลขที่หมายค้น'); return false; }
+    }
+  }
+  return true;
+}
+
+// ============================================================
+//  REPORT GENERATION
+// ============================================================
+function generateReportText() {
+  const unit = document.querySelector('[name="unit"]').value || "........";
+  const leader = unitLeaders[unit] || { name: "........................", phone: "................" };
+  const actionRaw = document.querySelector('[name="actionType"]:checked')?.value || "";
+  const dateStr = document.getElementById("actionDate").value;
+  const thaiDate = formatThaiDateShort(dateStr);
+  const timeStr = document.querySelector('[name="time"]').value || "…………";
+  const loc = document.querySelector('[name="location"]').value || ".........................................";
+  if (actionRaw === "ตรวจสอบสถานประกอบการ") {
+    const ownerName = document.querySelector('[name="ownerName"]').value || "........................";
+    const ownerAge = document.querySelector('[name="ownerAge"]').value || "........";
+    const ownerIdentityText = formatIdentityForReport('owner');
+    const ownerAddr = document.querySelector('[name="ownerAddress"]').value || "………………………………";
+    const inspectionResult = document.querySelector('[name="inspectionResult"]')?.value.trim() || "………………………………";
+
+    return `📌 เรียนผู้บังคับบัญชา เพื่อโปรดทราบ
+
+🔹 ตามสั่งการ บก.ป. ให้ กก.1 บก.ป. ตรวจสอบโรงงาน สถานประกอบการ และสถานที่ที่มีการจ้างแรงงานต่างด้าว ตามแผนปฏิบัติงาน เพื่อการบริหารจัดการการทำงานของคนต่างด้าว ประจำปีงบประมาณ พ.ศ.2569 นั้น
+
+👮‍♂️ วันนี้ ${thaiDate} ว่าที่ พ.ต.อ.เจตนิพัทธ์ ศิริวัฒน์ ผกก.1 บก.ป. ได้สั่งการให้ ${leader.name} โทร. ${leader.phone} และ ข้าราชการตำรวจ ${unit} กก.1 บก.ป. ปฏิบัติหน้าที่ตามแผนปฏิบัติงานดังกล่าว
+
+🔹 ขออนุญาตรายงานผลการตรวจสอบสถานประกอบการในเขตพื้นที่รับผิดชอบ ดังนี้
+
+🗓 วันที่ ${thaiDate}
+⏰ เวลา ${timeStr} น.
+📍 สถานที่ตรวจสอบ ${loc}
+
+	👤 เจ้าของสถานที่ ผู้นำตรวจ ${ownerName} อายุ ${ownerAge} ปี
+	${ownerIdentityText}
+	ที่อยู่ ${ownerAddr}
+
+🔎 ผลการตรวจสอบ
+${inspectionResult}
+
+จึงเรียนมาเพื่อโปรดทราบ`;
+  }
+
+  const arrestSuspects = getArrestSuspectEntries(actionRaw);
+  const primarySuspect = arrestSuspects[0] || {};
+  const pName = primarySuspect.personName || "........................";
+  const pAge = primarySuspect.personAge || "........";
+  const pIdentityText = primarySuspect.identityText || formatIdentityForReport('person');
+  const pAddr = primarySuspect.personAddress || "………………………………";
+  const globalCharges = document.querySelector('[name="charges"]').value || ".....................";
+  const evidence = document.querySelector('[name="evidence"]').value;
+  const invest = document.querySelector('[name="investigator"]').value || ".........................................";
+  const warrantEntries = getWarrantEntries();
+  const warrantCount = Math.max(1, warrantEntries.length);
+  const searchBy = document.querySelector('[name="searchBy"]:checked')?.value;
+  const searchCourt = document.querySelector('[name="searchCourt"]')?.value;
+  const searchNo = document.querySelector('[name="searchNo"]')?.value;
+  const searchDate = formatThaiDateShort(document.getElementById("searchDate")?.value);
+  const isMultiArrestSuspects = actionRaw === "จับซึ่งหน้า" && arrestSuspects.length > 1;
+  const introLine = actionRaw === "จับตามหมาย"
+    ? `🔹 ขอรายงานผลการจับกุมผู้ต้องหาตามหมายจับ 1 ราย ${warrantCount} หมายจับ ดังนี้`
+    : actionRaw === "จับซึ่งหน้า"
+      ? (isMultiArrestSuspects
+          ? `🔹 ขอรายงานผลการจับกุมผู้ต้องหากระทำความผิดซึ่งหน้า จำนวน ${arrestSuspects.length} ราย ดังนี้`
+          : "🔹 ขอรายงานผลการจับกุมผู้ต้องหากระทำความผิดซึ่งหน้า ดังนี้")
+      : "🔹 ขอรายงานผลการจับกุมผู้ต้องหา ดังนี้";
+  const suspectSummaryLine = isMultiArrestSuspects
+    ? `🔹 ได้ร่วมกันจับกุมผู้ต้องหา ${arrestSuspects.length} ราย ดังนี้\n${arrestSuspects.map((entry, idx) => {
+      const name = entry.personName || "........................";
+      const age = entry.personAge || "........";
+      const identityText = entry.identityText || "เลขประจำตัวประชาชน .............";
+      const address = entry.personAddress || "………………………………";
+      return `${idx + 1}) ${name} อายุ ${age} ปี ${identityText} ที่อยู่ ${address}`;
+    }).join('\n')}`
+    : `🔹 ได้ร่วมกันจับกุม ${pName} อายุ ${pAge} ปี ${pIdentityText} ที่อยู่ ${pAddr}`;
+
+  let report = `📌 เรียนผู้บังคับบัญชา เพื่อโปรดทราบ
+
+บก.ป. (${unit} กก.1 บก.ป.)
+
+${introLine}
+
+🗓 วันที่ ${thaiDate}
+⏰ เวลา ${timeStr} น.
+
+👮‍♂️ ชุดจับกุม นำโดย ${leader.name} โทร. ${leader.phone} และ ข้าราชการตำรวจ ${unit} กก.1 บก.ป.
+
+${suspectSummaryLine}
+`;
+
+  if (actionRaw === "จับตามหมาย" && warrantEntries.length) {
+    const warrantLines = warrantEntries.map((entry, idx) => {
+      const court = entry.arrestCourt || '................';
+      const no = entry.arrestNo || '................';
+      const date = formatThaiDateShort(entry.warrantDateRaw) || '........';
+      const typeText = entry.warrantType ? ` (${entry.warrantType})` : '';
+      const chargeText = entry.charges || '................';
+      return `🔹 หมายจับที่ ${idx + 1} ${court} ที่ ${no} ลงวันที่ ${date}${typeText} | ข้อหา "${chargeText}"`;
+    });
+    report += `\n\n⚖️ รายละเอียดหมายจับและข้อหา\n${warrantLines.join('\n')}`;
+  } else {
+    report += `\n\n⚖️ โดยต้องหาว่ากระทำผิดฐาน "${globalCharges}"`;
+  }
+  if (searchBy === "ตามหมายค้น" && searchCourt) {
+    report += `\n\n🔹 ตามหมายค้นของ ${searchCourt} ที่ ${searchNo} ลงวันที่ ${searchDate}`;
+  }
+  if (evidence && evidence.trim() !== "") {
+    report += `\n\n🔹 ของกลาง ${evidence}`;
+  }
+
+  report += `\n\n📍 สถานที่จับกุม ${loc}
+
+👮‍♂️ นำส่ง พงส. ${invest} ดำเนินคดีตามกฎหมายต่อไป`;
+
+  return report;
+}
+
+// ============================================================
+//  COPY REPORT
+// ============================================================
+function closeResultModal() {
+  document.getElementById('resultSection').classList.remove('show');
+}
+
+function shareToLine() {
+  const text = document.getElementById('reportOutput').value;
+  const url = 'https://line.me/R/share?text=' + encodeURIComponent(text);
+
+  // ใน PWA standalone mode ใช้ link element แทน window.open
+  // เพื่อป้องกันหน้าจอขาวเมื่อย้อนกลับ
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+
+  if (isStandalone) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+function copyReport() {
+  const text = document.getElementById('reportOutput').value;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('คัดลอกข้อความแล้ว');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('คัดลอกข้อความแล้ว');
+  });
+}
+
+// ============================================================
+//  REPORT EDITING HELPERS
+// ============================================================
+function updateReportMeta(el) {
+  document.getElementById('reportCharCount').textContent = el.value.length + ' ตัวอักษร';
+}
+
+function regenerateReport() {
+  const output = document.getElementById('reportOutput');
+  const text = generateReportText();
+  output.value = text;
+  originalReportText = text;
+  output.classList.remove('edited');
+  updateReportMeta(output);
+  showToast('สร้างข้อความรายงานใหม่แล้ว');
+}
+
+function initAgeInputs() {
+  document.querySelectorAll('[name="personAge"], [name="ownerAge"]').forEach((el) => {
+    el.addEventListener('input', () => {
+      const cleaned = String(el.value || '').replace(/\D/g, '').slice(0, 3);
+      el.value = cleaned;
+    });
+    el.addEventListener('change', () => {
+      normalizeAgeField(el);
+    });
+    el.addEventListener('blur', () => {
+      normalizeAgeField(el);
+    });
+  });
+}
+
+function initIdentityInputs() {
+  document.querySelectorAll('[name="personID"], [name="ownerID"]').forEach((el) => {
+    el.addEventListener('input', () => {
+      normalizeThaiIdField(el);
+    });
+    el.addEventListener('change', () => {
+      normalizeThaiIdField(el);
+    });
+    el.addEventListener('blur', () => {
+      normalizeThaiIdField(el);
+    });
+  });
+
+  ['person', 'owner'].forEach((prefix) => {
+    const identityTypeInputs = document.querySelectorAll(`input[name="${prefix}IdentityType"]`);
+    if (!identityTypeInputs.length) return;
+    identityTypeInputs.forEach((input) => {
+      input.addEventListener('change', () => applyForeignIdentityState(prefix));
+    });
+    applyForeignIdentityState(prefix);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const output = document.getElementById('reportOutput');
+  if (output) {
+    output.addEventListener('input', function() {
+      if (this.value !== originalReportText) {
+        this.classList.add('edited');
+      } else {
+        this.classList.remove('edited');
+      }
+      updateReportMeta(this);
+    });
+  }
+  initAgeInputs();
+  initIdentityInputs();
+  bindSingleSelectAlienPills(document);
+  bindSingleSelectMediaPills(document);
+  ensureWarrantListReady();
+  applyDefaultCourtPrefixes();
+  updateWorkSectionByActionType(document.querySelector('[name="actionType"]:checked')?.value || '');
+});
+
+// ============================================================
+//  PWA: FIX WHITE SCREEN ON RETURN FROM LINE / EXTERNAL APPS
+// ============================================================
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    // Page restored from bfcache — force repaint
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+  }
+});
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    // Ensure the app is visible when returning
+    document.body.style.opacity = '1';
+  }
+});
+
+// ============================================================
+//  SUBMIT TO GOOGLE SHEETS
+// ============================================================
+function getCheckedValues(name) {
+  const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+  return Array.from(checkboxes).map(cb => cb.value).join(', ');
+}
+
+let isSubmitting = false;
+
+function unlockSubmitButton(btn) {
+  isSubmitting = false;
+  if (btn) {
+    btn.disabled = false;
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+  }
+}
+
+async function postSheetRow(url, rowData) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(rowData)
+  });
+  const result = await response.json();
+  if (result.status !== 'success') {
+    throw new Error(result.message || 'ไม่ทราบสาเหตุ');
+  }
+  return result;
+}
+
+async function submitToSheet() {
+  // ป้องกันกดซ้ำ
+  if (isSubmitting) return;
+  isSubmitting = true;
+
+  const submitBtn = document.querySelector('.btn-accent[onclick="submitToSheet()"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.5';
+    submitBtn.style.pointerEvents = 'none';
+  }
+
+  const url = getSheetUrl();
+  if (!url) {
+    showToast('กรุณาตั้งค่า Google Sheets URL');
+    openSettings();
+    unlockSubmitButton(submitBtn);
+    return;
+  }
+
+  const user = JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  const unit = document.querySelector('[name="unit"]').value;
+  const leader = unitLeaders[unit] || { name: "", phone: "" };
+  const actionType = document.querySelector('[name="actionType"]:checked')?.value || "";
+  const dateStr = document.getElementById("actionDate").value;
+  const timeStr = document.querySelector('[name="time"]').value;
+  const loc = document.querySelector('[name="location"]').value;
+  const ownerIdentity = getIdentityState('owner');
+  const nowTimestamp = new Date().toLocaleString('th-TH');
+  const warrantEntries = getWarrantEntries();
+  const workMediaGlobal = getCheckedValues('workMedia');
+  const isInspectAction = actionType === 'ตรวจสอบสถานประกอบการ';
+  const arrestSuspects = isInspectAction ? [] : getArrestSuspectEntries(actionType);
+  const primarySuspect = arrestSuspects[0] || {
+    personName: '',
+    personAge: '',
+    personID: '',
+    personAddress: ''
+  };
+
+  const baseData = {
+    action: 'submit',
+    timestamp: nowTimestamp,
+    reporter: user.name || "",
+    email: user.email || "",
+    unit: unit,
+    leaderName: leader.name,
+    leaderPhone: leader.phone,
+    date: formatThaiDate(dateStr),
+    time: timeStr,
+    location: loc,
+    coordinates: document.querySelector('[name="coordinates"]')?.value || "",
+    actionType: actionType,
+    arrestCourt: "",
+    arrestNo: "",
+    warrantDate: "",
+    warrantType: "",
+    personName: primarySuspect.personName || "",
+    personAge: primarySuspect.personAge || "",
+    personID: primarySuspect.personID || "",
+    personAddress: primarySuspect.personAddress || "",
+    charges: document.querySelector('[name="charges"]')?.value || "",
+    evidence: document.querySelector('[name="evidence"]')?.value || "",
+    investigator: document.querySelector('[name="investigator"]')?.value || "",
+    ownerName: document.querySelector('[name="ownerName"]')?.value || "",
+    ownerAge: document.querySelector('[name="ownerAge"]')?.value || "",
+    ownerID: ownerIdentity.sheetValue || "",
+    ownerAddress: document.querySelector('[name="ownerAddress"]')?.value || "",
+    inspectionResult: document.querySelector('[name="inspectionResult"]')?.value || "",
+    searchBy: document.querySelector('[name="searchBy"]:checked')?.value || "",
+    searchCourt: document.querySelector('[name="searchCourt"]')?.value || "",
+    searchNo: document.querySelector('[name="searchNo"]')?.value || "",
+    searchDate: formatThaiDate(document.getElementById("searchDate")?.value),
+    workAlien: isInspectAction ? '' : getCheckedValues('workAlien'),
+    workMobilize: isInspectAction ? '' : getCheckedValues('workMobilize'),
+    workCenter: isInspectAction ? '' : getCheckedValues('workCenter'),
+    workMedia: isInspectAction ? '' : workMediaGlobal
+  };
+
+  showToast('กำลังบันทึกข้อมูล...');
+
+  try {
+    if (actionType === 'จับตามหมาย') {
+      if (!warrantEntries.length) {
+        throw new Error('ไม่พบข้อมูลหมายจับ');
+      }
+      for (let i = 0; i < warrantEntries.length; i++) {
+        const warrant = warrantEntries[i];
+        const rowData = {
+          ...baseData,
+          arrestCourt: warrant.arrestCourt,
+          arrestNo: warrant.arrestNo,
+          warrantDate: formatThaiDate(warrant.warrantDateRaw),
+          warrantType: warrant.warrantType,
+          charges: warrant.charges,
+          workAlien: warrant.workAlien,
+          workMobilize: warrant.workMobilize,
+          workCenter: warrant.workCenter,
+          // งานออกสื่อบันทึกเฉพาะแถวหมายจับที่ 1 เท่านั้น
+          workMedia: i === 0 ? workMediaGlobal : ''
+        };
+        await postSheetRow(url, rowData);
+      }
+      document.getElementById('resultSection').classList.add('show');
+      showToast(`บันทึกข้อมูลสำเร็จ ${warrantEntries.length} แถว`);
+      return;
+    }
+
+    if (actionType === 'จับซึ่งหน้า') {
+      if (!arrestSuspects.length) {
+        throw new Error('ไม่พบข้อมูลผู้ต้องหา');
+      }
+      for (let i = 0; i < arrestSuspects.length; i++) {
+        const suspect = arrestSuspects[i];
+        const rowData = {
+          ...baseData,
+          personName: suspect.personName || '',
+          personAge: suspect.personAge || '',
+          personID: suspect.personID || '',
+          personAddress: suspect.personAddress || '',
+          // งานออกสื่อบันทึกเฉพาะแถวผู้ต้องหารายแรกเท่านั้น
+          workMedia: i === 0 ? workMediaGlobal : ''
+        };
+        await postSheetRow(url, rowData);
+      }
+      document.getElementById('resultSection').classList.add('show');
+      showToast(`บันทึกข้อมูลสำเร็จ ${arrestSuspects.length} แถว`);
+      return;
+    }
+
+    await postSheetRow(url, baseData);
+    document.getElementById('resultSection').classList.add('show');
+    showToast('บันทึกข้อมูลสำเร็จ');
+  } catch (err) {
+    showToast('เกิดข้อผิดพลาด: ' + err.message);
+    unlockSubmitButton(submitBtn);
+  }
+}
+
+// ============================================================
+//  RESET FORM
+// ============================================================
+function resetForm() {
+  document.querySelectorAll('#mainApp input, #mainApp textarea, #mainApp select').forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+    else if (el.id !== 'unitSelect') el.value = '';
+  });
+  ['person', 'owner'].forEach((prefix) => {
+    const defaultThai = document.querySelector(`input[name="${prefix}IdentityType"][value="thai"]`);
+    if (defaultThai) defaultThai.checked = true;
+  });
+  document.getElementById('arrestSection').style.display = 'block';
+  document.getElementById('inspectSection').style.display = 'none';
+  document.getElementById('suspectSection').classList.add('section-hidden');
+  document.getElementById('warrantSection').classList.add('section-hidden');
+  document.getElementById('searchWarrantSection').classList.add('section-hidden');
+  document.getElementById('leaderInfo').classList.remove('visible');
+  document.getElementById('resultSection').classList.remove('show');
+  const suspectList = document.getElementById('suspectList');
+  if (suspectList) {
+    suspectList.innerHTML = '';
+    suspectItemSeq = 0;
+  }
+  const warrantList = document.getElementById('warrantList');
+  if (warrantList) {
+    warrantList.innerHTML = '';
+    warrantItemSeq = 0;
+    addWarrantItem();
+  }
+  applyDefaultCourtPrefixes();
+  updateWorkSectionByActionType('');
+  applyForeignIdentityState('person');
+  applyForeignIdentityState('owner');
+  setDefaultDate();
+  goToStep(1);
+
+  // ปลดล็อคปุ่มบันทึกสำหรับฟอร์มใหม่
+  const btn = document.querySelector('.btn-accent[onclick="submitToSheet()"]');
+  unlockSubmitButton(btn);
+}
+
+// ============================================================
+//  TOAST
+// ============================================================
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+// ============================================================
+//  DEFAULT DATE
+// ============================================================
+function setDefaultDate() {
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  document.getElementById('actionDate').value = today;
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+applyTheme(getPreferredTheme());
+setDefaultDate();
+window.onload = checkAuth;
+</script>
+
+</body>
+</html>
