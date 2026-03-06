@@ -2621,6 +2621,10 @@ document.addEventListener('keydown', (e) => {
 function getSheetUrl() {
   return localStorage.getItem('CSD1_SHEET_URL') || DEFAULT_SHEET_URL;
 }
+function revealLoginSettingsLink() {
+  const btn = document.querySelector('.login-settings-link');
+  if (btn) btn.style.display = 'inline-flex';
+}
 function openSettings() {
   document.getElementById('sheetUrlInput').value = getSheetUrl();
   document.getElementById('settingsModal').classList.add('show');
@@ -2708,6 +2712,7 @@ async function handleCredentialResponse(response) {
   
   if (!url) {
     loginError.textContent = 'กรุณาตั้งค่า Google Apps Script URL ก่อน';
+    revealLoginSettingsLink();
     openSettings();
     return;
   }
@@ -2737,11 +2742,18 @@ async function handleCredentialResponse(response) {
       showToast('ยินดีต้อนรับ ' + normalizedUser.name);
     } else {
       loginError.style.color = 'var(--danger)';
-      loginError.textContent = result.message || 'อีเมลนี้ไม่มีสิทธิ์เข้าใช้งานระบบ';
+      const serverMessage = result.message || 'อีเมลนี้ไม่มีสิทธิ์เข้าใช้งานระบบ';
+      if (serverMessage.indexOf('ตรวจสอบโทเคนล้มเหลว') !== -1) {
+        loginError.textContent = serverMessage + ' กรุณาตรวจสอบ URL Google Apps Script ว่าเป็น deployment ล่าสุด';
+        revealLoginSettingsLink();
+      } else {
+        loginError.textContent = serverMessage;
+      }
     }
   } catch (err) {
     loginError.style.color = 'var(--danger)';
     loginError.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ ตรวจสอบ URL หรืออินเทอร์เน็ต';
+    revealLoginSettingsLink();
   }
 }
 
