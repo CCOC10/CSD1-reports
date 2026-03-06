@@ -268,23 +268,29 @@ body::after {
 body.nav-open {
   overflow: hidden;
 }
+body.settings-open {
+  overflow: hidden;
+}
 .app-nav-fab {
   position: fixed;
   top: calc(env(safe-area-inset-top) + 0.9rem);
   left: 1rem;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid var(--border-accent);
-  background: var(--card-strong);
+  width: 53px;
+  height: 53px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
   color: var(--gold);
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  box-shadow: none;
   z-index: 4305;
-  transition: var(--transition);
+  transition: color 0.2s ease, transform 0.2s ease;
+  padding: 0;
 }
 body.nav-open .app-nav-fab {
   opacity: 0;
@@ -292,17 +298,18 @@ body.nav-open .app-nav-fab {
   transform: translateX(-10px) scale(0.92);
 }
 .app-nav-fab:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 18px var(--accent-glow-soft), 0 8px 25px rgba(0,0,0,0.25);
+  transform: scale(1.05);
+  box-shadow: none;
 }
 .app-nav-fab svg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  stroke-width: 2.6;
 }
 .app-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 18% 14%, rgba(255, 212, 0, 0.14), rgba(2, 6, 23, 0.72) 42%, rgba(2, 6, 23, 0.84) 100%);
+  background: rgba(0, 38, 75, 0.5);
   backdrop-filter: blur(10px) saturate(130%);
   -webkit-backdrop-filter: blur(10px) saturate(130%);
   z-index: 4200;
@@ -321,11 +328,9 @@ body.nav-open .app-nav-fab {
   height: 100dvh;
   width: min(320px, 86vw);
   padding: calc(env(safe-area-inset-top) + 1rem) 0.9rem calc(env(safe-area-inset-bottom) + 1rem);
-  background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.02) 36%),
-    linear-gradient(180deg, rgba(0, 38, 75, 0.78), rgba(2, 18, 44, 0.76));
-  border-right: 1px solid rgba(255, 255, 255, 0.24);
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  background: rgba(0, 38, 75, 0.5);
+  border-right: 1px solid rgba(255, 212, 0, 0.48);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(26px) saturate(150%);
   -webkit-backdrop-filter: blur(26px) saturate(150%);
   transform: translateX(-105%);
@@ -341,7 +346,7 @@ body.nav-open .app-nav-fab {
   position: absolute;
   inset: -12% -42% auto -28%;
   height: 42%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 72%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 72%);
   pointer-events: none;
 }
 .app-sidebar::after {
@@ -349,7 +354,7 @@ body.nav-open .app-nav-fab {
   position: absolute;
   inset: auto -24% 14% -26%;
   height: 40%;
-  background: radial-gradient(circle, rgba(255, 212, 0, 0.16) 0%, rgba(255, 212, 0, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.22) 0%, rgba(255, 212, 0, 0) 70%);
   pointer-events: none;
 }
 .app-sidebar > * {
@@ -365,20 +370,20 @@ body.nav-open .app-nav-fab {
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.3rem 0.35rem 0.55rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 212, 0, 0.34);
 }
 .app-sidebar-title {
   font-size: 0.95rem;
   font-weight: 800;
-  color: var(--gold);
+  color: #FFD400;
 }
 .app-sidebar-close {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--muted);
+  border: 1px solid rgba(255, 212, 0, 0.44);
+  background: rgba(0, 0, 0, 0.22);
+  color: #f8fafc;
   font-size: 1.2rem;
   cursor: pointer;
   backdrop-filter: blur(12px);
@@ -386,10 +391,10 @@ body.nav-open .app-nav-fab {
   transition: var(--transition);
 }
 .app-sidebar-close:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 212, 0, 0.46);
-  color: var(--gold);
-  box-shadow: 0 0 16px rgba(255, 212, 0, 0.26);
+  background: rgba(255, 212, 0, 0.22);
+  border-color: rgba(255, 212, 0, 0.72);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(255, 212, 0, 0.32);
 }
 .app-sidebar-nav {
   display: flex;
@@ -402,9 +407,9 @@ body.nav-open .app-nav-fab {
   gap: 0.65rem;
   padding: 0.65rem 0.72rem;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
   text-decoration: none;
   font-size: 0.86rem;
   font-weight: 600;
@@ -414,35 +419,256 @@ body.nav-open .app-nav-fab {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+  color: currentColor;
+  stroke: currentColor;
+  opacity: 0.95;
 }
 .app-sidebar-link:hover {
   transform: translateX(2px);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
-  border-color: rgba(255, 255, 255, 0.34);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-[data-theme="light"] .app-sidebar-link:hover {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.52));
+  background: rgba(255, 212, 0, 0.24);
+  border-color: rgba(255, 212, 0, 0.66);
+  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.22) inset, 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 .app-sidebar-link.active {
-  background: linear-gradient(145deg, rgba(255, 212, 0, 0.32), rgba(255, 212, 0, 0.16));
-  border-color: rgba(255, 212, 0, 0.52);
-  color: var(--gold);
-  box-shadow: 0 0 18px rgba(255, 212, 0, 0.22);
+  background: rgba(255, 212, 0, 0.4);
+  border-color: rgba(255, 212, 0, 0.78);
+  color: #001a33;
+  box-shadow: 0 0 18px rgba(255, 212, 0, 0.26);
+}
+[data-theme="light"] .app-sidebar-overlay {
+  background: rgba(255, 212, 0, 0.5);
 }
 [data-theme="light"] .app-sidebar {
-  background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.55) 36%),
-    linear-gradient(180deg, rgba(227, 237, 249, 0.9), rgba(214, 229, 245, 0.86));
-  border-right-color: rgba(10, 51, 87, 0.2);
-  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  background: rgba(255, 212, 0, 0.5);
+  border-right-color: rgba(0, 38, 75, 0.42);
+  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.52);
+}
+[data-theme="light"] .app-sidebar::before {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 72%);
+}
+[data-theme="light"] .app-sidebar::after {
+  background: radial-gradient(circle, rgba(0, 38, 75, 0.24) 0%, rgba(0, 38, 75, 0) 72%);
 }
 [data-theme="light"] .app-sidebar-head {
-  border-bottom-color: rgba(10, 51, 87, 0.12);
+  border-bottom-color: rgba(0, 38, 75, 0.3);
+}
+[data-theme="light"] .app-sidebar-title {
+  color: #00264B;
 }
 [data-theme="light"] .app-sidebar-close {
-  border-color: rgba(10, 51, 87, 0.2);
-  background: rgba(255, 255, 255, 0.62);
+  border-color: rgba(0, 38, 75, 0.4);
+  background: rgba(255, 255, 255, 0.42);
+  color: #00264B;
+}
+[data-theme="light"] .app-sidebar-close:hover {
+  background: rgba(0, 38, 75, 0.2);
+  border-color: rgba(0, 38, 75, 0.62);
+  color: #001a33;
+  box-shadow: 0 0 14px rgba(0, 38, 75, 0.22);
+}
+[data-theme="light"] .app-sidebar-link {
+  border-color: rgba(0, 38, 75, 0.26);
+  background: rgba(0, 38, 75, 0.12);
+  color: #00264B;
+}
+[data-theme="light"] .app-sidebar-link:hover {
+  background: rgba(0, 38, 75, 0.2);
+  border-color: rgba(0, 38, 75, 0.42);
+  box-shadow: 0 0 0 1px rgba(0, 38, 75, 0.14) inset, 0 10px 18px rgba(0, 38, 75, 0.16);
+}
+[data-theme="light"] .app-sidebar-link.active {
+  background: rgba(0, 38, 75, 0.36);
+  border-color: rgba(0, 38, 75, 0.58);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(0, 38, 75, 0.24);
+}
+
+.mobile-mini-nav {
+  position: fixed;
+  left: max(0.5rem, env(safe-area-inset-left));
+  right: max(0.5rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
+  height: 68px;
+  padding: 0.35rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 212, 0, 0.44);
+  background: rgba(0, 38, 75, 0.72);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  z-index: 4307;
+  display: none;
+  gap: 0.15rem;
+}
+.mobile-mini-link,
+.mobile-mini-settings {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+.mobile-mini-link svg,
+.mobile-mini-settings svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+.mobile-mini-link.active {
+  background: rgba(255, 212, 0, 0.38);
+  color: #001a33;
+}
+.mobile-mini-settings {
+  cursor: pointer;
+  font-family: inherit;
+  color: #FFD400;
+}
+.mobile-mini-link:active,
+.mobile-mini-settings:active {
+  transform: scale(0.96);
+}
+
+.mobile-settings-overlay,
+.mobile-settings-sheet {
+  display: none;
+}
+.mobile-settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.52);
+  z-index: 4308;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+.mobile-settings-sheet {
+  position: fixed;
+  left: max(0.7rem, env(safe-area-inset-left));
+  right: max(0.7rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 5rem);
+  background: rgba(0, 38, 75, 0.86);
+  border: 1px solid rgba(255, 212, 0, 0.42);
+  border-radius: 16px;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  z-index: 4309;
+  padding: 0.75rem 0.85rem 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.mobile-settings-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mobile-settings-sheet.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.mobile-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.3);
+}
+.mobile-settings-title {
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: #FFD400;
+}
+.mobile-settings-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 212, 0, 0.36);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.mobile-settings-row {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.mobile-settings-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+[data-theme="light"] .mobile-mini-nav {
+  background: rgba(255, 212, 0, 0.62);
+  border-color: rgba(0, 38, 75, 0.36);
+  box-shadow: 0 12px 24px rgba(0, 38, 75, 0.18);
+}
+[data-theme="light"] .mobile-mini-link,
+[data-theme="light"] .mobile-mini-settings {
+  color: #00264B;
+}
+[data-theme="light"] .mobile-mini-link.active {
+  background: rgba(0, 38, 75, 0.32);
+  color: #ffffff;
+}
+[data-theme="light"] .mobile-settings-overlay {
+  background: rgba(0, 38, 75, 0.28);
+}
+[data-theme="light"] .mobile-settings-sheet {
+  background: rgba(255, 212, 0, 0.9);
+  border-color: rgba(0, 38, 75, 0.38);
+  box-shadow: 0 16px 30px rgba(0, 38, 75, 0.18);
+}
+[data-theme="light"] .mobile-settings-head {
+  border-bottom-color: rgba(0, 38, 75, 0.26);
+}
+[data-theme="light"] .mobile-settings-title,
+[data-theme="light"] .mobile-settings-label {
+  color: #00264B;
+}
+[data-theme="light"] .mobile-settings-close {
+  border-color: rgba(0, 38, 75, 0.32);
+  background: rgba(255, 255, 255, 0.5);
+  color: #00264B;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 5.5rem);
+  }
+  .app-nav-fab {
+    display: none !important;
+  }
+  .mobile-mini-nav,
+  .mobile-settings-overlay,
+  .mobile-settings-sheet {
+    display: block;
+  }
+  .mobile-mini-nav {
+    display: flex;
+  }
+  .app-sidebar-theme {
+    display: none;
+  }
 }
 
 .btn {
@@ -559,6 +785,11 @@ body.nav-open .app-nav-fab {
 }
 
 .action-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+.filters .action-pill svg {
+  color: currentColor;
+  stroke: currentColor;
+  opacity: 0.95;
+}
 .action-pill:hover { transform: translateY(-1px); }
 
 .action-pill.ap-reset:hover {
@@ -1598,6 +1829,10 @@ body.modal-open {
   color: #335f8b;
 }
 
+[data-theme="light"] .filters .action-pill svg {
+  color: #1f4f78;
+}
+
 [data-theme="light"] .action-pill.ap-score {
   background: rgba(0, 38, 75, 0.05);
   border-color: rgba(0, 38, 75, 0.22);
@@ -1608,6 +1843,10 @@ body.modal-open {
   border-color: rgba(0, 38, 75, 0.44);
   color: #0f3559;
   box-shadow: 0 0 12px rgba(0, 38, 75, 0.15);
+}
+
+[data-theme="dark"] .filters .action-pill svg {
+  color: #d8e3f2;
 }
 
 [data-theme="light"] .hero-icon {
@@ -1868,6 +2107,59 @@ body.modal-open {
 <button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
 </button>
+<nav class="mobile-mini-nav" aria-label="เมนูหลักมือถือ">
+  <a class="mobile-mini-link" href="index.html" onclick="return navigateInApp(event, 'index.html')" title="หน้ากรอกแบบฟอร์ม" aria-label="หน้ากรอกแบบฟอร์ม">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+    <span>ฟอร์ม</span>
+  </a>
+  <a class="mobile-mini-link" href="compare.html" onclick="return navigateInApp(event, 'compare.html')" title="เปรียบเทียบ" aria-label="เปรียบเทียบ">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+    <span>เทียบ</span>
+  </a>
+  <a class="mobile-mini-link" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')" title="Dashboard (Home)" aria-label="Dashboard หน้าแรก">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+    <span>Dashboard</span>
+  </a>
+  <a class="mobile-mini-link active" href="rank.html" onclick="return navigateInApp(event, 'rank.html')" title="Hall of Fam" aria-label="Hall of Fam">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
+    <span>HOF</span>
+  </a>
+  <button class="mobile-mini-settings" type="button" onclick="openMobileSettings(event)" aria-label="หน้าตั้งค่า" title="หน้าตั้งค่า">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34a1.7 1.7 0 0 0-1.04 1.55V22a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.55a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87a1.7 1.7 0 0 0-1.55-1.04H2a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.04a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.04a1.7 1.7 0 0 0 1-1.54V2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.55a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.04a1.7 1.7 0 0 0 1.54 1H22a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.04z"></path></svg>
+    <span>ตั้งค่า</span>
+  </button>
+</nav>
+<div class="mobile-settings-overlay" id="mobileSettingsOverlay" onclick="closeMobileSettings()"></div>
+<section class="mobile-settings-sheet" id="mobileSettingsSheet" aria-label="หน้าตั้งค่า">
+  <div class="mobile-settings-head">
+    <div class="mobile-settings-title">หน้าตั้งค่า</div>
+    <button class="mobile-settings-close" type="button" onclick="closeMobileSettings()" aria-label="ปิดหน้าตั้งค่า">&times;</button>
+  </div>
+  <div class="mobile-settings-row">
+    <div class="mobile-settings-label">โหมดธีม</div>
+    <label class="app-theme-switch" for="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
+      <input type="checkbox" id="mobileThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
+      <span class="app-theme-switch-track">
+        <span class="app-theme-switch-thumb">
+          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
+            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
+            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
+            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
+            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
+            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
+            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
+            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
+          </svg>
+          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
+          </svg>
+        </span>
+      </span>
+    </label>
+  </div>
+</section>
 <div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
 <aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
   <div class="app-sidebar-head">
@@ -2088,7 +2380,7 @@ const EXPORT_FIXED_WIDTH = 1300;
 const EXPORT_FIXED_SCALE = 2;
 const EXPORT_OUTPUT_WIDTH = 2600;
 const EXPORT_OUTPUT_HEIGHT = 2670;
-const EXPORT_EXCLUDE_SELECTORS = ['.topbar', '#rankFooterActions', '.app-nav-fab', '#appSidebar', '#appSidebarOverlay'];
+const EXPORT_EXCLUDE_SELECTORS = ['.topbar', '#rankFooterActions', '.app-nav-fab', '.mobile-mini-nav', '.mobile-settings-overlay', '.mobile-settings-sheet', '#appSidebar', '#appSidebarOverlay'];
 
 const toBE = yr => yr + 543;
 
@@ -2109,6 +2401,7 @@ function navigateInApp(evt, targetPath) {
 
 let appSidebarOpen = false;
 function openAppSidebar() {
+  closeMobileSettings();
   appSidebarOpen = true;
   document.body.classList.add('nav-open');
   document.getElementById('appSidebar')?.classList.add('show');
@@ -2125,70 +2418,31 @@ function toggleAppSidebar(evt) {
   if (appSidebarOpen) closeAppSidebar();
   else openAppSidebar();
 }
+let mobileSettingsOpen = false;
+function openMobileSettings(evt) {
+  if (evt) evt.stopPropagation();
+  closeAppSidebar();
+  mobileSettingsOpen = true;
+  document.body.classList.add('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.add('show');
+  document.getElementById('mobileSettingsSheet')?.classList.add('show');
+}
+function closeMobileSettings() {
+  mobileSettingsOpen = false;
+  document.body.classList.remove('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.remove('show');
+  document.getElementById('mobileSettingsSheet')?.classList.remove('show');
+}
 function navigateViaSidebar(evt, targetPath) {
   closeAppSidebar();
   return navigateInApp(evt, targetPath);
 }
 
-const SIDEBAR_SWIPE_EDGE_PX = 24;
-const SIDEBAR_SWIPE_TRIGGER_PX = 58;
-const SIDEBAR_SWIPE_CANCEL_Y_PX = 88;
-let sidebarSwipeTracking = false;
-let sidebarSwipeStartX = 0;
-let sidebarSwipeStartY = 0;
-
 function isMobileSidebarGestureEnabled() {
-  return window.matchMedia('(max-width: 900px)').matches;
+  return false;
 }
 
-function setupSidebarEdgeSwipe() {
-  document.addEventListener('touchstart', function(e) {
-    if (!isMobileSidebarGestureEnabled() || appSidebarOpen) {
-      sidebarSwipeTracking = false;
-      return;
-    }
-    if (!e.touches || e.touches.length !== 1) {
-      sidebarSwipeTracking = false;
-      return;
-    }
-    const t = e.touches[0];
-    if (t.clientX > SIDEBAR_SWIPE_EDGE_PX) {
-      sidebarSwipeTracking = false;
-      return;
-    }
-    const target = e.target;
-    if (target && target.closest && target.closest('.app-sidebar, .app-sidebar-overlay')) {
-      sidebarSwipeTracking = false;
-      return;
-    }
-    sidebarSwipeTracking = true;
-    sidebarSwipeStartX = t.clientX;
-    sidebarSwipeStartY = t.clientY;
-  }, { passive: true });
-
-  document.addEventListener('touchmove', function(e) {
-    if (!sidebarSwipeTracking || appSidebarOpen || !e.touches || !e.touches.length) return;
-    const t = e.touches[0];
-    const dx = t.clientX - sidebarSwipeStartX;
-    const dy = Math.abs(t.clientY - sidebarSwipeStartY);
-    if (dy > SIDEBAR_SWIPE_CANCEL_Y_PX || dx < -12) {
-      sidebarSwipeTracking = false;
-      return;
-    }
-    if (dx >= SIDEBAR_SWIPE_TRIGGER_PX && dx > dy * 1.15) {
-      sidebarSwipeTracking = false;
-      openAppSidebar();
-    }
-  }, { passive: true });
-
-  document.addEventListener('touchend', function() {
-    sidebarSwipeTracking = false;
-  }, { passive: true });
-
-  document.addEventListener('touchcancel', function() {
-    sidebarSwipeTracking = false;
-  }, { passive: true });
-}
+function setupSidebarEdgeSwipe() {}
 
 setupSidebarEdgeSwipe();
 
@@ -2198,8 +2452,11 @@ function getPreferredTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 function syncThemeSwitch(mode) {
-  const toggleEl = document.getElementById('sidebarThemeToggle');
-  if (toggleEl) toggleEl.checked = mode === 'dark';
+  const isDark = mode === 'dark';
+  const sidebarToggleEl = document.getElementById('sidebarThemeToggle');
+  if (sidebarToggleEl) sidebarToggleEl.checked = isDark;
+  const mobileToggleEl = document.getElementById('mobileThemeToggle');
+  if (mobileToggleEl) mobileToggleEl.checked = isDark;
 }
 function applyTheme(mode) {
   const normalized = mode === 'light' ? 'light' : 'dark';
@@ -2938,16 +3195,10 @@ function fetchData() {
   if (loadingOverlay) loadingOverlay.classList.remove('hidden');
   if (footerActions) footerActions.style.display = 'none';
 
-  const userStr = localStorage.getItem('CSD1_USER');
-  let email = '';
-  try {
-    email = (JSON.parse(userStr || '{}').email || '').trim();
-  } catch (_) {}
-
   fetch(getSheetUrl(), {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'getData', email, public: true })
+    body: JSON.stringify({ action: 'getPublicData' })
   })
   .then(r => r.json())
   .then(result => {
@@ -2973,6 +3224,7 @@ document.getElementById('filterUnit').addEventListener('change', renderAll);
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeAppSidebar();
+    closeMobileSettings();
     closeScoreWeights();
     closeScoreDetails();
   }

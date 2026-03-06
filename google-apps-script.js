@@ -62,6 +62,21 @@ const HEADERS = [
 
 // ===== หัวตาราง (ชีทผู้ใช้) =====
 const USER_HEADERS = ["อีเมล", "ชื่อ-สกุล", "ตำแหน่ง", "ชุดปฏิบัติการ", "เบอร์โทร", "สิทธิ์"];
+const PUBLIC_REPORT_HEADERS = [
+  "วันที่",
+  "ชุดปฏิบัติการ",
+  "การจับกุม ตรวจสอบ",
+  "ประเภทหมายจับ",
+  "หน้างานต่างด้าว",
+  "หน้างานห้วงระดม",
+  "หน้างานศูนย์",
+  "งานออกสื่อ"
+];
+const SESSION_CACHE_PREFIX = "CSD1_SESSION_";
+const SESSION_TTL_SECONDS = 60 * 60 * 12; // 12 hours
+const ALLOWED_GOOGLE_CLIENT_IDS = [
+  "108806756839-iv4nrrfk4355ogcl2p2ehkh5f6a1u90b.apps.googleusercontent.com"
+];
 
 /**
  * สร้างหัวตารางและชีทผู้ใช้
@@ -168,24 +183,231 @@ function getAvatarUrl(email, name) {
   }
 }
 
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+function getUserMasterSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  return ss.getSheetByName("User_master");
+}
+
+function normalizeHeaderKey(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[()_\-./]/g, "");
+}
+
+function resolveUserMasterColumns(headerRow) {
+  const defaults = { email: 0, name: 1, position: 2, unit: 3, phone: 4, role: 5 };
+  if (!headerRow || !headerRow.length) return defaults;
+
+  const aliases = {
+    email: ["อีเมล", "email", "e-mail", "mail", "gmail"],
+    name: ["ชื่อสกุล", "ชื่อ", "name", "fullname", "full name", "full_name"],
+    position: ["ตำแหน่ง", "position", "rank"],
+    unit: ["ชุดปฏิบัติการ", "ชป", "หน่วย", "unit", "team"],
+    phone: ["เบอร์โทร", "เบอร์โทรศัพท์", "โทรศัพท์", "phone", "tel", "mobile"],
+    role: ["สิทธิ์", "สิทธิ", "role", "permission", "permissions", "access"]
+  };
+
+  const normalizedAliases = {};
+  Object.keys(aliases).forEach(function(key) {
+    normalizedAliases[key] = aliases[key].map(normalizeHeaderKey);
+  });
+
+  const resolved = Object.assign({}, defaults);
+  const found = { email: false, name: false, position: false, unit: false, phone: false, role: false };
+  for (let i = 0; i < headerRow.length; i++) {
+    const hk = normalizeHeaderKey(headerRow[i]);
+    if (!hk) continue;
+    Object.keys(normalizedAliases).forEach(function(key) {
+      if (found[key]) return;
+      if (normalizedAliases[key].indexOf(hk) !== -1) {
+        resolved[key] = i;
+        found[key] = true;
+      }
+    });
+  }
+  return resolved;
+}
+
+function findUserByEmail(email, includeAvatar) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return null;
+
+  const sheet = getUserMasterSheet();
+  if (!sheet) return null;
+
+  const rows = sheet.getDataRange().getValues();
+  if (!rows || rows.length < 2) return null;
+  const col = resolveUserMasterColumns(rows[0]);
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i] || [];
+    let rowEmail = normalizeEmail(row[col.email]);
+    if (!rowEmail) {
+      for (let c = 0; c < row.length; c++) {
+        const candidate = normalizeEmail(row[c]);
+        if (candidate === normalizedEmail) {
+          rowEmail = candidate;
+          break;
+        }
+      }
+    }
+    if (rowEmail === normalizedEmail) {
+      const userName = String(row[col.name] || "").trim();
+      return {
+        email: rowEmail,
+        name: userName,
+        position: String(row[col.position] || "").trim(),
+        unit: String(row[col.unit] || "").trim(),
+        phone: String(row[col.phone] || "").trim(),
+        role: String(row[col.role] || "").trim() || "user",
+        avatarUrl: includeAvatar ? getAvatarUrl(rowEmail, userName) : ""
+      };
+    }
+  }
+  return null;
+}
+
+function verifyGoogleIdToken(idToken, email) {
+  const token = String(idToken || "").trim();
+  if (!token) {
+    return { ok: false, message: "ไม่พบโทเคนสำหรับยืนยันตัวตน" };
+  }
+
+  try {
+    const res = UrlFetchApp.fetch(
+      "https://oauth2.googleapis.com/tokeninfo?id_token=" + encodeURIComponent(token),
+      { muteHttpExceptions: true }
+    );
+    if (res.getResponseCode() !== 200) {
+      return { ok: false, message: "ยืนยันตัวตนไม่สำเร็จ" };
+    }
+
+    const payload = JSON.parse(res.getContentText() || "{}");
+    const tokenEmail = normalizeEmail(payload.email);
+    const verified = payload.email_verified === true || String(payload.email_verified || "").toLowerCase() === "true";
+    const aud = String(payload.aud || "");
+
+    if (!tokenEmail || tokenEmail !== email) {
+      return { ok: false, message: "อีเมลในโทเคนไม่ตรงกับผู้ใช้งาน" };
+    }
+    if (!verified) {
+      return { ok: false, message: "บัญชี Google ยังไม่ยืนยันอีเมล" };
+    }
+    if (ALLOWED_GOOGLE_CLIENT_IDS.length && ALLOWED_GOOGLE_CLIENT_IDS.indexOf(aud) === -1) {
+      return { ok: false, message: "โทเคนมาจากแอปที่ไม่อนุญาต" };
+    }
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, message: "ตรวจสอบโทเคนล้มเหลว" };
+  }
+}
+
+function createSessionToken(email, role) {
+  const token = Utilities.getUuid().replace(/-/g, "") + "." + Utilities.getUuid().replace(/-/g, "");
+  const cache = CacheService.getScriptCache();
+  const session = {
+    email: normalizeEmail(email),
+    role: String(role || "user"),
+    issuedAt: new Date().toISOString()
+  };
+  cache.put(SESSION_CACHE_PREFIX + token, JSON.stringify(session), SESSION_TTL_SECONDS);
+  return token;
+}
+
+function getSessionData(sessionToken) {
+  const token = String(sessionToken || "").trim();
+  if (!token) return null;
+
+  const raw = CacheService.getScriptCache().get(SESSION_CACHE_PREFIX + token);
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    return null;
+  }
+}
+
+function authorizeRequest(data) {
+  const email = normalizeEmail(data.email);
+  const sessionToken = String(data.sessionToken || "").trim();
+
+  if (!email || !sessionToken) {
+    return { ok: false, message: "กรุณาเข้าสู่ระบบใหม่" };
+  }
+
+  const session = getSessionData(sessionToken);
+  if (!session || normalizeEmail(session.email) !== email) {
+    return { ok: false, message: "เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่" };
+  }
+
+  const user = findUserByEmail(email, false);
+  if (!user) {
+    return { ok: false, message: "บัญชีผู้ใช้นี้ไม่มีสิทธิ์ใช้งาน" };
+  }
+
+  // Extend session age while active.
+  CacheService.getScriptCache().put(SESSION_CACHE_PREFIX + sessionToken, JSON.stringify(session), SESSION_TTL_SECONDS);
+  return { ok: true, user: user };
+}
+
+function readReportRows() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("รายงานผลการปฏิบัติงาน");
+  if (!sheet || sheet.getLastRow() < 2) {
+    return [];
+  }
+
+  const allData = sheet.getRange(2, 1, sheet.getLastRow() - 1, HEADERS.length).getValues();
+  const rows = [];
+  for (let i = 0; i < allData.length; i++) {
+    const obj = {};
+    for (let j = 0; j < HEADERS.length; j++) {
+      obj[HEADERS[j]] = allData[i][j] != null ? String(allData[i][j]) : "";
+    }
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function toPublicRow(row) {
+  const out = {};
+  for (let i = 0; i < PUBLIC_REPORT_HEADERS.length; i++) {
+    const key = PUBLIC_REPORT_HEADERS[i];
+    out[key] = row[key] != null ? String(row[key]) : "";
+  }
+  return out;
+}
+
 /**
  * รับข้อมูล POST (login / submitReport)
  */
 function doPost(e) {
   try {
-    let data;
+    let data = {};
     try {
-      data = JSON.parse(e.postData.contents);
+      const rawBody = e && e.postData ? e.postData.contents : "";
+      data = rawBody ? JSON.parse(rawBody) : {};
     } catch (parseErr) {
       return jsonResponse({ status: "error", message: "Invalid JSON" });
     }
 
     if (data.action === "login") {
       return handleLogin(data);
+    } else if (data.action === "getPublicData") {
+      return handleGetPublicData(data);
     } else if (data.action === "getData") {
       return handleGetData(data);
-    } else {
+    } else if (data.action === "submit" || !data.action) {
       return handleSubmitReport(data);
+    } else {
+      return jsonResponse({ status: "error", message: "Unknown action" });
     }
   } catch (err) {
     return jsonResponse({ status: "error", message: err.toString() });
@@ -196,33 +418,36 @@ function doPost(e) {
  * ตรวจสอบอีเมลจากชีทผู้ใช้
  */
 function handleLogin(data) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName("User_master");
+  const sheet = getUserMasterSheet();
 
   if (!sheet) {
     return jsonResponse({ status: "error", message: "ไม่พบชีท 'User_master' กรุณารัน initSheet() ก่อน" });
   }
 
-  const email = String(data.email || "").trim().toLowerCase();
+  const email = normalizeEmail(data.email);
   if (!email) {
     return jsonResponse({ status: "error", message: "ไม่พบอีเมล" });
   }
 
-  const rows = sheet.getDataRange().getValues();
-  for (let i = 1; i < rows.length; i++) {
-    const rowEmail = String(rows[i][0]).trim().toLowerCase();
-    if (rowEmail === email) {
-      const userName = String(rows[i][1]).trim();
-      return jsonResponse({
-        status: "success",
-        name: userName,
-        position: String(rows[i][2]).trim(),
-        unit: String(rows[i][3]).trim(),
-        phone: String(rows[i][4]).trim(),
-        role: String(rows[i][5]).trim() || "user",
-        avatarUrl: getAvatarUrl(email, userName)
-      });
-    }
+  const tokenCheck = verifyGoogleIdToken(data.idToken, email);
+  if (!tokenCheck.ok) {
+    return jsonResponse({ status: "error", message: tokenCheck.message || "ยืนยันตัวตนไม่สำเร็จ" });
+  }
+
+  const user = findUserByEmail(email, true);
+  if (user) {
+    const sessionToken = createSessionToken(user.email, user.role);
+    return jsonResponse({
+      status: "success",
+      name: user.name,
+      position: user.position,
+      unit: user.unit,
+      phone: user.phone,
+      role: user.role,
+      avatarUrl: user.avatarUrl,
+      sessionToken: sessionToken,
+      sessionExpiresIn: SESSION_TTL_SECONDS
+    });
   }
 
   return jsonResponse({
@@ -235,17 +460,23 @@ function handleLogin(data) {
  * บันทึกรายงาน
  */
 function handleSubmitReport(data) {
+  const auth = authorizeRequest(data);
+  if (!auth.ok) {
+    return jsonResponse({ status: "error", message: auth.message });
+  }
+
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName("รายงานผลการปฏิบัติงาน") || ss.getActiveSheet();
 
   const lastRow = sheet.getLastRow();
   const nextNumber = lastRow;
+  const authUser = auth.user;
 
   const row = [
     nextNumber,
     data.timestamp || new Date().toLocaleString('th-TH'),
-    data.reporter || "",
-    data.email || "",
+    authUser.name || data.reporter || "",
+    authUser.email || "",
     data.unit || "",
     data.leaderName || "",
     data.leaderPhone || "",
@@ -290,25 +521,21 @@ function handleSubmitReport(data) {
  * ตรวจสิทธิ์ก่อน → อ่านชีท → ส่งกลับเป็น array of objects
  */
 function handleGetData(data) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-
-  // อ่านข้อมูลรายงาน
-  var sheet = ss.getSheetByName("รายงานผลการปฏิบัติงาน");
-  if (!sheet || sheet.getLastRow() < 2) {
-    return jsonResponse({ status: "success", data: [] });
+  const auth = authorizeRequest(data);
+  if (!auth.ok) {
+    return jsonResponse({ status: "error", message: auth.message });
   }
 
-  var allData = sheet.getRange(2, 1, sheet.getLastRow() - 1, HEADERS.length).getValues();
-  var rows = [];
-  for (var i = 0; i < allData.length; i++) {
-    var obj = {};
-    for (var j = 0; j < HEADERS.length; j++) {
-      obj[HEADERS[j]] = allData[i][j] != null ? String(allData[i][j]) : "";
-    }
-    rows.push(obj);
-  }
+  return jsonResponse({ status: "success", data: readReportRows() });
+}
 
-  return jsonResponse({ status: "success", data: rows });
+function handleGetPublicData(data) {
+  const rows = readReportRows();
+  const publicRows = rows.map(function(row) {
+    return toPublicRow(row);
+  });
+
+  return jsonResponse({ status: "success", data: publicRows });
 }
 
 function jsonResponse(obj) {
@@ -318,7 +545,7 @@ function jsonResponse(obj) {
 }
 
 function doGet(e) {
-  return jsonResponse({ status: "ok", message: "CSD1 Report API v2.1 (Google Login)", version: "2.1" });
+  return jsonResponse({ status: "ok", message: "CSD1 Report API v2.2 (Public Dashboard + Session Auth)", version: "2.2" });
 }
 
 function onOpen() {
