@@ -1017,41 +1017,56 @@ textarea:focus {
   border-color: rgba(255, 212, 0, 0.7) !important;
 }
 
-/* Bottom mini-nav: backplate behind bar to softly mask content below */
-.mobile-mini-nav,
-[data-theme="light"] .mobile-mini-nav {
-  overflow: visible !important;
-  isolation: isolate !important;
+/* Mobile: keep bottom nav fixed at screen bottom + 70% mask while loading data */
+@media (max-width: 900px) {
+  .mobile-mini-nav,
+  [data-theme="light"] .mobile-mini-nav {
+    left: max(0.5rem, env(safe-area-inset-left)) !important;
+    right: max(0.5rem, env(safe-area-inset-right)) !important;
+    bottom: 0 !important;
+    min-height: calc(68px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(0.35rem + env(safe-area-inset-bottom)) !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    overflow: visible !important;
+    isolation: isolate !important;
+    z-index: 9500 !important;
+  }
+
+  .mobile-mini-nav::after,
+  [data-theme="light"] .mobile-mini-nav::after {
+    content: none !important;
+  }
+
+  body.mobile-loading-data::after {
+    content: "" !important;
+    position: fixed !important;
+    left: max(0.5rem, env(safe-area-inset-left)) !important;
+    right: max(0.5rem, env(safe-area-inset-right)) !important;
+    bottom: 0 !important;
+    height: calc(68px + env(safe-area-inset-bottom)) !important;
+    border-radius: 18px 18px 0 0 !important;
+    background: rgba(0, 0, 0, 0.70) !important;
+    pointer-events: none !important;
+    z-index: 9490 !important;
+  }
+
+  html[data-theme="light"] body.mobile-loading-data::after {
+    background: rgba(255, 255, 255, 0.70) !important;
+  }
 }
 
-.mobile-mini-nav::after,
-[data-theme="light"] .mobile-mini-nav::after {
-  content: "" !important;
-  position: absolute !important;
-  left: 0 !important;
-  right: 0 !important;
-  top: 0 !important;
-  height: calc(100% + env(safe-area-inset-bottom) + 0.35rem) !important;
-  border-radius: 0 !important;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.70) 0%,
-    rgba(0, 0, 0, 0.70) 28%,
-    rgba(0, 0, 0, 0.36) 74%,
-    rgba(0, 0, 0, 0.0) 100%
-  ) !important;
-  pointer-events: none !important;
-  z-index: -1 !important;
+/* Standalone app shell guardrails (A2HS/PWA mode) */
+html.is-standalone-app,
+html.is-standalone-app body {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100dvh !important;
+  overscroll-behavior: none !important;
 }
 
-[data-theme="light"] .mobile-mini-nav::after {
-  background: linear-gradient(
-    to top,
-    rgba(255, 255, 255, 0.70) 0%,
-    rgba(255, 255, 255, 0.70) 28%,
-    rgba(255, 255, 255, 0.36) 74%,
-    rgba(255, 255, 255, 0.0) 100%
-  ) !important;
+html.is-standalone-app body {
+  touch-action: manipulation !important;
 }
 
 /* Request/History tables: force opaque sticky header to avoid overlap bleed */
@@ -1072,4 +1087,119 @@ textarea:focus {
   background-image: none !important;
   opacity: 1 !important;
   box-shadow: inset 0 -1px 0 rgba(15, 23, 42, 0.14) !important;
+}
+
+/* Loading fallback: restore original spinner loader and disable duck lanes */
+.loading-overlay .duck-race {
+  display: none !important;
+}
+
+.loading-overlay .spinner {
+  display: block !important;
+}
+
+/* ===========================================
+   Universal Bottom Nav (flat, full-width)
+   =========================================== */
+@media (max-width: 900px) {
+  .mobile-mini-nav,
+  [data-theme="light"] .mobile-mini-nav {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: calc(72px + env(safe-area-inset-bottom)) !important;
+    padding: 0.4rem max(0.6rem, env(safe-area-inset-left)) calc(0.38rem + env(safe-area-inset-bottom)) max(0.6rem, env(safe-area-inset-right)) !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+    background: #020717 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: end !important;
+    justify-items: stretch !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+    z-index: 9500 !important;
+  }
+
+  [data-theme="light"] .mobile-mini-nav {
+    background: #ffffff !important;
+    border-top-color: rgba(0, 38, 75, 0.2) !important;
+  }
+
+  .mobile-mini-nav::before,
+  .mobile-mini-nav::after,
+  [data-theme="light"] .mobile-mini-nav::before,
+  [data-theme="light"] .mobile-mini-nav::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .mobile-mini-link,
+  .mobile-mini-settings,
+  [data-theme="light"] .mobile-mini-link,
+  [data-theme="light"] .mobile-mini-settings {
+    min-height: 58px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0.26rem 0.2rem 0.16rem !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.2rem !important;
+    color: #f8fafc !important;
+  }
+
+  [data-theme="light"] .mobile-mini-link,
+  [data-theme="light"] .mobile-mini-settings {
+    color: #00264B !important;
+  }
+
+  .mobile-mini-link svg,
+  .mobile-mini-settings svg,
+  [data-theme="light"] .mobile-mini-link svg,
+  [data-theme="light"] .mobile-mini-settings svg {
+    width: 24px !important;
+    height: 24px !important;
+    stroke: currentColor !important;
+    fill: none !important;
+    filter: none !important;
+  }
+
+  .mobile-mini-link span,
+  .mobile-mini-settings span,
+  [data-theme="light"] .mobile-mini-link span,
+  [data-theme="light"] .mobile-mini-settings span {
+    font-size: 0.64rem !important;
+    font-weight: 700 !important;
+    line-height: 1.05 !important;
+  }
+
+  .mobile-mini-link.active,
+  .mobile-mini-settings.active,
+  [data-theme="light"] .mobile-mini-link.active,
+  [data-theme="light"] .mobile-mini-settings.active {
+    background: transparent !important;
+    color: #FFD400 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-shadow: 0 0 7px rgba(255, 212, 0, 0.26) !important;
+  }
+
+  body.mobile-loading-data::after,
+  html[data-theme="light"] body.mobile-loading-data::after {
+    content: none !important;
+    display: none !important;
+  }
 }

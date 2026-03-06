@@ -11,6 +11,7 @@
 <link rel="icon" type="image/png" href="web logo.png">
 <link rel="apple-touch-icon" href="web logo.png">
 <link rel="manifest" href="manifest.webmanifest">
+<script src="app-shell-lock.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
@@ -2560,6 +2561,32 @@ body.exporting-dashboard [class*="stat-"] {
 <!-- ==================== LOADING OVERLAY ==================== -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
+  <div class="duck-race" aria-hidden="true">
+    <span class="duck-lane">
+      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
+        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
+        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
+        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
+      </svg>
+    </span>
+    <span class="duck-lane">
+      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
+        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
+        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
+        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
+      </svg>
+    </span>
+    <span class="duck-lane">
+      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
+        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
+        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
+        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
+      </svg>
+    </span>
+  </div>
   <div class="loading-text">กำลังโหลดข้อมูล...</div>
 </div>
 
@@ -3193,8 +3220,18 @@ function parseThaiDate(str) {
 // ============================================================
 //  DATA FETCHING
 // ============================================================
+function setMobileDataLoading(isLoading) {
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  if (!isMobile) {
+    if (!isLoading) document.body.classList.remove('mobile-loading-data');
+    return;
+  }
+  document.body.classList.toggle('mobile-loading-data', !!isLoading);
+}
+
 function fetchData(user) {
   const url = getSheetUrl();
+  setMobileDataLoading(true);
 
   function requestRows(payload) {
     return fetch(url, {
@@ -3216,6 +3253,7 @@ function fetchData(user) {
       return row;
     });
     applyFilters();
+    setMobileDataLoading(false);
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('dashboardApp').style.display = '';
   }
@@ -3232,6 +3270,7 @@ function fetchData(user) {
 
   const failLoad = (err) => {
     showToast('โหลดข้อมูลล้มเหลว: ' + (err.message || 'ไม่ทราบสาเหตุ'));
+    setMobileDataLoading(false);
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('dashboardApp').style.display = '';
   };

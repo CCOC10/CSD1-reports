@@ -116,10 +116,6 @@
       el.classList.toggle('is-offline', !online);
     });
 
-    const stat = document.getElementById('profileStatOnlineValue');
-    if (stat) {
-      stat.classList.toggle('is-offline', !online);
-    }
   }
 
   function ensureSidebarProfileTop() {
@@ -232,13 +228,6 @@
       '  <div class="profile-stat-card">',
       '    <div class="profile-stat-label">สิทธิ์</div>',
       '    <div class="profile-stat-value" id="profileStatRole">-</div>',
-      '  </div>',
-      '  <div class="profile-stat-card">',
-      '    <div class="profile-stat-label">สถานะ</div>',
-      '    <div class="profile-stat-value profile-stat-online" id="profileStatOnlineValue">',
-      '      <span class="online-dot profile-stat-online-dot" data-presence-dot></span>',
-      '      <span class="profile-stat-online-text" data-presence-text>ออนไลน์</span>',
-      '    </div>',
       '  </div>',
       '</div>',
       '<div class="profile-sheet-actions">',

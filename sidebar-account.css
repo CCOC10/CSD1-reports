@@ -382,7 +382,7 @@ body.profile-sheet-open {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.24s ease;
-  z-index: 4402;
+  z-index: 20050;
 }
 
 .profile-sheet-overlay.show {
@@ -409,7 +409,7 @@ body.profile-sheet-open {
   -webkit-backdrop-filter: blur(22px) saturate(130%);
   color: #f8fafc;
   padding: 1rem 1rem 1.1rem;
-  z-index: 4403;
+  z-index: 20051;
   overflow: auto;
   transition: opacity 0.26s ease, transform 0.26s ease;
 }

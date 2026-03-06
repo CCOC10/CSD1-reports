@@ -11,6 +11,7 @@
 <link rel="icon" type="image/png" href="web logo.png">
 <link rel="apple-touch-icon" href="web logo.png">
 <link rel="manifest" href="manifest.webmanifest">
+<script src="app-shell-lock.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM Plex Sans Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -1787,6 +1788,10 @@ body.feature-announcement-open {
   overflow: hidden;
 }
 
+body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
+  pointer-events: none !important;
+}
+
 .feature-announcement-overlay {
   position: fixed;
   inset: 0;
@@ -1796,11 +1801,12 @@ body.feature-announcement-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 4600;
+  z-index: 20000;
   padding: 1rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s ease;
+  isolation: isolate;
 }
 
 .feature-announcement-overlay.show {
@@ -1818,6 +1824,28 @@ body.feature-announcement-open {
   transform: translateY(16px) scale(0.96);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+}
+
+.feature-announcement-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.18) 40%,
+    rgba(255, 255, 255, 0.42) 50%,
+    rgba(255, 255, 255, 0.18) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-140%);
+}
+
+.feature-announcement-card.announcement-flash::after {
+  animation: featureAnnouncementFlash 1.25s ease-in-out 2;
 }
 
 .feature-announcement-overlay.show .feature-announcement-card {
@@ -1887,12 +1915,22 @@ body.feature-announcement-open {
   background: radial-gradient(circle at 20% 20%, rgba(255,212,0,0.22), rgba(255,212,0,0) 55%), rgba(0,0,0,0.18);
   display: grid;
   place-items: center;
+  cursor: pointer;
+}
+
+.feature-announcement-graphic.is-bounce-exhausted {
+  cursor: default;
 }
 
 .feature-announcement-graphic svg {
   width: 88%;
   height: auto;
   display: block;
+  transform-origin: 50% 72%;
+}
+
+.feature-announcement-graphic svg.duck-bounce {
+  animation: duckBounce 0.56s cubic-bezier(0.2, 0.78, 0.22, 1);
 }
 
 .feature-announcement-body {
@@ -1971,6 +2009,41 @@ body.feature-announcement-open {
 
 [data-theme="light"] .feature-announcement-footnote {
   color: #1d4ed8;
+}
+
+@keyframes featureAnnouncementFlash {
+  0% {
+    opacity: 0;
+    transform: translateX(-140%);
+  }
+  20% {
+    opacity: 0.95;
+  }
+  55% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(140%);
+  }
+}
+
+@keyframes duckBounce {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  28% {
+    transform: translateY(-14px) scale(1.05);
+  }
+  56% {
+    transform: translateY(0) scale(0.98);
+  }
+  78% {
+    transform: translateY(-6px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 720px) {
@@ -2777,8 +2850,8 @@ body.feature-announcement-open {
           ตอนนี้ผู้ใช้สามารถแจ้งลบ หรือแจ้งแก้ไขข้อมูลที่กรอกไปแล้วผ่านระบบได้ทันที
         </p>
       </div>
-      <div class="feature-announcement-graphic" aria-hidden="true">
-        <svg viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="feature-announcement-graphic" aria-hidden="true" onclick="triggerDuckBounce(event)">
+        <svg id="featureAnnouncementDuck" viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="188" cy="34" r="8" fill="#FFD400" fill-opacity="0.85"/>
           <circle cx="165" cy="22" r="4" fill="#FFE66A" fill-opacity="0.9"/>
           <ellipse cx="108" cy="114" rx="72" ry="42" fill="#FFD400"/>
@@ -2924,17 +2997,52 @@ function openNotificationPage(evt) {
   return navigateInApp(evt, 'notification.html');
 }
 
+const DUCK_BOUNCE_MAX = 3;
+let duckBounceClicks = 0;
+
 function showFeatureAnnouncement() {
   const overlay = document.getElementById('featureAnnouncementOverlay');
   if (!overlay) return;
   overlay.classList.add('show');
   document.body.classList.add('feature-announcement-open');
+  duckBounceClicks = 0;
+
+  const duckWrap = overlay.querySelector('.feature-announcement-graphic');
+  if (duckWrap) duckWrap.classList.remove('is-bounce-exhausted');
+
+  const duck = document.getElementById('featureAnnouncementDuck');
+  if (duck) duck.classList.remove('duck-bounce');
+
+  const card = overlay.querySelector('.feature-announcement-card');
+  if (card) {
+    card.classList.remove('announcement-flash');
+    void card.offsetWidth;
+    card.classList.add('announcement-flash');
+  }
 }
 
 function closeFeatureAnnouncement() {
   const overlay = document.getElementById('featureAnnouncementOverlay');
   if (overlay) overlay.classList.remove('show');
   document.body.classList.remove('feature-announcement-open');
+}
+
+function triggerDuckBounce(event) {
+  if (event) event.stopPropagation();
+  if (duckBounceClicks >= DUCK_BOUNCE_MAX) return;
+
+  const duck = document.getElementById('featureAnnouncementDuck');
+  if (!duck) return;
+
+  duckBounceClicks += 1;
+  duck.classList.remove('duck-bounce');
+  void duck.offsetWidth;
+  duck.classList.add('duck-bounce');
+
+  if (duckBounceClicks >= DUCK_BOUNCE_MAX) {
+    const duckWrap = document.querySelector('.feature-announcement-graphic');
+    if (duckWrap) duckWrap.classList.add('is-bounce-exhausted');
+  }
 }
 
 function maybeShowFeatureAnnouncement(user) {
@@ -3174,6 +3282,15 @@ function parseResponseBody(rawText) {
   }
 }
 
+function setMobileDataLoading(isLoading) {
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  if (!isMobile) {
+    if (!isLoading) document.body.classList.remove('mobile-loading-data');
+    return;
+  }
+  document.body.classList.toggle('mobile-loading-data', !!isLoading);
+}
+
 async function handleCredentialResponse(response) {
   const responsePayload = decodeJwtResponse(response.credential);
   const email = String(responsePayload.email || '').trim().toLowerCase();
@@ -3191,6 +3308,7 @@ async function handleCredentialResponse(response) {
   loginError.style.color = 'var(--text-muted)';
   loginError.textContent = 'กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...';
 
+  setMobileDataLoading(true);
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -3225,6 +3343,8 @@ async function handleCredentialResponse(response) {
     loginError.style.color = 'var(--danger)';
     loginError.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ ตรวจสอบ URL หรืออินเทอร์เน็ต';
     revealLoginSettingsLink();
+  } finally {
+    setMobileDataLoading(false);
   }
 }
 
@@ -4616,6 +4736,7 @@ async function submitToSheet() {
 
   showToast('กำลังบันทึกข้อมูล...');
 
+  setMobileDataLoading(true);
   try {
     if (actionType === 'จับตามหมาย') {
       if (!warrantEntries.length) {
@@ -4671,6 +4792,8 @@ async function submitToSheet() {
   } catch (err) {
     showToast('เกิดข้อผิดพลาด: ' + err.message);
     unlockSubmitButton(submitBtn);
+  } finally {
+    setMobileDataLoading(false);
   }
 }
 

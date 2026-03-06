@@ -2,10 +2,14 @@
 <html lang="th" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
 <title>ประวัติการกรอกข้อมูล | CSD1</title>
 <link rel="manifest" href="manifest.webmanifest">
+<script src="app-shell-lock.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -898,6 +902,31 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 900px) {
+  .mobile-mini-nav {
+    left: max(0.5rem, env(safe-area-inset-left));
+    right: max(0.5rem, env(safe-area-inset-right));
+    bottom: 0;
+    min-height: calc(68px + env(safe-area-inset-bottom));
+    padding-bottom: calc(0.35rem + env(safe-area-inset-bottom));
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    z-index: 9500;
+  }
+  body.mobile-loading-data::after {
+    content: "";
+    position: fixed;
+    left: max(0.5rem, env(safe-area-inset-left));
+    right: max(0.5rem, env(safe-area-inset-right));
+    bottom: 0;
+    height: calc(68px + env(safe-area-inset-bottom));
+    border-radius: 18px 18px 0 0;
+    background: rgba(0, 0, 0, 0.70);
+    pointer-events: none;
+    z-index: 9490;
+  }
+  [data-theme="light"] body.mobile-loading-data::after {
+    background: rgba(255, 255, 255, 0.70);
+  }
   .page-wrap { padding-bottom: calc(env(safe-area-inset-bottom) + 6rem); }
   .app-nav-fab { display: none !important; }
   .mobile-mini-nav, .mobile-settings-overlay, .mobile-settings-sheet { display: block; }
@@ -909,6 +938,11 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   .mini-btn { width: 100%; }
 }
 </style>
+<link rel="stylesheet" href="dashboard-theme.css">
+<link rel="stylesheet" href="theme-sync-dashboard.css">
+<link rel="stylesheet" href="sidebar-account.css">
+<link rel="stylesheet" href="buttons-legacy.css">
+<link rel="stylesheet" href="luxury-2026.css">
 </head>
 <body>
 <button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
@@ -1618,6 +1652,15 @@ function notifyAdminByRow(index) {
   showToast('สร้างข้อความแจ้งแอดมินแล้ว');
 }
 
+function setMobileDataLoading(isLoading) {
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  if (!isMobile) {
+    if (!isLoading) document.body.classList.remove('mobile-loading-data');
+    return;
+  }
+  document.body.classList.toggle('mobile-loading-data', !!isLoading);
+}
+
 async function loadHistory() {
   const user = getStoredUserSafe();
   const roleLabel = document.getElementById('historyRoleLabel');
@@ -1639,14 +1682,17 @@ async function loadHistory() {
 
   const sessionToken = getSessionToken(user);
   if (!user.email || !sessionToken) {
+    setMobileDataLoading(false);
     emptyEl.textContent = 'ไม่พบเซสชันเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่';
     return;
   }
   if (!isUserRole(user)) {
+    setMobileDataLoading(false);
     emptyEl.textContent = 'เมนูนี้สำหรับผู้ใช้งานสิทธิ์ User เท่านั้น';
     return;
   }
 
+  setMobileDataLoading(true);
   try {
     const response = await fetch(getSheetUrl(), {
       method: 'POST',
@@ -1668,6 +1714,8 @@ async function loadHistory() {
     applyHistoryFilters();
   } catch (err) {
     emptyEl.textContent = 'เกิดข้อผิดพลาด: ' + (err.message || err);
+  } finally {
+    setMobileDataLoading(false);
   }
 }
 

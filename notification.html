@@ -2,10 +2,14 @@
 <html lang="th" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Notification คำขอแก้ไข | CSD1</title>
 <link rel="manifest" href="manifest.webmanifest">
+<script src="app-shell-lock.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -775,7 +779,7 @@ thead th {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: rgba(0,0,0,0.22);
+  background: rgba(3, 22, 52, 0.8);
   color: var(--text-secondary);
   text-align: left;
   font-size: 0.74rem;
@@ -785,7 +789,7 @@ thead th {
 }
 
 [data-theme="light"] thead th {
-  background: rgba(0,38,75,0.07);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 tbody td {
@@ -1701,6 +1705,15 @@ function hasAuthSession(user) {
   return !!(user && user.email && getSessionToken(user));
 }
 
+function setMobileDataLoading(isLoading) {
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  if (!isMobile) {
+    if (!isLoading) document.body.classList.remove('mobile-loading-data');
+    return;
+  }
+  document.body.classList.toggle('mobile-loading-data', !!isLoading);
+}
+
 function syncRoleMenus(user) {
   const userVisible = isUserRole(user) && hasAuthSession(user);
   const adminVisible = isAdminRole(user) && hasAuthSession(user);
@@ -2251,6 +2264,7 @@ async function decideRequest(index, decision, evt) {
 
   pendingDecisionRequestIds.add(requestId);
   applyFilters();
+  setMobileDataLoading(true);
 
   try {
     const response = await fetch(getSheetUrl(), {
@@ -2295,6 +2309,7 @@ async function decideRequest(index, decision, evt) {
   } catch (err) {
     showToast(decisionLabel + 'ไม่สำเร็จ: ' + (err.message || err));
   } finally {
+    setMobileDataLoading(false);
     pendingDecisionRequestIds.delete(requestId);
     applyFilters();
   }
@@ -2315,6 +2330,7 @@ async function loadNotifications() {
   applyFilters();
 
   if (!hasAuthSession(user)) {
+    setMobileDataLoading(false);
     showAuthCheck(
       'ไม่พบเซสชันเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่',
       'กรุณาเข้าสู่ระบบ',
@@ -2325,6 +2341,7 @@ async function loadNotifications() {
     return;
   }
   if (!isAdminRole(user)) {
+    setMobileDataLoading(false);
     showAuthCheck(
       'เมนูนี้สำหรับแอดมินเท่านั้น',
       'ไม่พบสิทธิ์เข้าใช้งาน',
@@ -2341,6 +2358,7 @@ async function loadNotifications() {
     sessionToken: getSessionToken(user)
   };
 
+  setMobileDataLoading(true);
   try {
     const response = await fetch(getSheetUrl(), {
       method: 'POST',
@@ -2377,6 +2395,8 @@ async function loadNotifications() {
     hideAuthCheck();
     emptyEl.textContent = 'เกิดข้อผิดพลาด: ' + errMsg;
     emptyEl.style.display = 'block';
+  } finally {
+    setMobileDataLoading(false);
   }
 }
 
