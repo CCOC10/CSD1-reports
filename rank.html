@@ -42,13 +42,13 @@
 }
 
 [data-theme="light"] {
-  --bg-0: #f2f6fb;
-  --bg-1: #e8eff7;
-  --bg-2: #d9e5f2;
+  --bg-0: #ffffff;
+  --bg-1: #ffffff;
+  --bg-2: #f4f8fd;
   --cib-blue: #00264B;
   --cib-gold: #b8860b;
   --card: rgba(255, 255, 255, 0.9);
-  --card-strong: #f4f8fd;
+  --card-strong: #ffffff;
   --text: #102f50;
   --muted: #486a8d;
   --gold: #b8860b;
@@ -266,7 +266,7 @@ body::after {
 
 /* ==================== APP SIDEBAR ==================== */
 body.nav-open {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 body.settings-open {
   overflow: hidden;
@@ -309,17 +309,17 @@ body.nav-open .app-nav-fab {
 .app-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 38, 75, 0.5);
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   z-index: 4200;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
 }
 .app-sidebar-overlay.show {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: 0;
+  pointer-events: none;
 }
 .app-sidebar {
   position: fixed;
@@ -436,12 +436,12 @@ body.nav-open .app-nav-fab {
   box-shadow: 0 0 18px rgba(255, 212, 0, 0.26);
 }
 [data-theme="light"] .app-sidebar-overlay {
-  background: rgba(255, 212, 0, 0.5);
+  background: transparent;
 }
 [data-theme="light"] .app-sidebar {
-  background: rgba(255, 212, 0, 0.5);
-  border-right-color: rgba(0, 38, 75, 0.42);
-  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  background: rgba(255, 255, 255, 0.92);
+  border-right-color: rgba(0, 38, 75, 0.28);
+  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 [data-theme="light"] .app-sidebar::before {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 72%);
@@ -491,9 +491,9 @@ body.nav-open .app-nav-fab {
   height: 68px;
   padding: 0.35rem;
   border-radius: 18px;
-  border: 1px solid rgba(255, 212, 0, 0.44);
-  background: rgba(0, 38, 75, 0.72);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: rgba(2, 6, 23, 0.94);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
   z-index: 4307;
@@ -527,14 +527,19 @@ body.nav-open .app-nav-fab {
   stroke: currentColor;
   stroke-width: 2.2;
 }
-.mobile-mini-link.active {
-  background: rgba(255, 212, 0, 0.38);
-  color: #001a33;
+[data-theme="dark"] .mobile-mini-link.active {
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.42) inset, 0 0 14px rgba(255, 212, 0, 0.46);
+  text-shadow: 0 0 10px rgba(255, 212, 0, 0.45);
+}
+[data-theme="dark"] .mobile-mini-link.active svg {
+  filter: drop-shadow(0 0 6px rgba(255, 212, 0, 0.75));
 }
 .mobile-mini-settings {
   cursor: pointer;
   font-family: inherit;
-  color: #FFD400;
+  color: #f8fafc;
 }
 .mobile-mini-link:active,
 .mobile-mini-settings:active {
@@ -616,15 +621,52 @@ body.nav-open .app-nav-fab {
   font-weight: 700;
   color: #f8fafc;
 }
+.mobile-settings-action {
+  width: 100%;
+  padding: 0.58rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.34);
+  background: rgba(255, 212, 0, 0.14);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.mobile-settings-action:hover {
+  background: rgba(255, 212, 0, 0.22);
+  border-color: rgba(255, 212, 0, 0.52);
+}
+.sidebar-settings-action {
+  margin-top: 0.65rem;
+  width: 100%;
+  padding: 0.55rem 0.62rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.36);
+  background: rgba(255, 212, 0, 0.16);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.sidebar-settings-action:hover {
+  background: rgba(255, 212, 0, 0.24);
+  border-color: rgba(255, 212, 0, 0.58);
+}
 
 [data-theme="light"] .mobile-mini-nav {
-  background: rgba(255, 212, 0, 0.62);
+  background: rgba(0, 38, 75, 0.6);
   border-color: rgba(0, 38, 75, 0.36);
   box-shadow: 0 12px 24px rgba(0, 38, 75, 0.18);
 }
 [data-theme="light"] .mobile-mini-link,
 [data-theme="light"] .mobile-mini-settings {
-  color: #00264B;
+  color: #f8fafc;
 }
 [data-theme="light"] .mobile-mini-link.active {
   background: rgba(0, 38, 75, 0.32);
@@ -634,7 +676,7 @@ body.nav-open .app-nav-fab {
   background: rgba(0, 38, 75, 0.28);
 }
 [data-theme="light"] .mobile-settings-sheet {
-  background: rgba(255, 212, 0, 0.9);
+  background: rgba(255, 255, 255, 0.98);
   border-color: rgba(0, 38, 75, 0.38);
   box-shadow: 0 16px 30px rgba(0, 38, 75, 0.18);
 }
@@ -645,10 +687,26 @@ body.nav-open .app-nav-fab {
 [data-theme="light"] .mobile-settings-label {
   color: #00264B;
 }
+[data-theme="light"] .mobile-settings-action {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
+}
+[data-theme="light"] .mobile-settings-action:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
 [data-theme="light"] .mobile-settings-close {
   border-color: rgba(0, 38, 75, 0.32);
   background: rgba(255, 255, 255, 0.5);
   color: #00264B;
+}
+[data-theme="light"] .sidebar-settings-action {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.18);
+  color: #f8fafc;
+}
+[data-theme="light"] .sidebar-settings-action:hover {
+  background: rgba(255, 255, 255, 0.26);
 }
 
 @media (max-width: 900px) {
@@ -1784,25 +1842,15 @@ body.modal-open {
 
 /* ==================== LIGHT MODE READABILITY TUNE ==================== */
 [data-theme="light"] body {
-  background:
-    radial-gradient(circle at 18% 8%, rgba(0, 38, 75, 0.14), transparent 42%),
-    radial-gradient(circle at 82% 24%, rgba(184, 134, 11, 0.12), transparent 36%),
-    linear-gradient(162deg, #f2f6fb 0%, #e8eff7 48%, #dce9f6 100%);
+  background: #ffffff;
 }
 
 [data-theme="light"] body::before {
-  background-image:
-    radial-gradient(circle at 12% 18%, rgba(0, 38, 75, 0.08) 0 1px, transparent 2px),
-    radial-gradient(circle at 70% 35%, rgba(0, 38, 75, 0.06) 0 1px, transparent 2px),
-    radial-gradient(circle at 45% 78%, rgba(0, 38, 75, 0.05) 0 1px, transparent 2px),
-    radial-gradient(circle at 84% 72%, rgba(0, 38, 75, 0.07) 0 1px, transparent 2px);
+  background-image: none;
 }
 
 [data-theme="light"] body::after {
-  background:
-    radial-gradient(circle at 18% 38%, rgba(0, 38, 75, 0.12), transparent 32%),
-    radial-gradient(circle at 76% 30%, rgba(184, 134, 11, 0.14), transparent 30%),
-    radial-gradient(circle at 54% 82%, rgba(0, 38, 75, 0.1), transparent 28%);
+  background: none;
 }
 
 [data-theme="light"] .filters select {
@@ -2102,6 +2150,9 @@ body.modal-open {
   }
 }
 </style>
+<link rel="stylesheet" href="sidebar-account.css">
+<link rel="stylesheet" href="buttons-legacy.css">
+<link rel="stylesheet" href="luxury-2026.css">
 </head>
 <body>
 <button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
@@ -2159,6 +2210,27 @@ body.modal-open {
       </span>
     </label>
   </div>
+  <div class="mobile-settings-row mobile-account-row">
+    <button class="mobile-account-btn" type="button" onclick="handleAvatarAccess(event)">
+      <span class="mobile-account-avatar" id="mobileAccountAvatar">U</span>
+      <span class="mobile-account-text">
+        <span class="mobile-account-name" id="mobileAccountName">เข้าสู่ระบบ</span>
+        <span class="mobile-account-sub" id="mobileAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
+      </span>
+    </button>
+  </div>
+  <div class="mobile-settings-row">
+    <button class="mobile-settings-action mobile-logout-btn is-hidden" id="mobileLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span>ออกจากระบบ</span>
+    </button>
+  </div>
+  <div class="mobile-settings-row" id="mobileHistoryMenuRow" data-admin-history style="display:none;">
+    <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+  </div>
+  <div class="mobile-settings-row" id="mobileNotificationMenuRow" data-admin-notification style="display:none;">
+    <button class="mobile-settings-action" type="button" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
+  </div>
 </section>
 <div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
 <aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
@@ -2186,6 +2258,13 @@ body.modal-open {
   </nav>
   <div class="app-sidebar-theme">
     <div class="app-sidebar-theme-label">Theme</div>
+    <button class="sidebar-account-btn" id="sidebarAccountBtn" type="button" onclick="handleAvatarAccess(event)">
+      <span class="sidebar-account-avatar" id="sidebarAccountAvatar">U</span>
+      <span class="sidebar-account-meta">
+        <span class="sidebar-account-name" id="sidebarAccountName">เข้าสู่ระบบ</span>
+        <span class="sidebar-account-sub" id="sidebarAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
+      </span>
+    </button>
     <label class="app-theme-switch" for="sidebarThemeToggle" title="สลับโหมดสว่าง/มืด">
       <input type="checkbox" id="sidebarThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
       <span class="app-theme-switch-track">
@@ -2207,6 +2286,12 @@ body.modal-open {
         </span>
       </span>
     </label>
+    <button class="sidebar-settings-action" id="sidebarHistoryMenuBtn" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+    <button class="sidebar-settings-action" id="sidebarNotificationMenuBtn" data-admin-notification type="button" style="display:none;" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
+    <button class="sidebar-logout-btn is-hidden" id="sidebarLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span>ออกจากระบบ</span>
+    </button>
   </div>
 </aside>
 
@@ -2384,9 +2469,23 @@ const EXPORT_EXCLUDE_SELECTORS = ['.topbar', '#rankFooterActions', '.app-nav-fab
 
 const toBE = yr => yr + 543;
 
+function resolveInAppUrl(targetPath) {
+  const rawTarget = String(targetPath == null ? '' : targetPath).trim();
+  if (!rawTarget) return new URL(window.location.href);
+  if (/^https?:\/\//i.test(rawTarget)) return new URL(rawTarget);
+
+  const pathName = window.location.pathname || '/';
+  const hasFileName = /\/[^/]+\.[a-z0-9]+$/i.test(pathName);
+  const basePath = hasFileName
+    ? pathName.replace(/[^/]+$/, '')
+    : (pathName.endsWith('/') ? pathName : pathName + '/');
+  const cleanedTarget = rawTarget.replace(/^\/+/, '');
+  return new URL(cleanedTarget, window.location.origin + basePath);
+}
+
 function navigateInApp(evt, targetPath) {
   if (evt) evt.preventDefault();
-  const nextUrl = new URL(targetPath, window.location.href);
+  const nextUrl = resolveInAppUrl(targetPath);
   const standaloneMode =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.matchMedia('(display-mode: fullscreen)').matches ||
@@ -2397,6 +2496,60 @@ function navigateInApp(evt, targetPath) {
   }
   window.location.assign(nextUrl.href);
   return false;
+}
+
+function getStoredUserSafe() {
+  try {
+    return JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  } catch (_) {
+    return {};
+  }
+}
+
+function isAdminRole(user) {
+  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'admin';
+}
+
+function isUserRole(user) {
+  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'user';
+}
+
+function hasAuthSession(user) {
+  if (!user || typeof user !== 'object') return false;
+  const email = String(user.email || '').trim();
+  const token = String(
+    user.sessionToken ||
+    user.session_token ||
+    (user.session && user.session.token) ||
+    user.token ||
+    user.accessToken ||
+    ''
+  ).trim();
+  return !!(email && token);
+}
+
+function syncAdminHistoryMenus(user) {
+  const hasSession = hasAuthSession(user);
+  const userVisible = isUserRole(user) && hasSession;
+  const adminVisible = isAdminRole(user) && hasSession;
+  document.querySelectorAll('[data-admin-history]').forEach((el) => {
+    el.style.display = userVisible ? '' : 'none';
+  });
+  document.querySelectorAll('[data-admin-notification]').forEach((el) => {
+    el.style.display = adminVisible ? '' : 'none';
+  });
+}
+
+function openHistoryPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'history.html');
+}
+
+function openNotificationPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'notification.html');
 }
 
 let appSidebarOpen = false;
@@ -2503,8 +2656,27 @@ let filteredRows = [];
 let prevValueMap = {};
 let podiumSweepResetTimer = null;
 
+function normalizeSheetUrl(rawValue) {
+  const raw = String(rawValue == null ? '' : rawValue).trim();
+  if (!raw) return DEFAULT_SHEET_URL;
+  const candidate = /^https?:\/\//i.test(raw) ? raw : ('https://' + raw);
+  try {
+    const parsed = new URL(candidate);
+    if (!/^https?:$/i.test(parsed.protocol)) throw new Error('invalid protocol');
+    return parsed.href;
+  } catch (_) {
+    return DEFAULT_SHEET_URL;
+  }
+}
+
 function getSheetUrl() {
-  return localStorage.getItem('CSD1_SHEET_URL') || DEFAULT_SHEET_URL;
+  const stored = localStorage.getItem('CSD1_SHEET_URL');
+  const resolved = normalizeSheetUrl(stored);
+  const normalizedStored = String(stored == null ? '' : stored).trim();
+  if (normalizedStored && normalizedStored !== resolved) {
+    localStorage.setItem('CSD1_SHEET_URL', resolved);
+  }
+  return resolved;
 }
 
 function parseThaiDate(str) {
@@ -3231,10 +3403,12 @@ document.addEventListener('keydown', (e) => {
 });
 
 applyTheme(getPreferredTheme());
+syncAdminHistoryMenus(getStoredUserSafe());
 fillUnitOptions();
 updateHeroPeriodText();
 renderScoreWeightTable();
 fetchData();
 </script>
+<script src="sidebar-account.js"></script>
 </body>
 </html>

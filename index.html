@@ -63,8 +63,8 @@
 }
 
 [data-theme="light"] {
-  --primary: #f8fafc;
-  --primary-deep: #e2e8f0;
+  --primary: #ffffff;
+  --primary-deep: #ffffff;
   --primary-surface: #ffffff;
   --accent: #d4a800;
   --accent-dim: #a38200;
@@ -83,7 +83,7 @@
   --card-bg-solid: #ffffff;
   --input-bg: rgba(0,0,0,0.04);
   --input-bg-focus: rgba(0,0,0,0.06);
-  --body-bg: linear-gradient(160deg, #e8ecf2 0%, #f0f3f7 40%, #e2e8f0 100%);
+  --body-bg: #ffffff;
   --header-bg: linear-gradient(135deg, #00264B 0%, #001a33 100%);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
   --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
@@ -633,7 +633,7 @@ body {
 
 /* ==================== APP SIDEBAR ==================== */
 body.nav-open {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 body.settings-open {
   overflow: hidden;
@@ -676,17 +676,17 @@ body.nav-open .app-nav-fab {
 .app-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 38, 75, 0.5);
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   z-index: 4200;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
 }
 .app-sidebar-overlay.show {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: 0;
+  pointer-events: none;
 }
 .app-sidebar {
   position: fixed;
@@ -803,12 +803,12 @@ body.nav-open .app-nav-fab {
   box-shadow: 0 0 18px rgba(255, 212, 0, 0.26);
 }
 [data-theme="light"] .app-sidebar-overlay {
-  background: rgba(255, 212, 0, 0.5);
+  background: transparent;
 }
 [data-theme="light"] .app-sidebar {
-  background: rgba(255, 212, 0, 0.5);
-  border-right-color: rgba(0, 38, 75, 0.42);
-  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  background: rgba(255, 255, 255, 0.92);
+  border-right-color: rgba(0, 38, 75, 0.28);
+  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 [data-theme="light"] .app-sidebar::before {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 72%);
@@ -858,9 +858,9 @@ body.nav-open .app-nav-fab {
   height: 68px;
   padding: 0.35rem;
   border-radius: 18px;
-  border: 1px solid rgba(255, 212, 0, 0.44);
-  background: rgba(0, 38, 75, 0.72);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: rgba(2, 6, 23, 0.94);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
   z-index: 4307;
@@ -894,14 +894,19 @@ body.nav-open .app-nav-fab {
   stroke: currentColor;
   stroke-width: 2.2;
 }
-.mobile-mini-link.active {
-  background: rgba(255, 212, 0, 0.38);
-  color: #001a33;
+[data-theme="dark"] .mobile-mini-link.active {
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.42) inset, 0 0 14px rgba(255, 212, 0, 0.46);
+  text-shadow: 0 0 10px rgba(255, 212, 0, 0.45);
+}
+[data-theme="dark"] .mobile-mini-link.active svg {
+  filter: drop-shadow(0 0 6px rgba(255, 212, 0, 0.75));
 }
 .mobile-mini-settings {
   cursor: pointer;
   font-family: inherit;
-  color: #FFD400;
+  color: #f8fafc;
 }
 .mobile-mini-link:active,
 .mobile-mini-settings:active {
@@ -983,15 +988,52 @@ body.nav-open .app-nav-fab {
   font-weight: 700;
   color: #f8fafc;
 }
+.mobile-settings-action {
+  width: 100%;
+  padding: 0.58rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.34);
+  background: rgba(255, 212, 0, 0.14);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.mobile-settings-action:hover {
+  background: rgba(255, 212, 0, 0.22);
+  border-color: rgba(255, 212, 0, 0.52);
+}
+.sidebar-settings-action {
+  margin-top: 0.65rem;
+  width: 100%;
+  padding: 0.55rem 0.62rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.36);
+  background: rgba(255, 212, 0, 0.16);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.sidebar-settings-action:hover {
+  background: rgba(255, 212, 0, 0.24);
+  border-color: rgba(255, 212, 0, 0.58);
+}
 
 [data-theme="light"] .mobile-mini-nav {
-  background: rgba(255, 212, 0, 0.62);
+  background: rgba(0, 38, 75, 0.6);
   border-color: rgba(0, 38, 75, 0.36);
   box-shadow: 0 12px 24px rgba(0, 38, 75, 0.18);
 }
 [data-theme="light"] .mobile-mini-link,
 [data-theme="light"] .mobile-mini-settings {
-  color: #00264B;
+  color: #f8fafc;
 }
 [data-theme="light"] .mobile-mini-link.active {
   background: rgba(0, 38, 75, 0.32);
@@ -1001,7 +1043,7 @@ body.nav-open .app-nav-fab {
   background: rgba(0, 38, 75, 0.28);
 }
 [data-theme="light"] .mobile-settings-sheet {
-  background: rgba(255, 212, 0, 0.9);
+  background: rgba(255, 255, 255, 0.98);
   border-color: rgba(0, 38, 75, 0.38);
   box-shadow: 0 16px 30px rgba(0, 38, 75, 0.18);
 }
@@ -1012,10 +1054,26 @@ body.nav-open .app-nav-fab {
 [data-theme="light"] .mobile-settings-label {
   color: #00264B;
 }
+[data-theme="light"] .mobile-settings-action {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
+}
+[data-theme="light"] .mobile-settings-action:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
 [data-theme="light"] .mobile-settings-close {
   border-color: rgba(0, 38, 75, 0.32);
   background: rgba(255, 255, 255, 0.5);
   color: #00264B;
+}
+[data-theme="light"] .sidebar-settings-action {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.18);
+  color: #f8fafc;
+}
+[data-theme="light"] .sidebar-settings-action:hover {
+  background: rgba(255, 255, 255, 0.26);
 }
 
 @media (max-width: 900px) {
@@ -1724,6 +1782,215 @@ body.nav-open .app-nav-fab {
   line-height: 1.5;
 }
 
+/* ==================== FEATURE ANNOUNCEMENT ==================== */
+body.feature-announcement-open {
+  overflow: hidden;
+}
+
+.feature-announcement-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4600;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+
+.feature-announcement-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.feature-announcement-card {
+  width: min(760px, 96vw);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 212, 0, 0.28);
+  background: linear-gradient(180deg, #00264B 0%, #001a33 43%, #020717 43%, #020717 100%);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform: translateY(16px) scale(0.96);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.feature-announcement-overlay.show .feature-announcement-card {
+  transform: translateY(0) scale(1);
+}
+
+.feature-announcement-close {
+  position: absolute;
+  right: 0.9rem;
+  top: 0.9rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(2, 7, 23, 0.45);
+  color: #f8fafc;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.feature-announcement-hero {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1rem;
+  padding: 1.25rem 1.3rem 1rem;
+  align-items: center;
+}
+
+.feature-announcement-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 212, 0, 0.42);
+  background: rgba(255, 212, 0, 0.14);
+  color: #FFD400;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.56rem;
+  margin-bottom: 0.6rem;
+}
+
+.feature-announcement-title {
+  font-size: 1.38rem;
+  line-height: 1.22;
+  color: #FFD400;
+  font-weight: 800;
+  margin-bottom: 0.42rem;
+}
+
+.feature-announcement-subtitle {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(241, 245, 249, 0.92);
+}
+
+.feature-announcement-graphic {
+  justify-self: center;
+  width: min(220px, 100%);
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 212, 0, 0.24);
+  background: radial-gradient(circle at 20% 20%, rgba(255,212,0,0.22), rgba(255,212,0,0) 55%), rgba(0,0,0,0.18);
+  display: grid;
+  place-items: center;
+}
+
+.feature-announcement-graphic svg {
+  width: 88%;
+  height: auto;
+  display: block;
+}
+
+.feature-announcement-body {
+  padding: 1rem 1.3rem 1.25rem;
+}
+
+.feature-announcement-list {
+  list-style: none;
+  display: grid;
+  gap: 0.52rem;
+  margin-bottom: 0.95rem;
+}
+
+.feature-announcement-item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 0.45rem;
+  align-items: flex-start;
+  color: #dbeafe;
+  font-size: 0.88rem;
+  line-height: 1.48;
+}
+
+.feature-announcement-item svg {
+  width: 20px;
+  height: 20px;
+  color: #FFD400;
+  margin-top: 0.05rem;
+}
+
+.feature-announcement-footnote {
+  font-size: 0.8rem;
+  color: #93c5fd;
+  margin-top: 0.46rem;
+}
+
+.feature-announcement-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.feature-announcement-btn {
+  border: 1px solid rgba(255, 212, 0, 0.35);
+  background: rgba(255, 212, 0, 0.12);
+  color: #FFD400;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  padding: 0.48rem 1rem;
+  cursor: pointer;
+}
+
+[data-theme="light"] .feature-announcement-overlay {
+  background: rgba(0, 38, 75, 0.26);
+}
+
+[data-theme="light"] .feature-announcement-card {
+  border-color: rgba(0, 38, 75, 0.22);
+  background: linear-gradient(180deg, #00264B 0%, #001a33 43%, #ffffff 43%, #ffffff 100%);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .feature-announcement-close {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="light"] .feature-announcement-subtitle {
+  color: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .feature-announcement-item {
+  color: #0f2742;
+}
+
+[data-theme="light"] .feature-announcement-footnote {
+  color: #1d4ed8;
+}
+
+@media (max-width: 720px) {
+  .feature-announcement-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-announcement-graphic {
+    width: min(220px, 88%);
+  }
+
+  .feature-announcement-title {
+    font-size: 1.2rem;
+  }
+
+  .feature-announcement-subtitle {
+    font-size: 0.84rem;
+  }
+}
+
 /* ==================== TOAST ==================== */
 .toast {
   position: fixed;
@@ -1853,6 +2120,10 @@ body.nav-open .app-nav-fab {
   line-height: 1.3;
 }
 </style>
+<link rel="stylesheet" href="theme-sync-dashboard.css">
+<link rel="stylesheet" href="sidebar-account.css">
+<link rel="stylesheet" href="buttons-legacy.css">
+<link rel="stylesheet" href="luxury-2026.css">
 </head>
 <body>
 
@@ -1958,6 +2229,27 @@ body.nav-open .app-nav-fab {
       </span>
     </label>
   </div>
+  <div class="mobile-settings-row mobile-account-row">
+    <button class="mobile-account-btn" type="button" onclick="handleAvatarAccess(event)">
+      <span class="mobile-account-avatar" id="mobileAccountAvatar">U</span>
+      <span class="mobile-account-text">
+        <span class="mobile-account-name" id="mobileAccountName">เข้าสู่ระบบ</span>
+        <span class="mobile-account-sub" id="mobileAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
+      </span>
+    </button>
+  </div>
+  <div class="mobile-settings-row">
+    <button class="mobile-settings-action mobile-logout-btn is-hidden" id="mobileLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span>ออกจากระบบ</span>
+    </button>
+  </div>
+  <div class="mobile-settings-row" id="mobileHistoryMenuRow" data-admin-history style="display:none;">
+    <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+  </div>
+  <div class="mobile-settings-row" id="mobileNotificationMenuRow" data-admin-notification style="display:none;">
+    <button class="mobile-settings-action" type="button" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
+  </div>
 </section>
 <div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
 <aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
@@ -1985,6 +2277,13 @@ body.nav-open .app-nav-fab {
   </nav>
   <div class="app-sidebar-theme">
     <div class="app-sidebar-theme-label">Theme</div>
+    <button class="sidebar-account-btn" id="sidebarAccountBtn" type="button" onclick="handleAvatarAccess(event)">
+      <span class="sidebar-account-avatar" id="sidebarAccountAvatar">U</span>
+      <span class="sidebar-account-meta">
+        <span class="sidebar-account-name" id="sidebarAccountName">เข้าสู่ระบบ</span>
+        <span class="sidebar-account-sub" id="sidebarAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
+      </span>
+    </button>
     <label class="app-theme-switch" for="sidebarThemeToggle" title="สลับโหมดสว่าง/มืด">
       <input type="checkbox" id="sidebarThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
       <span class="app-theme-switch-track">
@@ -2006,6 +2305,12 @@ body.nav-open .app-nav-fab {
         </span>
       </span>
     </label>
+    <button class="sidebar-settings-action" id="sidebarHistoryMenuBtn" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+    <button class="sidebar-settings-action" id="sidebarNotificationMenuBtn" data-admin-notification type="button" style="display:none;" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
+    <button class="sidebar-logout-btn is-hidden" id="sidebarLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span>ออกจากระบบ</span>
+    </button>
   </div>
 </aside>
 
@@ -2024,7 +2329,6 @@ body.nav-open .app-nav-fab {
         <span class="user-divider"></span>
         <div class="avatar-wrap">
           <div class="user-avatar" id="userAvatar">-</div>
-          <span class="online-dot"></span>
         </div>
       </button>
       <div class="profile-menu" id="profileMenu">
@@ -2462,6 +2766,54 @@ body.nav-open .app-nav-fab {
   </div>
 </div>
 
+<div class="feature-announcement-overlay" id="featureAnnouncementOverlay" onclick="if (event.target === this) closeFeatureAnnouncement()">
+  <section class="feature-announcement-card" role="dialog" aria-modal="true" aria-labelledby="featureAnnouncementTitle">
+    <button class="feature-announcement-close" type="button" aria-label="ปิดประกาศ" onclick="closeFeatureAnnouncement()">&times;</button>
+    <div class="feature-announcement-hero">
+      <div>
+        <div class="feature-announcement-badge">NEW FEATURE</div>
+        <h3 class="feature-announcement-title" id="featureAnnouncementTitle">น้องเป็ดเหลือง Update ฟีเจอร์ใหม่</h3>
+        <p class="feature-announcement-subtitle">
+          ตอนนี้ผู้ใช้สามารถแจ้งลบ หรือแจ้งแก้ไขข้อมูลที่กรอกไปแล้วผ่านระบบได้ทันที
+        </p>
+      </div>
+      <div class="feature-announcement-graphic" aria-hidden="true">
+        <svg viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="188" cy="34" r="8" fill="#FFD400" fill-opacity="0.85"/>
+          <circle cx="165" cy="22" r="4" fill="#FFE66A" fill-opacity="0.9"/>
+          <ellipse cx="108" cy="114" rx="72" ry="42" fill="#FFD400"/>
+          <circle cx="74" cy="88" r="30" fill="#FFD400"/>
+          <ellipse cx="58" cy="91" rx="12" ry="8" fill="#FF8A00"/>
+          <circle cx="82" cy="84" r="4.8" fill="#1E293B"/>
+          <path d="M92 111C100.5 104.5 115 104.5 124 111" stroke="#EAB308" stroke-width="6" stroke-linecap="round"/>
+          <path d="M90 128L68 145" stroke="#FFB703" stroke-width="7" stroke-linecap="round"/>
+          <path d="M128 130L150 146" stroke="#FFB703" stroke-width="7" stroke-linecap="round"/>
+          <path d="M150 96C161.2 92.8 172.9 97.9 178 108.2C183 118.5 180.2 131 171.5 138.2" stroke="#FFC300" stroke-width="10" stroke-linecap="round"/>
+          <rect x="150" y="28" width="62" height="48" rx="12" fill="#0EA5E9" fill-opacity="0.18" stroke="#38BDF8" stroke-width="2"/>
+          <path d="M166 46H196M166 56H186" stroke="#7DD3FC" stroke-width="4" stroke-linecap="round"/>
+          <path d="M180 16L184 22L191 23L186 28L187 35L180 31L173 35L174 28L169 23L176 22L180 16Z" fill="#FFD400"/>
+        </svg>
+      </div>
+    </div>
+    <div class="feature-announcement-body">
+      <ul class="feature-announcement-list">
+        <li class="feature-announcement-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>ผู้ใช้สามารถแจ้งลบ หรือแจ้งเปลี่ยนแปลงแก้ไขข้อมูลที่เคยกรอกได้แล้ว โดยไปที่ ตั้งค่า > ประวัติ > แจ้งลบ/แก้ไขข้อมูล</span>
+        </li>
+        <li class="feature-announcement-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <span>คำขอทุกกรณีต้องรอแอดมินอนุมัติ ก่อนที่ข้อมูลจริงจะอัปเดตในระบบ</span>
+        </li>
+      </ul>
+      <div class="feature-announcement-actions">
+        <button class="feature-announcement-btn" type="button" onclick="closeFeatureAnnouncement()">รับทราบแล้ว</button>
+      </div>
+      <p class="feature-announcement-footnote">ประกาศนี้จะแสดงเฉพาะผู้มีสิทธิ์ User เท่านั้น</p>
+    </div>
+  </section>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2492,9 +2844,23 @@ const DEV_BYPASS_USER = {
   __devBypass: true
 };
 
+function resolveInAppUrl(targetPath) {
+  const rawTarget = String(targetPath == null ? '' : targetPath).trim();
+  if (!rawTarget) return new URL(window.location.href);
+  if (/^https?:\/\//i.test(rawTarget)) return new URL(rawTarget);
+
+  const pathName = window.location.pathname || '/';
+  const hasFileName = /\/[^/]+\.[a-z0-9]+$/i.test(pathName);
+  const basePath = hasFileName
+    ? pathName.replace(/[^/]+$/, '')
+    : (pathName.endsWith('/') ? pathName : pathName + '/');
+  const cleanedTarget = rawTarget.replace(/^\/+/, '');
+  return new URL(cleanedTarget, window.location.origin + basePath);
+}
+
 function navigateInApp(evt, targetPath) {
   if (evt) evt.preventDefault();
-  const nextUrl = new URL(targetPath, window.location.href);
+  const nextUrl = resolveInAppUrl(targetPath);
   const standaloneMode =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.matchMedia('(display-mode: fullscreen)').matches ||
@@ -2505,6 +2871,75 @@ function navigateInApp(evt, targetPath) {
   }
   window.location.assign(nextUrl.href);
   return false;
+}
+
+function getStoredUserSafe() {
+  try {
+    return JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  } catch (_) {
+    return {};
+  }
+}
+
+function isAdminRole(user) {
+  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'admin';
+}
+
+function isUserRole(user) {
+  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'user';
+}
+
+function hasAuthSession(user) {
+  return !!pickSessionToken(user) && !!String(user && user.email ? user.email : '').trim();
+}
+
+function isGoogleAuthUser(user) {
+  const provider = String(user && user.authProvider ? user.authProvider : '').trim().toLowerCase();
+  if (provider === 'google') return true;
+  // Backward compatibility for older stored sessions.
+  return !provider && !!String(user && user.googlePhoto ? user.googlePhoto : '').trim();
+}
+
+function syncAdminHistoryMenus(user) {
+  const hasSession = hasAuthSession(user);
+  const userVisible = isUserRole(user) && hasSession;
+  const adminVisible = isAdminRole(user) && hasSession;
+  document.querySelectorAll('[data-admin-history]').forEach((el) => {
+    el.style.display = userVisible ? '' : 'none';
+  });
+  document.querySelectorAll('[data-admin-notification]').forEach((el) => {
+    el.style.display = adminVisible ? '' : 'none';
+  });
+}
+
+function openHistoryPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'history.html');
+}
+
+function openNotificationPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'notification.html');
+}
+
+function showFeatureAnnouncement() {
+  const overlay = document.getElementById('featureAnnouncementOverlay');
+  if (!overlay) return;
+  overlay.classList.add('show');
+  document.body.classList.add('feature-announcement-open');
+}
+
+function closeFeatureAnnouncement() {
+  const overlay = document.getElementById('featureAnnouncementOverlay');
+  if (overlay) overlay.classList.remove('show');
+  document.body.classList.remove('feature-announcement-open');
+}
+
+function maybeShowFeatureAnnouncement(user) {
+  if (!isUserRole(user) || !hasAuthSession(user) || !isGoogleAuthUser(user)) return;
+  showFeatureAnnouncement();
 }
 
 // ============================================================
@@ -2612,14 +3047,34 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeAppSidebar();
     closeMobileSettings();
+    closeFeatureAnnouncement();
   }
 });
 
 // ============================================================
 //  SETTINGS
 // ============================================================
+function normalizeSheetUrl(rawValue) {
+  const raw = String(rawValue == null ? '' : rawValue).trim();
+  if (!raw) return DEFAULT_SHEET_URL;
+  const candidate = /^https?:\/\//i.test(raw) ? raw : ('https://' + raw);
+  try {
+    const parsed = new URL(candidate);
+    if (!/^https?:$/i.test(parsed.protocol)) throw new Error('invalid protocol');
+    return parsed.href;
+  } catch (_) {
+    return DEFAULT_SHEET_URL;
+  }
+}
+
 function getSheetUrl() {
-  return localStorage.getItem('CSD1_SHEET_URL') || DEFAULT_SHEET_URL;
+  const stored = localStorage.getItem('CSD1_SHEET_URL');
+  const resolved = normalizeSheetUrl(stored);
+  const normalizedStored = String(stored == null ? '' : stored).trim();
+  if (normalizedStored && normalizedStored !== resolved) {
+    localStorage.setItem('CSD1_SHEET_URL', resolved);
+  }
+  return resolved;
 }
 function revealLoginSettingsLink() {
   const btn = document.querySelector('.login-settings-link');
@@ -2633,11 +3088,23 @@ function closeSettings() {
   document.getElementById('settingsModal').classList.remove('show');
 }
 function saveSettings() {
-  const url = document.getElementById('sheetUrlInput').value.trim();
-  if (url) {
-    localStorage.setItem('CSD1_SHEET_URL', url);
-    showToast('บันทึก URL สำเร็จ');
+  const rawUrl = document.getElementById('sheetUrlInput').value;
+  const normalizedInput = String(rawUrl == null ? '' : rawUrl).trim();
+  if (!normalizedInput) {
+    localStorage.removeItem('CSD1_SHEET_URL');
+    showToast('ล้างค่า URL แล้ว (ใช้ค่าเริ่มต้น)');
+    closeSettings();
+    return;
   }
+
+  const normalizedUrl = normalizeSheetUrl(normalizedInput);
+  if (normalizedUrl === DEFAULT_SHEET_URL && normalizedInput !== DEFAULT_SHEET_URL) {
+    showToast('URL ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
+    return;
+  }
+
+  localStorage.setItem('CSD1_SHEET_URL', normalizedUrl);
+  showToast('บันทึก URL สำเร็จ');
   closeSettings();
 }
 
@@ -2671,6 +3138,9 @@ function normalizeAuthUser(rawUser, fallbackEmail, fallbackProfile) {
   const nested = rawUser.data && typeof rawUser.data === 'object' ? rawUser.data : {};
   const merged = Object.assign({}, rawUser, nested);
   const sessionToken = pickSessionToken(merged);
+  const explicitProvider = String(merged.authProvider || merged.auth_provider || '').trim().toLowerCase();
+  const inferredProvider = fallbackProfile && typeof fallbackProfile === 'object' ? 'google' : '';
+  const authProvider = explicitProvider || inferredProvider || '';
   const email = String(merged.email || fallbackEmail || '').trim().toLowerCase();
   if (!email || !sessionToken) return null;
 
@@ -2683,6 +3153,7 @@ function normalizeAuthUser(rawUser, fallbackEmail, fallbackProfile) {
     role: String(merged.role || 'user').trim() || 'user',
     avatarUrl: String(merged.avatarUrl || '').trim(),
     googlePhoto: String(merged.googlePhoto || fallbackProfile?.picture || '').trim(),
+    authProvider: authProvider,
     sessionToken: sessionToken,
     sessionExpiresIn: Number(merged.sessionExpiresIn || merged.session_expires_in || 0) || 0
   };
@@ -2762,6 +3233,7 @@ function showMainApp() {
   document.getElementById('mainApp').style.display = 'block';
 
   const user = JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  syncAdminHistoryMenus(user);
 
   const displayName = user.name || 'ผู้ใช้';
   document.getElementById('userDisplayName').textContent = displayName;
@@ -2789,14 +3261,19 @@ function showMainApp() {
     sel.value = user.unit;
     sel.dispatchEvent(new Event('change'));
   }
+
+  maybeShowFeatureAnnouncement(user);
 }
 
 function showLoginPage() {
+  closeFeatureAnnouncement();
   document.getElementById('loginWrapper').classList.remove('hidden');
   document.getElementById('mainApp').style.display = 'none';
+  syncAdminHistoryMenus(null);
 }
 
 function handleLogout() {
+  closeFeatureAnnouncement();
   localStorage.removeItem('CSD1_USER');
   showLoginPage();
   showToast('ออกจากระบบแล้ว');
@@ -2987,6 +3464,21 @@ let warrantItemSeq = 0;
 let suspectItemSeq = 0;
 const DEFAULT_COURT_PREFIX = 'ศาล';
 
+function normalizeCourtText(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function isCourtPlaceholderOnly(value) {
+  const courtText = normalizeCourtText(value);
+  if (!courtText) return true;
+  return /^ศาล\s*$/u.test(courtText);
+}
+
+function sanitizeCourtValue(value) {
+  const courtText = normalizeCourtText(value);
+  return isCourtPlaceholderOnly(courtText) ? '' : courtText;
+}
+
 function getWarrantPillGroupHtml(itemId, groupKey, options) {
   const containerClass = groupKey === 'center' ? 'center-grid' : 'pill-group';
   const pills = options.map((opt, idx) => {
@@ -3117,7 +3609,7 @@ function getCheckedValuesIn(root, selector) {
 function getWarrantEntries() {
   const items = Array.from(document.querySelectorAll('#warrantList .warrant-item'));
   return items.map((item) => ({
-    arrestCourt: item.querySelector('.warrant-court')?.value.trim() || '',
+    arrestCourt: sanitizeCourtValue(item.querySelector('.warrant-court')?.value),
     arrestNo: item.querySelector('.warrant-no')?.value.trim() || '',
     warrantDateRaw: item.querySelector('.warrant-date')?.value || '',
     warrantType: item.querySelector('.warrant-type')?.value || '',
@@ -3706,7 +4198,7 @@ function validateStep2() {
         const noInput = item.querySelector('.warrant-no');
         const dateInput = item.querySelector('.warrant-date');
         const warrantChargesInput = item.querySelector('.warrant-charges');
-        if (!courtInput?.value.trim()) {
+        if (!sanitizeCourtValue(courtInput?.value)) {
           highlightError(courtInput, `กรุณาระบุศาลที่ออกหมายจับ (หมายที่ ${i + 1})`);
           return false;
         }
@@ -3732,7 +4224,7 @@ function validateStep2() {
     if (searchBy === 'ตามหมายค้น') {
       const searchCourt = document.querySelector('[name="searchCourt"]');
       const searchNo = document.querySelector('[name="searchNo"]');
-      if (!searchCourt.value.trim()) { highlightError(searchCourt, 'กรุณาระบุศาลที่ออกหมายค้น'); return false; }
+      if (!sanitizeCourtValue(searchCourt?.value)) { highlightError(searchCourt, 'กรุณาระบุศาลที่ออกหมายค้น'); return false; }
       if (!searchNo.value.trim()) { highlightError(searchNo, 'กรุณาระบุเลขที่หมายค้น'); return false; }
     }
   }
@@ -3791,7 +4283,7 @@ ${inspectionResult}
   const warrantEntries = getWarrantEntries();
   const warrantCount = Math.max(1, warrantEntries.length);
   const searchBy = document.querySelector('[name="searchBy"]:checked')?.value;
-  const searchCourt = document.querySelector('[name="searchCourt"]')?.value;
+  const searchCourt = sanitizeCourtValue(document.querySelector('[name="searchCourt"]')?.value);
   const searchNo = document.querySelector('[name="searchNo"]')?.value;
   const searchDate = formatThaiDateShort(document.getElementById("searchDate")?.value);
   const isMultiArrestSuspects = actionRaw === "จับซึ่งหน้า" && arrestSuspects.length > 1;
@@ -4063,6 +4555,17 @@ async function submitToSheet() {
   const warrantEntries = getWarrantEntries();
   const workMediaGlobal = getCheckedValues('workMedia');
   const isInspectAction = actionType === 'ตรวจสอบสถานประกอบการ';
+  const searchBy = document.querySelector('[name="searchBy"]:checked')?.value || "";
+  const isSearchWarrant = searchBy === 'ตามหมายค้น';
+  const searchCourtValue = isSearchWarrant
+    ? sanitizeCourtValue(document.querySelector('[name="searchCourt"]')?.value)
+    : '';
+  const searchNoValue = isSearchWarrant
+    ? (document.querySelector('[name="searchNo"]')?.value || '').trim()
+    : '';
+  const searchDateValue = isSearchWarrant
+    ? formatThaiDate(document.getElementById("searchDate")?.value)
+    : '';
   const arrestSuspects = isInspectAction ? [] : getArrestSuspectEntries(actionType);
   const primarySuspect = arrestSuspects[0] || {
     personName: '',
@@ -4101,10 +4604,10 @@ async function submitToSheet() {
     ownerID: ownerIdentity.sheetValue || "",
     ownerAddress: document.querySelector('[name="ownerAddress"]')?.value || "",
     inspectionResult: document.querySelector('[name="inspectionResult"]')?.value || "",
-    searchBy: document.querySelector('[name="searchBy"]:checked')?.value || "",
-    searchCourt: document.querySelector('[name="searchCourt"]')?.value || "",
-    searchNo: document.querySelector('[name="searchNo"]')?.value || "",
-    searchDate: formatThaiDate(document.getElementById("searchDate")?.value),
+    searchBy: searchBy,
+    searchCourt: searchCourtValue,
+    searchNo: searchNoValue,
+    searchDate: searchDateValue,
     workAlien: isInspectAction ? '' : getCheckedValues('workAlien'),
     workMobilize: isInspectAction ? '' : getCheckedValues('workMobilize'),
     workCenter: isInspectAction ? '' : getCheckedValues('workCenter'),
@@ -4241,5 +4744,6 @@ setDefaultDate();
 window.onload = checkAuth;
 </script>
 
+<script src="sidebar-account.js"></script>
 </body>
 </html>

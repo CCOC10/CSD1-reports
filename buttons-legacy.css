@@ -1,0 +1,154 @@
+/* Unified legacy button style (based on original index page) */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.btn,
+a.btn,
+button.btn {
+  border: none !important;
+  border-radius: var(--radius-sm, 10px) !important;
+  padding: 0.78rem 1.2rem !important;
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: transform 0.26s ease, box-shadow 0.26s ease, background 0.26s ease, border-color 0.26s ease, color 0.26s ease;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.btn-row .btn,
+.btn-row-half .btn {
+  flex: 1 1 0;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn:hover::after {
+  opacity: 1;
+  animation: shimmer 1.5s ease;
+}
+
+.btn-primary,
+.btn-accent {
+  background: var(--gold, var(--accent, #FFD400)) !important;
+  color: #001a33 !important;
+  font-weight: 700 !important;
+}
+
+.btn-primary:hover,
+.btn-accent:hover {
+  box-shadow: 0 0 25px var(--accent-glow, rgba(255, 212, 0, 0.5)), 0 5px 15px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+.btn-primary:active,
+.btn-accent:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-outline {
+  background: transparent !important;
+  color: var(--text, #f1f5f9) !important;
+  border: 1.5px solid var(--border, rgba(255, 255, 255, 0.12)) !important;
+}
+
+.btn-outline:hover {
+  border-color: var(--gold, var(--accent, #FFD400)) !important;
+  color: var(--gold, var(--accent, #FFD400)) !important;
+  box-shadow: 0 0 15px var(--accent-glow-soft, rgba(255, 212, 0, 0.15)) !important;
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: rgba(0, 26, 51, 0.8) !important;
+  color: var(--gold, var(--accent, #FFD400)) !important;
+  border: 1.5px solid var(--gold, var(--accent, #FFD400)) !important;
+}
+
+.btn-success:hover {
+  background: rgba(0, 38, 75, 0.9) !important;
+  box-shadow: 0 0 20px var(--accent-glow-soft, rgba(255, 212, 0, 0.15)) !important;
+  transform: translateY(-1px);
+}
+
+.btn-line {
+  background: #06c755 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+.btn-line:hover {
+  background: #05b34c !important;
+  box-shadow: 0 0 20px rgba(6, 199, 85, 0.4), 0 5px 15px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+.btn-sm {
+  padding: 0.45rem 1rem !important;
+  font-size: 0.8rem !important;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep utility/action buttons in history/notification visually consistent */
+.mini-btn,
+.notify-btn,
+.request-btn {
+  border-radius: var(--radius-sm, 10px) !important;
+  border: 1.5px solid var(--border, rgba(255, 255, 255, 0.12)) !important;
+  background: transparent !important;
+  color: var(--text, #f1f5f9) !important;
+  padding: 0.46rem 0.8rem !important;
+  font-family: "IBM Plex Sans Thai", sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  transition: transform 0.24s ease, box-shadow 0.24s ease, background 0.24s ease, border-color 0.24s ease, color 0.24s ease;
+}
+
+.mini-btn:hover,
+.request-btn:hover {
+  border-color: var(--gold, var(--accent, #FFD400)) !important;
+  color: var(--gold, var(--accent, #FFD400)) !important;
+  box-shadow: 0 0 15px var(--accent-glow-soft, rgba(255, 212, 0, 0.15)) !important;
+  transform: translateY(-1px);
+}
+
+.notify-btn,
+.request-btn.primary {
+  border-color: var(--gold, var(--accent, #FFD400)) !important;
+  background: var(--gold, var(--accent, #FFD400)) !important;
+  color: #001a33 !important;
+}
+
+.notify-btn:hover,
+.request-btn.primary:hover {
+  box-shadow: 0 0 22px var(--accent-glow, rgba(255, 212, 0, 0.5)), 0 5px 15px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-2px);
+}

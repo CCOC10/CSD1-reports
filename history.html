@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#020617">
+<title>ประวัติการกรอกข้อมูล | CSD1</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --primary: #0f172a;
+  --primary-deep: #020617;
+  --primary-surface: #1e293b;
+  --accent: #FFD400;
+  --text: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: rgba(255,255,255,0.12);
+  --card-bg: rgba(15, 23, 42, 0.76);
+  --body-bg: linear-gradient(160deg, #020617 0%, #0b1628 45%, #0f172a 100%);
+  --shadow-md: 0 10px 24px rgba(0,0,0,0.34);
+}
+
+[data-theme="light"] {
+  --primary: #ffffff;
+  --primary-deep: #f1f5f9;
+  --primary-surface: #ffffff;
+  --accent: #00264B;
+  --text: #0f172a;
+  --text-secondary: #1f2937;
+  --text-muted: #475569;
+  --border: rgba(0,0,0,0.12);
+  --card-bg: rgba(255,255,255,0.94);
+  --body-bg: #ffffff;
+  --shadow-md: 0 10px 24px rgba(2,6,23,0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background-color: var(--primary-deep);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--body-bg);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.55;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.page-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.1rem 1rem 6rem;
+}
+
+.top-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+
+.title-box {
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  flex: 1 1 420px;
+}
+
+.title-box h1 {
+  font-size: 1.2rem;
+  margin-bottom: 0.15rem;
+}
+
+.title-box p {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+.head-actions {
+  display: inline-flex;
+  gap: 0.45rem;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 0.52rem 0.78rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  border-color: rgba(255,212,0,0.48);
+  background: rgba(255,212,0,0.18);
+  color: #FFD400;
+}
+
+[data-theme="light"] .btn-primary {
+  border-color: rgba(0,38,75,0.36);
+  background: rgba(0,38,75,0.1);
+  color: #00264B;
+}
+
+.user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.9rem;
+  padding: 0.62rem 0.78rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+[data-theme="light"] .user-bar {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.user-profile-wrap {
+  position: relative;
+}
+
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.user-profile-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  text-align: right;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="light"] .user-name {
+  color: #f1f5f9;
+}
+
+.user-role-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.user-role-badge.admin {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.25));
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+.user-role-badge.user {
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.2));
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.2);
+}
+
+.user-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  margin: 2px 0;
+}
+
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #f59e0b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  border: 2px solid rgba(15,23,42,0.8);
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: scale(0.85) translateY(-6px);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 5000;
+  min-width: 160px;
+}
+
+.profile-menu.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.profile-menu-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.profile-menu-option.logout {
+  color: #f87171;
+}
+
+.profile-menu-option.logout:hover {
+  background: rgba(239,68,68,0.12);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 0.9rem;
+}
+
+.info-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  padding: 0.7rem 0.85rem;
+}
+
+.info-label {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.info-value {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.note {
+  margin-bottom: 0.9rem;
+  border: 1px dashed rgba(255,212,0,0.42);
+  border-radius: 12px;
+  padding: 0.65rem 0.8rem;
+  background: rgba(255,212,0,0.1);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+[data-theme="light"] .note {
+  border-color: rgba(0,38,75,0.28);
+  background: rgba(0,38,75,0.06);
+}
+
+.filter-panel {
+  margin-bottom: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  padding: 0.7rem 0.75rem;
+}
+
+.filter-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.55rem;
+}
+
+.filter-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.filter-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.filter-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.55);
+  color: var(--text);
+  padding: 0.5rem 0.56rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+}
+
+[data-theme="light"] .filter-input {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.filter-actions {
+  margin-top: 0.55rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.mini-btn {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  padding: 0.36rem 0.58rem;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+[data-theme="light"] .mini-btn {
+  background: rgba(0,38,75,0.08);
+}
+
+.result-note {
+  margin-top: 0.55rem;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  z-index: 4600;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.detail-overlay.show {
+  display: flex;
+}
+
+.detail-panel {
+  width: min(960px, 96vw);
+  max-height: 86vh;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.detail-close {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.detail-content {
+  margin: 0;
+  padding: 0.75rem 0.8rem 0.9rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow: auto;
+  max-height: 66vh;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1680px;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(0,0,0,0.22);
+  color: var(--text-secondary);
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 0.55rem 0.55rem;
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] thead th {
+  background: rgba(0,38,75,0.07);
+}
+
+tbody td {
+  font-size: 0.79rem;
+  color: var(--text);
+  padding: 0.5rem 0.55rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.notify-btn {
+  border: 1px solid rgba(255,212,0,0.5);
+  background: rgba(255,212,0,0.14);
+  color: #FFD400;
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+[data-theme="light"] .notify-btn {
+  border-color: rgba(0,38,75,0.35);
+  background: rgba(0,38,75,0.1);
+  color: #00264B;
+}
+
+.empty-state {
+  padding: 1.2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.app-nav-fab {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 0.85rem);
+  left: 1rem;
+  width: 52px;
+  height: 52px;
+  border: none;
+  background: transparent;
+  color: #FFD400;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4305;
+}
+.app-nav-fab svg { width: 24px; height: 24px; stroke-width: 2.6; }
+body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
+
+.app-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 4200;
+}
+.app-sidebar-overlay.show { opacity: 0; pointer-events: none; }
+
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(320px, 86vw);
+  height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 1rem) 0.9rem calc(env(safe-area-inset-bottom) + 1rem);
+  background: rgba(0, 38, 75, 0.55);
+  border-right: 1px solid rgba(255, 212, 0, 0.42);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.34);
+  transform: translateX(-105%);
+  transition: transform 0.28s ease;
+  z-index: 4301;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.app-sidebar.show { transform: translateX(0); }
+[data-theme="light"] .app-sidebar {
+  background: rgba(255, 255, 255, 0.92);
+  border-right-color: rgba(0, 38, 75, 0.3);
+}
+
+.app-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.3rem 0.5rem;
+  border-bottom: 1px solid rgba(255,212,0,0.34);
+}
+[data-theme="light"] .app-sidebar-head { border-bottom-color: rgba(0,38,75,0.26); }
+.app-sidebar-title { font-size: 0.92rem; font-weight: 800; color: #FFD400; }
+[data-theme="light"] .app-sidebar-title { color: #00264B; }
+.app-sidebar-close {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(255,212,0,0.42);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.2);
+  color: #fff;
+  font-size: 1.18rem;
+  cursor: pointer;
+}
+[data-theme="light"] .app-sidebar-close {
+  border-color: rgba(0,38,75,0.32);
+  background: rgba(255,255,255,0.52);
+  color: #00264B;
+}
+
+.app-sidebar-nav { display: flex; flex-direction: column; gap: 0.35rem; }
+.app-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.62rem 0.68rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.26);
+  background: rgba(255,255,255,0.08);
+  color: #f8fafc;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+[data-theme="light"] .app-sidebar-link {
+  border-color: rgba(0,38,75,0.24);
+  background: rgba(0,38,75,0.1);
+  color: #00264B;
+}
+.app-sidebar-link svg { width: 16px; height: 16px; stroke: currentColor; }
+
+.app-sidebar-theme {
+  margin-top: 0.8rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.app-sidebar-theme-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+  color: var(--text-muted);
+}
+
+.app-theme-switch {
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid #bcc1ca;
+  background: #d8dce1;
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+[data-theme="dark"] .app-theme-switch { background: #252c36; border-color: #3d4654; }
+.app-theme-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.app-theme-switch-track { display: block; width: 100%; height: 100%; border-radius: inherit; position: relative; }
+.app-theme-switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+[data-theme="dark"] .app-theme-switch-thumb { transform: translate(24px, -50%); background: #05070b; color: #f8fafc; }
+.app-theme-switch-sun,.app-theme-switch-moon { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.4; }
+.app-theme-switch-moon { display: none; }
+[data-theme="dark"] .app-theme-switch-sun { display: none; }
+[data-theme="dark"] .app-theme-switch-moon { display: block; }
+
+.sidebar-settings-action {
+  margin-top: 0.6rem;
+  width: 100%;
+  padding: 0.54rem 0.62rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,212,0,0.36);
+  background: rgba(255,212,0,0.16);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+[data-theme="light"] .sidebar-settings-action {
+  border-color: rgba(255,255,255,0.34);
+  background: rgba(255,255,255,0.18);
+  color: #f8fafc;
+}
+
+.mobile-mini-nav {
+  position: fixed;
+  left: max(0.5rem, env(safe-area-inset-left));
+  right: max(0.5rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
+  height: 68px;
+  padding: 0.35rem;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: rgba(2, 6, 23, 0.94);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
+  z-index: 4307;
+  display: none;
+  gap: 0.15rem;
+}
+
+.mobile-mini-link,
+.mobile-mini-settings {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+}
+.mobile-mini-link svg,
+.mobile-mini-settings svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.2; }
+.mobile-mini-settings { cursor: pointer; font-family: inherit; }
+[data-theme="light"] .mobile-mini-nav { background: rgba(0, 38, 75, 0.6); border-color: rgba(0, 38, 75, 0.36); }
+[data-theme="light"] .mobile-mini-link,
+[data-theme="light"] .mobile-mini-settings { color: #f8fafc; }
+[data-theme="light"] .mobile-mini-link.active { background: rgba(0, 38, 75, 0.32); color: #fff; }
+
+.mobile-settings-overlay,
+.mobile-settings-sheet { display: none; }
+.mobile-settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.52);
+  z-index: 4308;
+  opacity: 0;
+  pointer-events: none;
+}
+.mobile-settings-sheet {
+  position: fixed;
+  left: max(0.7rem, env(safe-area-inset-left));
+  right: max(0.7rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 5rem);
+  background: rgba(0, 38, 75, 0.86);
+  border: 1px solid rgba(255, 212, 0, 0.42);
+  border-radius: 16px;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.34);
+  z-index: 4309;
+  padding: 0.75rem 0.85rem 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.mobile-settings-overlay.show { opacity: 1; pointer-events: auto; }
+.mobile-settings-sheet.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.mobile-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.3);
+}
+.mobile-settings-title { font-size: 0.94rem; font-weight: 800; color: #FFD400; }
+.mobile-settings-close {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 212, 0, 0.36);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.mobile-settings-row {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.mobile-settings-label { font-size: 0.86rem; font-weight: 700; color: #f8fafc; }
+.mobile-settings-action {
+  width: 100%;
+  padding: 0.58rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.34);
+  background: rgba(255, 212, 0, 0.14);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+[data-theme="light"] .mobile-settings-sheet {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 38, 75, 0.38);
+}
+[data-theme="light"] .mobile-settings-head { border-bottom-color: rgba(0, 38, 75, 0.26); }
+[data-theme="light"] .mobile-settings-title,
+[data-theme="light"] .mobile-settings-label { color: #00264B; }
+[data-theme="light"] .mobile-settings-action {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 5.3rem);
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.78rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 4500;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 900px) {
+  .page-wrap { padding-bottom: calc(env(safe-area-inset-bottom) + 6rem); }
+  .app-nav-fab { display: none !important; }
+  .mobile-mini-nav, .mobile-settings-overlay, .mobile-settings-sheet { display: block; }
+  .mobile-mini-nav { display: flex; }
+  .app-sidebar-theme { display: none; }
+  .info-grid { grid-template-columns: 1fr; }
+  .filter-grid { grid-template-columns: 1fr; }
+  .filter-actions { justify-content: stretch; }
+  .mini-btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+</button>
+
+<nav class="mobile-mini-nav" aria-label="เมนูหลักมือถือ">
+  <a class="mobile-mini-link" href="index.html" onclick="return navigateInApp(event, 'index.html')" title="หน้ากรอกแบบฟอร์ม" aria-label="หน้ากรอกแบบฟอร์ม">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+    <span>ฟอร์ม</span>
+  </a>
+  <a class="mobile-mini-link" href="compare.html" onclick="return navigateInApp(event, 'compare.html')" title="เปรียบเทียบ" aria-label="เปรียบเทียบ">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+    <span>เทียบ</span>
+  </a>
+  <a class="mobile-mini-link" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')" title="Dashboard (Home)" aria-label="Dashboard หน้าแรก">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+    <span>Dashboard</span>
+  </a>
+  <a class="mobile-mini-link" href="rank.html" onclick="return navigateInApp(event, 'rank.html')" title="Hall of Fam" aria-label="Hall of Fam">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
+    <span>HOF</span>
+  </a>
+  <button class="mobile-mini-settings" type="button" onclick="openMobileSettings(event)" aria-label="หน้าตั้งค่า" title="หน้าตั้งค่า">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34a1.7 1.7 0 0 0-1.04 1.55V22a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.55a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87a1.7 1.7 0 0 0-1.55-1.04H2a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.04a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.04a1.7 1.7 0 0 0 1-1.54V2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.55a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.04a1.7 1.7 0 0 0 1.54 1H22a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.04z"></path></svg>
+    <span>ตั้งค่า</span>
+  </button>
+</nav>
+
+<div class="mobile-settings-overlay" id="mobileSettingsOverlay" onclick="closeMobileSettings()"></div>
+<section class="mobile-settings-sheet" id="mobileSettingsSheet" aria-label="หน้าตั้งค่า">
+  <div class="mobile-settings-head">
+    <div class="mobile-settings-title">หน้าตั้งค่า</div>
+    <button class="mobile-settings-close" type="button" onclick="closeMobileSettings()" aria-label="ปิดหน้าตั้งค่า">&times;</button>
+  </div>
+  <div class="mobile-settings-row">
+    <div class="mobile-settings-label">โหมดธีม</div>
+    <label class="app-theme-switch" for="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
+      <input type="checkbox" id="mobileThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
+      <span class="app-theme-switch-track">
+        <span class="app-theme-switch-thumb">
+          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
+            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
+            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
+            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
+            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
+            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
+            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
+            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
+          </svg>
+          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
+          </svg>
+        </span>
+      </span>
+    </label>
+  </div>
+  <div class="mobile-settings-row" id="mobileHistoryMenuRow" data-admin-history style="display:none;">
+    <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+  </div>
+</section>
+
+<div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
+<aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
+  <div class="app-sidebar-head">
+    <div class="app-sidebar-title">เมนูหลัก</div>
+    <button class="app-sidebar-close" type="button" onclick="closeAppSidebar()" aria-label="ปิดเมนู">&times;</button>
+  </div>
+  <nav class="app-sidebar-nav">
+    <a class="app-sidebar-link" href="dashboard.html" onclick="return navigateViaSidebar(event, 'dashboard.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>Dashboard</span>
+    </a>
+    <a class="app-sidebar-link" href="compare.html" onclick="return navigateViaSidebar(event, 'compare.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      <span>เปรียบเทียบ</span>
+    </a>
+    <a class="app-sidebar-link" href="rank.html" onclick="return navigateViaSidebar(event, 'rank.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
+      <span>HALL OF FAM</span>
+    </a>
+    <a class="app-sidebar-link" href="index.html" onclick="return navigateViaSidebar(event, 'index.html')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+      <span>หน้ากรอกแบบฟอร์ม</span>
+    </a>
+  </nav>
+  <div class="app-sidebar-theme">
+    <div class="app-sidebar-theme-label">Theme</div>
+    <label class="app-theme-switch" for="sidebarThemeToggle" title="สลับโหมดสว่าง/มืด">
+      <input type="checkbox" id="sidebarThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
+      <span class="app-theme-switch-track">
+        <span class="app-theme-switch-thumb">
+          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
+            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
+            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
+            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
+            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
+            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
+            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
+            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
+          </svg>
+          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
+          </svg>
+        </span>
+      </span>
+    </label>
+    <button class="sidebar-settings-action" id="sidebarHistoryMenuBtn" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+  </div>
+</aside>
+
+<main class="page-wrap">
+  <section class="top-head">
+    <div class="title-box">
+      <h1>ประวัติการกรอกข้อมูล (เฉพาะ ชป. ของท่าน)</h1>
+      <p>ท่านสามารถตรวจสอบ และแจ้งแก้ไขได้ 1 ครั้ง</p>
+    </div>
+    <div class="head-actions">
+      <a class="btn" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')">กลับหน้า Dashboard</a>
+      <button class="btn btn-primary" type="button" onclick="loadHistory()">รีเฟรช</button>
+    </div>
+  </section>
+
+  <section class="user-bar">
+    <div class="user-bar-left"></div>
+    <div class="user-profile-wrap" id="userProfileWrap">
+      <button class="user-profile-btn" type="button" onclick="toggleProfileMenu()">
+        <div class="user-details">
+          <span class="user-name" id="userDisplayName">-</span>
+          <span class="user-role-badge user" id="userRoleBadge">user</span>
+        </div>
+        <span class="user-divider"></span>
+        <div class="avatar-wrap">
+          <div class="user-avatar" id="userAvatar">-</div>
+          <span class="online-dot"></span>
+        </div>
+      </button>
+      <div class="profile-menu" id="profileMenu">
+        <button class="profile-menu-option logout" type="button" onclick="handleLogout()">
+          ออกจากระบบ
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-grid">
+    <article class="info-card">
+      <div class="info-label">สถานะสิทธิ์</div>
+      <div class="info-value" id="historyRoleLabel">-</div>
+    </article>
+    <article class="info-card">
+      <div class="info-label">ชุดปฏิบัติการ</div>
+      <div class="info-value" id="historyUnitLabel">-</div>
+    </article>
+    <article class="info-card">
+      <div class="info-label">จำนวนรายการ</div>
+      <div class="info-value" id="historyCountLabel">0</div>
+    </article>
+    <article class="info-card">
+      <div class="info-label">ผลลัพธ์หลังกรอง</div>
+      <div class="info-value" id="historyFilteredCountLabel">0</div>
+    </article>
+  </section>
+
+  <section class="filter-panel">
+    <div class="filter-head">
+      <div class="filter-title">ฟิลเตอร์ค้นหาข้อมูล</div>
+    </div>
+    <div class="filter-grid">
+      <label class="filter-field">
+        <span class="filter-label">คำค้นหา</span>
+        <input class="filter-input" id="filterKeyword" type="text" placeholder=" เช่น ศูนย์, ชื่อผู้ต้องหา, ข้อหา">
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">ชื่อ/สกุล ผู้ต้องหา</span>
+        <input class="filter-input" id="filterSuspectName" type="text" placeholder="เช่น สมชาย ใจดี">
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">เลขที่หมายจับ / หมายค้น</span>
+        <input class="filter-input" id="filterWarrantNo" type="text" placeholder="เช่น 123/2569">
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">เลขบัตรประชาชน</span>
+        <input class="filter-input" id="filterCitizenId" type="text" placeholder="13 หลัก หรือบางส่วน">
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">ศูนย์/ประเภทงาน</span>
+        <input class="filter-input" id="filterCenter" type="text" placeholder="เช่น ศูนย์, ต่างด้าว, ห้วงระดม, ออกสื่อ">
+      </label>
+    </div>
+    <div class="filter-actions">
+      <button class="mini-btn" type="button" onclick="clearHistoryFilters()">ล้างฟิลเตอร์</button>
+    </div>
+    <div class="result-note" id="historyFilterSummary">แสดงทั้งหมด 0 รายการ</div>
+  </section>
+
+  <section class="note">
+    กรุณารอสักครู่ หากข้อมูลใดต้องแก้ไข ให้กดปุ่ม <strong>แจ้งแอดมิน</strong> 
+  </section>
+
+  <section class="table-wrap">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="nowrap">ลำดับ</th>
+            <th class="nowrap">ประทับเวลา</th>
+            <th>ผู้รายงาน</th>
+            <th class="nowrap">อีเมลผู้รายงาน</th>
+            <th>ชุดปฏิบัติการ</th>
+            <th>หน้างานศูนย์</th>
+            <th>สรุปหน้างาน</th>
+            <th>ชื่อ-สกุล ผู้ต้องหา</th>
+            <th class="nowrap">เลขหมายจับ/หมายค้น</th>
+            <th class="nowrap">เลขบัตรประชาชน</th>
+            <th>ข้อหา</th>
+            <th class="nowrap">วันที่/เวลา</th>
+            <th>สถานที่</th>
+            <th class="nowrap">ประเภท</th>
+            <th class="nowrap">รายละเอียดเต็ม</th>
+            <th class="nowrap">แจ้งแอดมิน</th>
+          </tr>
+        </thead>
+        <tbody id="historyTbody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="historyEmpty">กำลังโหลดข้อมูล...</div>
+  </section>
+</main>
+
+<div class="detail-overlay" id="historyDetailOverlay" onclick="if (event.target === this) closeHistoryDetail()">
+  <section class="detail-panel">
+    <div class="detail-head">
+      <div class="detail-title">รายละเอียดข้อมูลทั้งหมด</div>
+      <button class="detail-close" type="button" onclick="closeHistoryDetail()" aria-label="ปิดรายละเอียด">&times;</button>
+    </div>
+    <pre class="detail-content" id="historyDetailContent">-</pre>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbytUmPr668UwcPsbmwtZm9wSL3qnhDjYJG8b7DzIiqxqyo6vKLVtDgGdmdvA2hE00xX9Q/exec";
+let appSidebarOpen = false;
+let mobileSettingsOpen = false;
+let historyRows = [];
+let profileMenuOpen = false;
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function navigateInApp(evt, targetPath) {
+  if (evt) evt.preventDefault();
+  const nextUrl = new URL(targetPath, window.location.href);
+  const standaloneMode =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (standaloneMode && nextUrl.origin === window.location.origin) {
+    window.location.assign(nextUrl.pathname + nextUrl.search + nextUrl.hash);
+    return false;
+  }
+  window.location.assign(nextUrl.href);
+  return false;
+}
+
+function openAppSidebar() {
+  closeMobileSettings();
+  appSidebarOpen = true;
+  document.body.classList.add('nav-open');
+  document.getElementById('appSidebar')?.classList.add('show');
+  document.getElementById('appSidebarOverlay')?.classList.add('show');
+}
+
+function closeAppSidebar() {
+  appSidebarOpen = false;
+  document.body.classList.remove('nav-open');
+  document.getElementById('appSidebar')?.classList.remove('show');
+  document.getElementById('appSidebarOverlay')?.classList.remove('show');
+}
+
+function toggleAppSidebar(evt) {
+  if (evt) evt.stopPropagation();
+  if (appSidebarOpen) closeAppSidebar();
+  else openAppSidebar();
+}
+
+function openMobileSettings(evt) {
+  if (evt) evt.stopPropagation();
+  closeAppSidebar();
+  mobileSettingsOpen = true;
+  document.body.classList.add('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.add('show');
+  document.getElementById('mobileSettingsSheet')?.classList.add('show');
+}
+
+function closeMobileSettings() {
+  mobileSettingsOpen = false;
+  document.body.classList.remove('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.remove('show');
+  document.getElementById('mobileSettingsSheet')?.classList.remove('show');
+}
+
+function navigateViaSidebar(evt, targetPath) {
+  closeAppSidebar();
+  return navigateInApp(evt, targetPath);
+}
+
+function getPreferredTheme() {
+  const stored = localStorage.getItem('CSD1_THEME') || 'dark';
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function syncThemeSwitch(mode) {
+  const isDark = mode === 'dark';
+  const sidebarToggleEl = document.getElementById('sidebarThemeToggle');
+  if (sidebarToggleEl) sidebarToggleEl.checked = isDark;
+  const mobileToggleEl = document.getElementById('mobileThemeToggle');
+  if (mobileToggleEl) mobileToggleEl.checked = isDark;
+}
+
+function applyTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', normalized);
+  syncThemeSwitch(normalized);
+  const themeColor = normalized === 'dark' ? '#020617' : '#e8ecf2';
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.setAttribute('content', themeColor);
+}
+
+function setTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  localStorage.setItem('CSD1_THEME', normalized);
+  applyTheme(normalized);
+}
+
+function toggleThemeSwitch(evt) {
+  const isDark = !!evt?.target?.checked;
+  setTheme(isDark ? 'dark' : 'light');
+}
+
+function getSheetUrl() {
+  return localStorage.getItem('CSD1_SHEET_URL') || DEFAULT_SHEET_URL;
+}
+
+function getStoredUserSafe() {
+  try {
+    return JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  } catch (_) {
+    return {};
+  }
+}
+
+function getSessionToken(user) {
+  if (!user || typeof user !== 'object') return '';
+  return String(
+    user.sessionToken ||
+    user.session_token ||
+    (user.session && user.session.token) ||
+    user.token ||
+    user.accessToken ||
+    ''
+  ).trim();
+}
+
+function isAdminRole(user) {
+  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'admin';
+}
+
+function isUserRole(user) {
+  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'user';
+}
+
+function hasAuthSession(user) {
+  return !!(user && user.email && getSessionToken(user));
+}
+
+function syncAdminHistoryMenus(user) {
+  const visible = isUserRole(user) && hasAuthSession(user);
+  document.querySelectorAll('[data-admin-history]').forEach((el) => {
+    el.style.display = visible ? '' : 'none';
+  });
+}
+
+function openHistoryPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'history.html');
+}
+
+function toggleProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  profileMenuOpen = !profileMenuOpen;
+  menu.classList.toggle('show', profileMenuOpen);
+}
+
+function closeProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  profileMenuOpen = false;
+  menu.classList.remove('show');
+}
+
+function renderUserProfile(user) {
+  const normalized = user && typeof user === 'object' ? user : {};
+  const displayName = String(normalized.name || normalized.email || 'ผู้ใช้').trim();
+  const roleBadge = document.getElementById('userRoleBadge');
+  const displayNameEl = document.getElementById('userDisplayName');
+  const avatarEl = document.getElementById('userAvatar');
+  if (displayNameEl) displayNameEl.textContent = displayName || '-';
+  if (roleBadge) {
+    roleBadge.textContent = normalized.unit || '-';
+    roleBadge.className = 'user-role-badge ' + (isAdminRole(normalized) ? 'admin' : 'user');
+  }
+  if (avatarEl) {
+    const photoUrl = String(normalized.avatarUrl || normalized.googlePhoto || '').trim();
+    const initial = (displayName || '-').charAt(0).toUpperCase();
+    if (photoUrl) {
+      avatarEl.innerHTML = `<img src="${photoUrl}" alt="${displayName}" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${initial}'">`;
+    } else {
+      avatarEl.textContent = initial;
+    }
+  }
+}
+
+function handleLogout() {
+  localStorage.removeItem('CSD1_USER');
+  closeProfileMenu();
+  showToast('ออกจากระบบแล้ว');
+  setTimeout(() => {
+    navigateInApp(null, 'index.html');
+  }, 220);
+}
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function normalizeText(value) {
+  return String(value == null ? '' : value).trim().toLowerCase();
+}
+
+function getRowValue(row, key) {
+  return row && Object.prototype.hasOwnProperty.call(row, key)
+    ? String(row[key] == null ? '' : row[key]).trim()
+    : '';
+}
+
+function getFirstValue(row, keys) {
+  for (let i = 0; i < keys.length; i++) {
+    const v = getRowValue(row, keys[i]);
+    if (v) return v;
+  }
+  return '';
+}
+
+function getHeaderValues(row, baseHeader) {
+  const values = [];
+  const base = getRowValue(row, baseHeader);
+  if (base) values.push(base);
+  Object.keys(row || {}).forEach((key) => {
+    if (key.indexOf(baseHeader + ' #') === 0) {
+      const v = getRowValue(row, key);
+      if (v && values.indexOf(v) === -1) values.push(v);
+    }
+  });
+  return values;
+}
+
+function getCitizenId(row) {
+  const values = getHeaderValues(row, 'เลขประจำตัวประชาชน (13 หลัก)');
+  return values.length ? values[0] : '';
+}
+
+function getWarrantNo(row) {
+  return getFirstValue(row, ['เลขที่หมายจับ', 'เลขที่หมายค้น']);
+}
+
+function getWorkTag(row) {
+  const tags = [];
+  const center = getRowValue(row, 'หน้างานศูนย์');
+  const migrant = getRowValue(row, 'หน้างานต่างด้าว');
+  const mobilize = getRowValue(row, 'หน้างานห้วงระดม');
+  const media = getRowValue(row, 'งานออกสื่อ');
+  if (center) tags.push('ศูนย์: ' + center);
+  if (migrant) tags.push('ต่างด้าว: ' + migrant);
+  if (mobilize) tags.push('ห้วงระดม: ' + mobilize);
+  if (media) tags.push('ออกสื่อ: ' + media);
+  return tags.join(' | ');
+}
+
+function getHistoryFilters() {
+  return {
+    keyword: normalizeText(document.getElementById('filterKeyword')?.value || ''),
+    suspect: normalizeText(document.getElementById('filterSuspectName')?.value || ''),
+    warrant: normalizeText(document.getElementById('filterWarrantNo')?.value || ''),
+    citizenId: normalizeText(document.getElementById('filterCitizenId')?.value || ''),
+    center: normalizeText(document.getElementById('filterCenter')?.value || '')
+  };
+}
+
+function rowMatchesFilters(row, filters) {
+  if (!filters) return true;
+  const allText = normalizeText(Object.keys(row || {}).map((key) => row[key]).join(' '));
+  if (filters.keyword && allText.indexOf(filters.keyword) === -1) return false;
+
+  const suspect = normalizeText(getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา'));
+  if (filters.suspect && suspect.indexOf(filters.suspect) === -1) return false;
+
+  const warrant = normalizeText(
+    [getRowValue(row, 'เลขที่หมายจับ'), getRowValue(row, 'เลขที่หมายค้น')].join(' ')
+  );
+  if (filters.warrant && warrant.indexOf(filters.warrant) === -1) return false;
+
+  const citizenValues = normalizeText(getHeaderValues(row, 'เลขประจำตัวประชาชน (13 หลัก)').join(' '));
+  if (filters.citizenId && citizenValues.indexOf(filters.citizenId) === -1) return false;
+
+  const centerText = normalizeText(
+    [
+      getRowValue(row, 'หน้างานศูนย์'),
+      getRowValue(row, 'หน้างานต่างด้าว'),
+      getRowValue(row, 'หน้างานห้วงระดม'),
+      getRowValue(row, 'งานออกสื่อ'),
+      getRowValue(row, 'การจับกุม ตรวจสอบ')
+    ].join(' ')
+  );
+  if (filters.center && centerText.indexOf(filters.center) === -1) return false;
+
+  return true;
+}
+
+function updateFilterSummary(total, filtered) {
+  const summaryEl = document.getElementById('historyFilterSummary');
+  const filteredCountLabel = document.getElementById('historyFilteredCountLabel');
+  if (filteredCountLabel) filteredCountLabel.textContent = String(filtered);
+  if (summaryEl) {
+    summaryEl.textContent = filtered === total
+      ? `แสดงทั้งหมด ${filtered} รายการ`
+      : `พบ ${filtered} จากทั้งหมด ${total} รายการ`;
+  }
+}
+
+function getCurrentFilteredRows() {
+  const filters = getHistoryFilters();
+  return historyRows.filter((row) => rowMatchesFilters(row, filters));
+}
+
+function renderFilteredRows(rows) {
+  const tbody = document.getElementById('historyTbody');
+  const emptyEl = document.getElementById('historyEmpty');
+  const filteredRows = Array.isArray(rows) ? rows : [];
+  tbody.innerHTML = '';
+
+  if (!historyRows.length) {
+    emptyEl.textContent = 'ยังไม่มีข้อมูลในชุดปฏิบัติการของท่าน';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  if (!filteredRows.length) {
+    emptyEl.textContent = 'ไม่พบข้อมูลที่ตรงกับเงื่อนไขฟิลเตอร์';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  tbody.innerHTML = filteredRows.map((row, idx) => {
+    const no = getRowValue(row, 'ลำดับ') || '-';
+    const ts = getRowValue(row, 'ประทับเวลา') || '-';
+    const reporter = getRowValue(row, 'ผู้รายงาน') || '-';
+    const reporterEmail = getRowValue(row, 'อีเมล') || '-';
+    const unit = getRowValue(row, 'ชุดปฏิบัติการ') || '-';
+    const center = getRowValue(row, 'หน้างานศูนย์') || '-';
+    const otherWork = getWorkTag(row) || '-';
+    const suspect = getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-';
+    const warrant = getWarrantNo(row) || '-';
+    const citizenId = getCitizenId(row) || '-';
+    const charge = getRowValue(row, 'ข้อหา (ฐานความผิด)') || '-';
+    const dateTime = `${getRowValue(row, 'วันที่') || '-'} ${getRowValue(row, 'เวลา') || ''}`.trim();
+    const location = getRowValue(row, 'สถานที่ (จับกุม/หรือตรวจสอบ)') || '-';
+    const actionType = getRowValue(row, 'การจับกุม ตรวจสอบ') || '-';
+    return `
+      <tr>
+        <td class="nowrap">${escapeHtml(no)}</td>
+        <td class="nowrap">${escapeHtml(ts)}</td>
+        <td>${escapeHtml(reporter)}</td>
+        <td class="nowrap">${escapeHtml(reporterEmail)}</td>
+        <td>${escapeHtml(unit)}</td>
+        <td>${escapeHtml(center)}</td>
+        <td>${escapeHtml(otherWork)}</td>
+        <td>${escapeHtml(suspect)}</td>
+        <td class="nowrap">${escapeHtml(warrant)}</td>
+        <td class="nowrap">${escapeHtml(citizenId)}</td>
+        <td>${escapeHtml(charge)}</td>
+        <td class="nowrap">${escapeHtml(dateTime)}</td>
+        <td>${escapeHtml(location)}</td>
+        <td class="nowrap">${escapeHtml(actionType)}</td>
+        <td class="nowrap"><button class="mini-btn" type="button" onclick="openHistoryDetail(${idx})">ดูทั้งหมด</button></td>
+        <td class="nowrap"><button class="notify-btn" type="button" onclick="notifyAdminByRow(${idx})">แจ้งแอดมิน</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function applyHistoryFilters() {
+  const filteredRows = getCurrentFilteredRows();
+  updateFilterSummary(historyRows.length, filteredRows.length);
+  renderFilteredRows(filteredRows);
+}
+
+function clearHistoryFilters() {
+  ['filterKeyword', 'filterSuspectName', 'filterWarrantNo', 'filterCitizenId', 'filterCenter'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  applyHistoryFilters();
+}
+
+function bindFilterInputs() {
+  ['filterKeyword', 'filterSuspectName', 'filterWarrantNo', 'filterCitizenId', 'filterCenter'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el || el.__boundFilter) return;
+    el.addEventListener('input', applyHistoryFilters);
+    el.__boundFilter = true;
+  });
+}
+
+function buildHistoryDetailText(row) {
+  const source = row && typeof row === 'object' ? row : {};
+  const allKeys = Object.keys(source);
+  const hasAlias = {};
+  allKeys.forEach((key) => {
+    const m = key.match(/^(.*)\s#\d+$/);
+    if (m) hasAlias[m[1]] = true;
+  });
+
+  const keysToShow = allKeys.filter((key) => {
+    const m = key.match(/^(.*)\s#\d+$/);
+    if (m) return true;
+    return !hasAlias[key];
+  });
+
+  return keysToShow.map((key) => {
+    const label = key.replace(/\s#(\d+)$/, ' (ช่อง $1)');
+    const value = getRowValue(source, key) || '-';
+    return `${label}: ${value}`;
+  }).join('\n');
+}
+
+function openHistoryDetail(index) {
+  const rows = getCurrentFilteredRows();
+  const row = rows[index];
+  if (!row) return;
+  const overlay = document.getElementById('historyDetailOverlay');
+  const content = document.getElementById('historyDetailContent');
+  if (content) content.textContent = buildHistoryDetailText(row);
+  if (overlay) overlay.classList.add('show');
+}
+
+function closeHistoryDetail() {
+  document.getElementById('historyDetailOverlay')?.classList.remove('show');
+}
+
+function notifyAdminByRow(index) {
+  const currentRows = getCurrentFilteredRows();
+  const row = currentRows[index];
+  if (!row) return;
+
+  const message = [
+    'แจ้งแอดมิน: ขอแก้ไขข้อมูลรายงาน',
+    'ลำดับ: ' + (getRowValue(row, 'ลำดับ') || '-'),
+    'ประทับเวลา: ' + (getRowValue(row, 'ประทับเวลา') || '-'),
+    'ผู้รายงาน: ' + (getRowValue(row, 'ผู้รายงาน') || '-'),
+    'ชุดปฏิบัติการ: ' + (getRowValue(row, 'ชุดปฏิบัติการ') || '-'),
+    'วันที่/เวลา: ' + ((getRowValue(row, 'วันที่') || '-') + ' ' + (getRowValue(row, 'เวลา') || '')),
+    'สถานที่: ' + (getRowValue(row, 'สถานที่ (จับกุม/หรือตรวจสอบ)') || '-'),
+    'ชื่อผู้ต้องหา: ' + (getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-'),
+    'เลขหมายจับ/ค้น: ' + (getWarrantNo(row) || '-'),
+    'เลขบัตรประชาชน: ' + (getCitizenId(row) || '-'),
+    'ข้อหา: ' + (getRowValue(row, 'ข้อหา (ฐานความผิด)') || '-'),
+    '',
+    'หมายเหตุการแก้ไข: (กรอกรายละเอียดที่ต้องแก้)'
+  ].join('\n');
+
+  const lineUrl = 'https://line.me/R/msg/text/?' + encodeURIComponent(message);
+  window.open(lineUrl, '_blank', 'noopener,noreferrer');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(message).catch(() => {});
+  }
+  showToast('สร้างข้อความแจ้งแอดมินแล้ว');
+}
+
+async function loadHistory() {
+  const user = getStoredUserSafe();
+  const roleLabel = document.getElementById('historyRoleLabel');
+  const unitLabel = document.getElementById('historyUnitLabel');
+  const countLabel = document.getElementById('historyCountLabel');
+  const emptyEl = document.getElementById('historyEmpty');
+
+  syncAdminHistoryMenus(user);
+  renderUserProfile(user);
+  roleLabel.textContent = isAdminRole(user) ? 'Admin' : (isUserRole(user) ? 'User' : '-');
+  unitLabel.textContent = user.unit || '-';
+  countLabel.textContent = '0';
+  updateFilterSummary(0, 0);
+  emptyEl.textContent = 'กำลังโหลดข้อมูล...';
+  emptyEl.style.display = 'block';
+  historyRows = [];
+  bindFilterInputs();
+  applyHistoryFilters();
+
+  const sessionToken = getSessionToken(user);
+  if (!user.email || !sessionToken) {
+    emptyEl.textContent = 'ไม่พบเซสชันเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่';
+    return;
+  }
+  if (!isUserRole(user)) {
+    emptyEl.textContent = 'เมนูนี้สำหรับผู้ใช้งานสิทธิ์ User เท่านั้น';
+    return;
+  }
+
+  try {
+    const response = await fetch(getSheetUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'getUnitHistory',
+        email: user.email,
+        sessionToken: sessionToken
+      })
+    });
+    const result = await response.json();
+    if (result.status !== 'success') {
+      throw new Error(result.message || 'โหลดข้อมูลไม่สำเร็จ');
+    }
+
+    unitLabel.textContent = result.unit || user.unit || '-';
+    countLabel.textContent = String(result.total || 0);
+    historyRows = Array.isArray(result.data) ? result.data : [];
+    applyHistoryFilters();
+  } catch (err) {
+    emptyEl.textContent = 'เกิดข้อผิดพลาด: ' + (err.message || err);
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeProfileMenu();
+    closeHistoryDetail();
+    closeAppSidebar();
+    closeMobileSettings();
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (profileMenuOpen && !e.target.closest('.user-profile-wrap')) {
+    closeProfileMenu();
+  }
+});
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+  }
+});
+
+applyTheme(getPreferredTheme());
+syncAdminHistoryMenus(getStoredUserSafe());
+loadHistory();
+</script>
+</body>
+</html>
