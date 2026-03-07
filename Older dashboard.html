@@ -1445,25 +1445,47 @@ body.exporting-dashboard [class*="stat-"] {
 /* ==================== TOAST ==================== */
 .toast {
   position: fixed;
-  bottom: calc(2rem + env(safe-area-inset-bottom));
   left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--toast-bg);
-  color: var(--text);
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
-  border: 1px solid var(--border);
-  font-size: 0.85rem;
-  font-weight: 500;
-  box-shadow: var(--shadow-lg);
-  z-index: 5000;
+  bottom: calc(env(safe-area-inset-bottom) + 1.35rem);
+  transform: translateX(-50%) translateY(14px);
+  width: auto;
+  max-width: min(92vw, 640px);
+  padding: 0.68rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 212, 0, 0.34);
+  background: rgba(2, 6, 23, 0.76);
+  color: #f8fafc;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
+  box-shadow: 0 14px 34px rgba(2, 6, 23, 0.46);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  z-index: 12020;
   opacity: 0;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.22s ease, transform 0.22s ease;
   pointer-events: none;
+}
+[data-theme="light"] .toast {
+  background: rgba(255, 255, 255, 0.8);
+  color: #00264B;
+  border-color: rgba(0, 38, 75, 0.3);
+  box-shadow: 0 14px 30px rgba(0, 38, 75, 0.2);
 }
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+@media (max-width: 900px) {
+  .toast {
+    bottom: calc(env(safe-area-inset-bottom) + 5.35rem);
+    font-size: 0.88rem;
+  }
 }
 
 /* ==================== NO DATA STATE ==================== */

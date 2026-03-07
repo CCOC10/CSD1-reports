@@ -84,6 +84,12 @@ body {
   color: var(--text) !important;
 }
 
+.detail-close {
+  width: 34px !important;
+  height: 34px !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
 .btn-primary,
 .notify-btn {
   border-color: var(--accent) !important;

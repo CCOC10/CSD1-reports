@@ -7,10 +7,44 @@
     notificationTotal: 0,
     notificationLastFetch: 0,
     notificationUserKey: '',
-    notificationInFlight: null
+    notificationInFlight: null,
+    notificationSeenStorageKey: '',
+    notificationSeenSet: new Set(),
+    notificationSeenOrder: [],
+    notificationAlertSignatures: [],
+    floatingFabBound: false
   };
 
   const SIDEBAR_REFRESH_DEFAULT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbytUmPr668UwcPsbmwtZm9wSL3qnhDjYJG8b7DzIiqxqyo6vKLVtDgGdmdvA2hE00xX9Q/exec';
+  const NOTIFICATION_SEEN_STORAGE_PREFIX = 'CSD1_NOTIFY_SEEN_V1::';
+  const NOTIFICATION_SEEN_MAX = 1200;
+  const SIDEBAR_ACTION_ICONS = {
+    history: '<svg class="action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v4l2.5 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3.2 12a8.8 8.8 0 1 0 2.8-6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 4v4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+    notice: '<svg class="action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 10.5a6 6 0 1 1 12 0v3.2l1.2 2.2a1 1 0 0 1-.88 1.48H5.68a1 1 0 0 1-.88-1.48L6 13.7v-3.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M10 19a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>',
+    logout: '<svg class="action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 12H9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>'
+  };
+  const PROFILE_PRIMARY_NAV_ITEMS = [
+    {
+      path: 'dashboard.html',
+      label: 'Dashboard',
+      icon: '<svg class="action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"></rect><rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"></rect><rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"></rect><rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"></rect></svg>'
+    },
+    {
+      path: 'compare.html',
+      label: 'เปรียบเทียบ',
+      icon: '<svg class="action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg>'
+    },
+    {
+      path: 'rank.html',
+      label: 'HALL OF FAM',
+      icon: '<svg class="action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M5 7H3a3 3 0 0 0 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M19 7h2a3 3 0 0 1-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>'
+    },
+    {
+      path: 'index.html',
+      label: 'กรอกข้อมูล',
+      icon: '<svg class="action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"></rect><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg>'
+    }
+  ];
 
   function safeParseUser() {
     try {
@@ -22,6 +56,15 @@
 
   function normalizeText(value) {
     return String(value == null ? '' : value).trim();
+  }
+
+  function getCurrentPageName() {
+    const pathname = normalizeText(window.location && window.location.pathname);
+    if (!pathname) return 'index.html';
+    const cleanPath = pathname.replace(/\/+$/, '');
+    const parts = cleanPath.split('/').filter(Boolean);
+    const page = normalizeText(parts.length ? parts[parts.length - 1] : '');
+    return (page || 'index.html').toLowerCase();
   }
 
   function getSessionToken(user) {
@@ -179,6 +222,294 @@
     }
   }
 
+  function setSidebarActionContent(button, iconMarkup, labelText, badgeId) {
+    if (!button) return;
+    const safeLabel = normalizeText(labelText) || '-';
+    let html = String(iconMarkup || '') + '<span class="action-label">' + safeLabel + '</span>';
+    if (badgeId) {
+      html += '<span class="profile-action-badge sidebar-action-badge" id="' + badgeId + '" hidden>0</span>';
+    }
+    button.innerHTML = html;
+  }
+
+  function ensureSidebarActionButtons() {
+    const sidebar = document.getElementById('appSidebar');
+    if (!sidebar) return {};
+    const themeWrap = sidebar.querySelector('.app-sidebar-theme');
+    if (!themeWrap) return {};
+
+    let stack = document.getElementById('sidebarActionStack');
+    if (!stack) {
+      stack = document.createElement('div');
+      stack.id = 'sidebarActionStack';
+      stack.className = 'sidebar-action-stack';
+      themeWrap.appendChild(stack);
+    }
+
+    let historyBtn = document.getElementById('sidebarHistoryMenuBtn') || themeWrap.querySelector('[data-admin-history]');
+    if (!historyBtn) {
+      historyBtn = document.createElement('button');
+      stack.appendChild(historyBtn);
+    }
+    historyBtn.id = 'sidebarHistoryMenuBtn';
+    historyBtn.type = 'button';
+    historyBtn.className = 'sidebar-settings-action sidebar-action-history with-action-icon';
+    historyBtn.removeAttribute('data-admin-history');
+    historyBtn.removeAttribute('onclick');
+    setSidebarActionContent(historyBtn, SIDEBAR_ACTION_ICONS.history, 'ตรวจสอบ แก้ไขข้อมูล');
+
+    let noticeBtn = document.getElementById('sidebarNotificationMenuBtn') || themeWrap.querySelector('[data-admin-notification]');
+    if (!noticeBtn) {
+      noticeBtn = document.createElement('button');
+      stack.appendChild(noticeBtn);
+    }
+    noticeBtn.id = 'sidebarNotificationMenuBtn';
+    noticeBtn.type = 'button';
+    noticeBtn.className = 'sidebar-settings-action sidebar-action-notice with-action-icon';
+    noticeBtn.removeAttribute('data-admin-notification');
+    noticeBtn.removeAttribute('onclick');
+    setSidebarActionContent(noticeBtn, SIDEBAR_ACTION_ICONS.notice, 'แจ้งเตือนคำขอแก้ไข', 'sidebarNotificationBadge');
+
+    let logoutBtn = document.getElementById('sidebarLogoutBtn') || themeWrap.querySelector('.sidebar-logout-btn');
+    if (!logoutBtn) {
+      logoutBtn = document.createElement('button');
+      stack.appendChild(logoutBtn);
+    }
+    logoutBtn.id = 'sidebarLogoutBtn';
+    logoutBtn.type = 'button';
+    logoutBtn.className = 'sidebar-logout-btn sidebar-action-logout with-action-icon';
+    logoutBtn.removeAttribute('onclick');
+    setSidebarActionContent(logoutBtn, SIDEBAR_ACTION_ICONS.logout, 'ออกจากระบบ');
+
+    if (historyBtn.parentElement !== stack) stack.appendChild(historyBtn);
+    if (noticeBtn.parentElement !== stack) stack.appendChild(noticeBtn);
+    if (logoutBtn.parentElement !== stack) stack.appendChild(logoutBtn);
+
+    if (historyBtn.dataset.sidebarActionBound !== '1') {
+      historyBtn.dataset.sidebarActionBound = '1';
+      historyBtn.addEventListener('click', function (evt) {
+        if (evt) evt.preventDefault();
+        const user = safeParseUser();
+        if (!isLoggedIn(user)) {
+          toast('กรุณาเข้าสู่ระบบ');
+          navigateTo('index.html');
+          return;
+        }
+        if (typeof window.openHistoryPage === 'function') {
+          window.openHistoryPage(evt);
+          return;
+        }
+        closePanels();
+        navigateTo('history.html');
+      });
+    }
+
+    if (noticeBtn.dataset.sidebarActionBound !== '1') {
+      noticeBtn.dataset.sidebarActionBound = '1';
+      noticeBtn.addEventListener('click', function (evt) {
+        if (evt) evt.preventDefault();
+        const user = safeParseUser();
+        if (!isLoggedIn(user)) {
+          toast('กรุณาเข้าสู่ระบบ');
+          navigateTo('index.html');
+          return;
+        }
+        markCurrentNotificationAlertsRead(user);
+        if (isAdminRole(user)) {
+          if (typeof window.openNotificationPage === 'function') {
+            window.openNotificationPage(evt);
+            return;
+          }
+          closePanels();
+          navigateTo('notification.html');
+          return;
+        }
+        closePanels();
+        openMyRequestsSheet();
+      });
+    }
+
+    if (logoutBtn.dataset.sidebarActionBound !== '1') {
+      logoutBtn.dataset.sidebarActionBound = '1';
+      logoutBtn.addEventListener('click', function (evt) {
+        window.handleSidebarLogout(evt);
+      });
+    }
+
+    return {
+      historyBtn: historyBtn,
+      noticeBtn: noticeBtn,
+      logoutBtn: logoutBtn,
+      noticeBadge: document.getElementById('sidebarNotificationBadge')
+    };
+  }
+
+  function disableLegacySidebarControls() {
+    const legacyFab = document.getElementById('appNavFab');
+    if (legacyFab) {
+      legacyFab.disabled = true;
+      legacyFab.removeAttribute('onclick');
+      legacyFab.setAttribute('hidden', 'hidden');
+      legacyFab.setAttribute('aria-hidden', 'true');
+      legacyFab.style.display = 'none';
+      legacyFab.style.pointerEvents = 'none';
+    }
+
+    const sidebar = document.getElementById('appSidebar');
+    if (sidebar) {
+      sidebar.classList.remove('show');
+      sidebar.setAttribute('hidden', 'hidden');
+      sidebar.setAttribute('aria-hidden', 'true');
+      sidebar.style.display = 'none';
+      sidebar.style.pointerEvents = 'none';
+    }
+
+    const overlay = document.getElementById('appSidebarOverlay');
+    if (overlay) {
+      overlay.classList.remove('show');
+      overlay.setAttribute('hidden', 'hidden');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.style.display = 'none';
+      overlay.style.pointerEvents = 'none';
+    }
+
+    ['sidebarHistoryMenuBtn', 'sidebarNotificationMenuBtn', 'sidebarLogoutBtn'].forEach(function (id) {
+      const button = document.getElementById(id);
+      if (!button) return;
+      button.disabled = true;
+      button.style.display = 'none';
+      button.style.pointerEvents = 'none';
+    });
+
+    if (document.body) {
+      document.body.classList.remove('nav-open');
+    }
+
+    // Hide legacy inline profile wrap / dropdown (history.html, notification.html)
+    var legacyProfileWrap = document.getElementById('userProfileWrap');
+    if (legacyProfileWrap) {
+      legacyProfileWrap.setAttribute('hidden', 'hidden');
+      legacyProfileWrap.setAttribute('aria-hidden', 'true');
+      legacyProfileWrap.style.display = 'none';
+      legacyProfileWrap.style.pointerEvents = 'none';
+    }
+    var legacyProfileMenu = document.getElementById('profileMenu');
+    if (legacyProfileMenu) {
+      legacyProfileMenu.classList.remove('show');
+      legacyProfileMenu.setAttribute('hidden', 'hidden');
+      legacyProfileMenu.style.display = 'none';
+    }
+    // Redirect legacy toggleProfileMenu to the new profile sheet
+    window.toggleProfileMenu = function toggleProfileMenuDisabled() {
+      if (typeof window.handleAvatarAccess === 'function') {
+        window.handleAvatarAccess(null);
+      }
+    };
+
+    window.openAppSidebar = function openAppSidebarDisabled() {
+      if (document.body) document.body.classList.remove('nav-open');
+      return false;
+    };
+
+    window.closeAppSidebar = function closeAppSidebarDisabled() {
+      if (document.body) document.body.classList.remove('nav-open');
+      const panel = document.getElementById('appSidebar');
+      if (panel) {
+        panel.classList.remove('show');
+        panel.style.display = 'none';
+      }
+      const layer = document.getElementById('appSidebarOverlay');
+      if (layer) {
+        layer.classList.remove('show');
+        layer.style.display = 'none';
+      }
+      return false;
+    };
+
+    window.toggleAppSidebar = function toggleAppSidebarDisabled(evt) {
+      if (evt && typeof evt.preventDefault === 'function') evt.preventDefault();
+      if (evt && typeof evt.stopPropagation === 'function') evt.stopPropagation();
+      return window.closeAppSidebar();
+    };
+  }
+
+  function getProfilePrimaryLinksMarkup() {
+    return PROFILE_PRIMARY_NAV_ITEMS.map(function (item) {
+      return '<button class="profile-quick-link with-action-icon" type="button" data-path="' + item.path + '">'
+        + item.icon
+        + '<span class="action-label">' + item.label + '</span>'
+        + '</button>';
+    }).join('');
+  }
+
+  function syncProfileQuickLinksActive() {
+    const currentPage = getCurrentPageName();
+    document.querySelectorAll('#profileQuickLinks .profile-quick-link').forEach(function (btn) {
+      const targetPath = normalizeText(btn.getAttribute('data-path')).toLowerCase();
+      const isActive = !!targetPath && targetPath === currentPage;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-current', isActive ? 'page' : 'false');
+    });
+  }
+
+  function ensureFloatingProfileFab() {
+    if (document.getElementById('floatingProfileFab')) return;
+    const fab = document.createElement('button');
+    fab.id = 'floatingProfileFab';
+    fab.className = 'floating-profile-fab';
+    fab.type = 'button';
+    fab.setAttribute('aria-label', 'โปรไฟล์ผู้ใช้งาน');
+    fab.setAttribute('title', 'โปรไฟล์ผู้ใช้งาน');
+    fab.innerHTML = '<span class="floating-profile-avatar" id="floatingProfileAvatar">U</span>';
+    fab.addEventListener('click', function (evt) {
+      window.handleAvatarAccess(evt);
+    });
+    document.body.appendChild(fab);
+  }
+
+  function resolveTopHeaderBottom() {
+    const selectors = ['.top-head', '.dash-header', '.header', '.topbar', 'header'];
+    let bottom = 0;
+    selectors.forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(function (el) {
+        if (!el) return;
+        const styles = window.getComputedStyle(el);
+        if (styles.display === 'none' || styles.visibility === 'hidden') return;
+        const rect = el.getBoundingClientRect();
+        if (!rect || rect.height < 24) return;
+        if (rect.bottom <= 0) return;
+        if (rect.top > (window.innerHeight * 0.38)) return;
+        if (rect.bottom > bottom) bottom = rect.bottom;
+      });
+    });
+    return bottom;
+  }
+
+  function updateFloatingProfileFabPosition() {
+    const fab = document.getElementById('floatingProfileFab');
+    if (!fab) return;
+    const headerBottom = resolveTopHeaderBottom();
+    const baseTop = headerBottom > 0 ? (headerBottom + 10) : 12;
+    const maxTop = Math.max(12, window.innerHeight - 62);
+    fab.style.top = Math.min(baseTop, maxTop) + 'px';
+  }
+
+  function bindFloatingProfileFabPositioning() {
+    if (state.floatingFabBound) return;
+    state.floatingFabBound = true;
+    const schedule = function () {
+      window.requestAnimationFrame(updateFloatingProfileFabPosition);
+    };
+    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('scroll', schedule, { passive: true });
+    if (window.visualViewport) {
+      try {
+        window.visualViewport.addEventListener('resize', schedule, { passive: true });
+        window.visualViewport.addEventListener('scroll', schedule, { passive: true });
+      } catch (_) {}
+    }
+  }
+
   function closePanels() {
     if (typeof window.closeAppSidebar === 'function') window.closeAppSidebar();
     if (typeof window.closeMobileSettings === 'function') window.closeMobileSettings();
@@ -221,6 +552,205 @@
     return role ? role.toUpperCase() : '-';
   }
 
+  function getNotificationSeenIdentity(user) {
+    const email = normalizeText(user && user.email).toLowerCase();
+    if (!email) return '';
+    if (isAdminRole(user)) return 'admin|' + email;
+    if (isStandardUserRole(user)) return 'user|' + email;
+    return '';
+  }
+
+  function resetNotificationSeenState() {
+    state.notificationSeenSet = new Set();
+    state.notificationSeenOrder = [];
+    state.notificationAlertSignatures = [];
+  }
+
+  function trimNotificationSeenState() {
+    if (!Array.isArray(state.notificationSeenOrder)) state.notificationSeenOrder = [];
+    if (state.notificationSeenOrder.length <= NOTIFICATION_SEEN_MAX) return;
+    state.notificationSeenOrder = state.notificationSeenOrder.slice(-NOTIFICATION_SEEN_MAX);
+    state.notificationSeenSet = new Set(state.notificationSeenOrder);
+  }
+
+  function persistNotificationSeenState() {
+    const storageKey = normalizeText(state.notificationSeenStorageKey);
+    if (!storageKey) return;
+    trimNotificationSeenState();
+    try {
+      localStorage.setItem(storageKey, JSON.stringify({
+        version: 1,
+        signatures: state.notificationSeenOrder
+      }));
+    } catch (_) {}
+  }
+
+  function loadNotificationSeenState(identity) {
+    const normalizedIdentity = normalizeText(identity);
+    const storageKey = normalizedIdentity ? (NOTIFICATION_SEEN_STORAGE_PREFIX + normalizedIdentity) : '';
+    if (state.notificationSeenStorageKey === storageKey) return;
+
+    state.notificationSeenStorageKey = storageKey;
+    resetNotificationSeenState();
+    if (!storageKey) return;
+
+    let parsed = null;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      parsed = raw ? JSON.parse(raw) : null;
+    } catch (_) {
+      parsed = null;
+    }
+
+    const list = Array.isArray(parsed)
+      ? parsed
+      : (parsed && Array.isArray(parsed.signatures) ? parsed.signatures : []);
+
+    const clean = [];
+    const seen = new Set();
+    list.forEach(function (item) {
+      const sig = normalizeText(item);
+      if (!sig || seen.has(sig)) return;
+      seen.add(sig);
+      clean.push(sig);
+    });
+    state.notificationSeenOrder = clean;
+    state.notificationSeenSet = seen;
+    trimNotificationSeenState();
+  }
+
+  function rememberSeenSignatures(signatures) {
+    const list = Array.isArray(signatures) ? signatures : [];
+    if (!list.length) return;
+    if (!(state.notificationSeenSet instanceof Set)) state.notificationSeenSet = new Set();
+    if (!Array.isArray(state.notificationSeenOrder)) state.notificationSeenOrder = [];
+
+    list.forEach(function (item) {
+      const sig = normalizeText(item);
+      if (!sig || state.notificationSeenSet.has(sig)) return;
+      state.notificationSeenSet.add(sig);
+      state.notificationSeenOrder.push(sig);
+    });
+    persistNotificationSeenState();
+  }
+
+  function normalizeRequesterEmail(row) {
+    return normalizeText(
+      row && (
+        row.requestedByEmail ||
+        row.changeRequestedByEmail ||
+        row['อีเมล'] ||
+        row.targetReporterEmail
+      )
+    ).toLowerCase();
+  }
+
+  function buildNotificationAlertSignature(row, adminRole) {
+    const requestId = normalizeText(
+      row && (
+        row.requestId ||
+        row.changeRequestId
+      )
+    );
+    if (!requestId) return '';
+
+    const status = normalizeStatusForAlert(
+      adminRole
+        ? (row && row.status)
+        : (row && (row.changeRequestStatus || row.status))
+    );
+
+    const timestamp = normalizeText(
+      row && (
+        row.createdAt ||
+        row.changeRequestedAt ||
+        row.requestedAt ||
+        row.updatedAt ||
+        row.changeUpdatedAt ||
+        row['ประทับเวลา']
+      )
+    );
+
+    const requestType = normalizeText(
+      row && (
+        row.requestType ||
+        row.changeRequestType
+      )
+    );
+
+    const requester = normalizeRequesterEmail(row);
+    return [requestId, status, timestamp, requestType, requester].join('|');
+  }
+
+  function dedupeSignatures(signatures) {
+    const list = Array.isArray(signatures) ? signatures : [];
+    if (!list.length) return [];
+    const out = [];
+    const seen = new Set();
+    list.forEach(function (item) {
+      const sig = normalizeText(item);
+      if (!sig || seen.has(sig)) return;
+      seen.add(sig);
+      out.push(sig);
+    });
+    return out;
+  }
+
+  function getAdminAlertSignatures(rows) {
+    const list = [];
+    rows.forEach(function (row) {
+      if (normalizeStatusForAlert(row && row.status) !== 'new') return;
+      const signature = buildNotificationAlertSignature(row, true);
+      if (signature) list.push(signature);
+    });
+    return dedupeSignatures(list);
+  }
+
+  function getUserAlertSignatures(rows, user) {
+    const requesterEmail = normalizeText(user && user.email).toLowerCase();
+    if (!requesterEmail) return [];
+    const list = [];
+
+    rows.forEach(function (row) {
+      const requestId = normalizeText(row && row.changeRequestId);
+      if (!requestId) return;
+
+      const byEmail = normalizeText(row && row.changeRequestedByEmail).toLowerCase();
+      const fallbackEmail = normalizeText(row && row['อีเมล']).toLowerCase();
+      if (byEmail) {
+        if (byEmail !== requesterEmail) return;
+      } else if (fallbackEmail !== requesterEmail) {
+        return;
+      }
+
+      const status = normalizeStatusForAlert(row && row.changeRequestStatus);
+      if (status !== 'done' && status !== 'rejected') return;
+
+      const signature = buildNotificationAlertSignature(row, false);
+      if (signature) list.push(signature);
+    });
+
+    return dedupeSignatures(list);
+  }
+
+  function countUnreadSignatures(signatures) {
+    const list = Array.isArray(signatures) ? signatures : [];
+    if (!(state.notificationSeenSet instanceof Set)) state.notificationSeenSet = new Set();
+    let unread = 0;
+    list.forEach(function (signature) {
+      if (!state.notificationSeenSet.has(signature)) unread += 1;
+    });
+    return unread;
+  }
+
+  function markCurrentNotificationAlertsRead(user) {
+    const identity = getNotificationSeenIdentity(user);
+    loadNotificationSeenState(identity);
+    const signatures = Array.isArray(state.notificationAlertSignatures) ? state.notificationAlertSignatures : [];
+    rememberSeenSignatures(signatures);
+    setNotificationState(0, state.notificationTotal);
+  }
+
   function normalizeStatusForAlert(value) {
     const status = normalizeText(value).toLowerCase();
     if (!status) return 'new';
@@ -251,14 +781,23 @@
     state.notificationUnread = unreadSafe;
     state.notificationTotal = totalSafe;
 
-    const noticeBtn = document.getElementById('profileActionNotification');
-    const badge = document.getElementById('profileNotificationBadge');
-    if (!noticeBtn) return;
     const hasUnread = unreadSafe > 0;
-    noticeBtn.classList.toggle('has-unread', hasUnread);
-    if (badge) {
-      badge.hidden = !hasUnread;
-      badge.textContent = hasUnread ? (unreadSafe > 99 ? '99+' : String(unreadSafe)) : '';
+    const badgeText = hasUnread ? (unreadSafe > 99 ? '99+' : String(unreadSafe)) : '';
+
+    const profileNoticeBtn = document.getElementById('profileActionNotification');
+    const profileBadge = document.getElementById('profileNotificationBadge');
+    if (profileNoticeBtn) profileNoticeBtn.classList.toggle('has-unread', hasUnread);
+    if (profileBadge) {
+      profileBadge.hidden = !hasUnread;
+      profileBadge.textContent = badgeText;
+    }
+
+    const sidebarNoticeBtn = document.getElementById('sidebarNotificationMenuBtn');
+    const sidebarBadge = document.getElementById('sidebarNotificationBadge');
+    if (sidebarNoticeBtn) sidebarNoticeBtn.classList.toggle('has-unread', hasUnread);
+    if (sidebarBadge) {
+      sidebarBadge.hidden = !hasUnread;
+      sidebarBadge.textContent = badgeText;
     }
   }
 
@@ -269,14 +808,19 @@
 
     const adminRole = isAdminRole(user);
     const standardUserRole = isStandardUserRole(user);
+    const seenIdentity = getNotificationSeenIdentity(user);
 
     if (!isLoggedIn(user) || (!adminRole && !standardUserRole)) {
       state.notificationUserKey = '';
       state.notificationLastFetch = 0;
       state.notificationInFlight = null;
+      state.notificationSeenStorageKey = '';
+      resetNotificationSeenState();
       setNotificationState(0, 0);
       return Promise.resolve({ unread: 0, total: 0 });
     }
+
+    loadNotificationSeenState(seenIdentity);
 
     const roleKey = adminRole ? 'admin' : 'user';
     const userKey = roleKey + '|' + normalizeText(user.email).toLowerCase() + '|' + normalizeText(getSessionToken(user));
@@ -330,9 +874,9 @@
         let unread = 0;
         let total = 0;
         if (adminRole) {
-          unread = rows.filter(function (row) {
-            return normalizeStatusForAlert(row && row.status) === 'new';
-          }).length;
+          const alertSignatures = getAdminAlertSignatures(rows);
+          state.notificationAlertSignatures = alertSignatures;
+          unread = countUnreadSignatures(alertSignatures);
           total = rows.length;
         } else {
           const requesterEmail = normalizeText(user.email).toLowerCase();
@@ -345,10 +889,9 @@
             return fallbackReporter === requesterEmail;
           });
           total = myRequests.length;
-          unread = myRequests.filter(function (row) {
-            const status = normalizeStatusForAlert(row && row.changeRequestStatus);
-            return status === 'done' || status === 'rejected';
-          }).length;
+          const alertSignatures = getUserAlertSignatures(rows, user);
+          state.notificationAlertSignatures = alertSignatures;
+          unread = countUnreadSignatures(alertSignatures);
         }
         setNotificationState(unread, total);
         state.notificationLastFetch = Date.now();
@@ -433,6 +976,7 @@
       '    <div class="profile-stat-value" id="profileStatRole">-</div>',
       '  </div>',
       '</div>',
+      '<div class="profile-quick-links" id="profileQuickLinks">' + getProfilePrimaryLinksMarkup() + '</div>',
       '<div class="profile-sheet-actions">',
       '  <div class="profile-theme-switch-row">',
       '    <label class="app-theme-switch" for="profileThemeToggle" title="สลับโหมดสว่าง/มืด">',
@@ -502,6 +1046,18 @@
       });
     }
 
+    document.querySelectorAll('#profileQuickLinks .profile-quick-link').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const targetPath = normalizeText(btn.getAttribute('data-path'));
+        if (!targetPath) return;
+        window.closeProfileSheet();
+        closePanels();
+        if (targetPath.toLowerCase() === getCurrentPageName()) return;
+        navigateTo(targetPath);
+      });
+    });
+    syncProfileQuickLinksActive();
+
     const profileThemeToggle = document.getElementById('profileThemeToggle');
     if (profileThemeToggle) {
       profileThemeToggle.addEventListener('change', function (evt) {
@@ -514,8 +1070,9 @@
     const noticeBtn = document.getElementById('profileActionNotification');
     if (noticeBtn) {
       noticeBtn.addEventListener('click', function () {
-        window.closeProfileSheet();
         const latestUser = safeParseUser();
+        markCurrentNotificationAlertsRead(latestUser);
+        window.closeProfileSheet();
         if (isAdminRole(latestUser)) {
           if (typeof window.openNotificationPage === 'function') {
             window.openNotificationPage();
@@ -524,11 +1081,7 @@
           navigateFromProfile('notification.html');
           return;
         }
-        if (typeof window.openHistoryPage === 'function') {
-          window.openHistoryPage();
-          return;
-        }
-        navigateFromProfile('history.html');
+        openMyRequestsSheet();
       });
     }
 
@@ -547,10 +1100,18 @@
     sheet.style.width = sheetW + 'px';
     if (!triggerEl) return;
     const rect = triggerEl.getBoundingClientRect();
+    const sheetH = Math.max(220, Math.min(sheet.scrollHeight || 0, window.innerHeight - (MARGIN * 2)));
     let left = rect.left + rect.width / 2 - sheetW / 2;
     left = Math.max(MARGIN, Math.min(left, window.innerWidth - sheetW - MARGIN));
     sheet.style.left = left + 'px';
     sheet.style.right = 'auto';
+    if (rect.top <= (window.innerHeight * 0.46)) {
+      const maxTop = Math.max(MARGIN, window.innerHeight - sheetH - MARGIN);
+      const top = Math.max(MARGIN, Math.min(rect.bottom + GAP, maxTop));
+      sheet.style.top = top + 'px';
+      sheet.style.bottom = 'auto';
+      return;
+    }
     sheet.style.top = 'auto';
     sheet.style.bottom = (window.innerHeight - rect.top + GAP) + 'px';
   }
@@ -610,9 +1171,144 @@
         noticeLabel.textContent = isAdminRole(currentUser) ? 'แจ้งเตือนคำขอแก้ไข' : 'ผลคำร้องของฉัน';
       }
     }
+    syncProfileQuickLinksActive();
     syncProfileThemeToggle();
     setNotificationState(state.notificationUnread, state.notificationTotal);
     refreshNotificationIndicator({ user: currentUser, force: false });
+  }
+
+  // ================================================================
+  //  MY REQUESTS SHEET
+  // ================================================================
+  function escapeHtmlMyReq(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function getMyRequestStatusMeta(status) {
+    const s = normalizeText(status).toLowerCase();
+    if (s === 'done' || s === 'completed' || s === 'resolved' || s === 'closed') return { cls: 'done', label: 'อนุมัติแล้ว' };
+    if (s === 'rejected' || s === 'cancelled' || s === 'canceled') return { cls: 'rejected', label: 'ไม่อนุมัติ' };
+    if (s === 'processing' || s === 'in_progress' || s === 'working') return { cls: 'processing', label: 'กำลังดำเนินการ' };
+    return { cls: 'new', label: 'รอดำเนินการ' };
+  }
+
+  function ensureMyRequestsSheet() {
+    if (document.getElementById('myRequestsOverlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'myRequestsOverlay';
+    overlay.className = 'my-requests-overlay';
+
+    const sheet = document.createElement('section');
+    sheet.id = 'myRequestsSheet';
+    sheet.className = 'my-requests-sheet';
+    sheet.setAttribute('role', 'dialog');
+    sheet.setAttribute('aria-modal', 'true');
+    sheet.setAttribute('aria-label', 'ผลคำร้องของฉัน');
+    sheet.innerHTML = [
+      '<div class="my-requests-header">',
+      '  <div></div>',
+      '  <div class="my-requests-title">ผลคำร้องของฉัน</div>',
+      '  <button class="my-requests-close" id="myRequestsCloseBtn" type="button" aria-label="ปิด">&times;</button>',
+      '</div>',
+      '<div class="my-requests-body" id="myRequestsBody">',
+      '  <div class="my-requests-loading">กำลังโหลด...</div>',
+      '</div>'
+    ].join('');
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(sheet);
+
+    overlay.addEventListener('click', closeMyRequestsSheet);
+    sheet.querySelector('#myRequestsCloseBtn').addEventListener('click', closeMyRequestsSheet);
+  }
+
+  function closeMyRequestsSheet() {
+    const overlay = document.getElementById('myRequestsOverlay');
+    const sheet = document.getElementById('myRequestsSheet');
+    if (overlay) overlay.classList.remove('show');
+    if (sheet) sheet.classList.remove('show');
+  }
+
+  function openMyRequestsSheet() {
+    ensureMyRequestsSheet();
+    const overlay = document.getElementById('myRequestsOverlay');
+    const sheet = document.getElementById('myRequestsSheet');
+    const body = document.getElementById('myRequestsBody');
+    overlay.classList.add('show');
+    sheet.classList.add('show');
+    body.innerHTML = '<div class="my-requests-loading">กำลังโหลด...</div>';
+
+    const user = safeParseUser();
+    const requesterEmail = normalizeText(user.email).toLowerCase();
+    const sheetUrl = getSidebarSheetUrl();
+    const requestUrl = sheetUrl + (sheetUrl.indexOf('?') >= 0 ? '&' : '?') + 'ts=' + Date.now();
+
+    fetch(requestUrl, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'getUnitHistory', email: user.email, sessionToken: getSessionToken(user) })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (parsed) {
+        if (!parsed || parsed.status !== 'success') {
+          body.innerHTML = '<div class="my-requests-empty">ไม่สามารถโหลดข้อมูลได้</div>';
+          return;
+        }
+        const rows = Array.isArray(parsed.data) ? parsed.data : [];
+        const myRequests = rows.filter(function (row) {
+          const requestId = normalizeText(row && row.changeRequestId);
+          if (!requestId) return false;
+          const byEmail = normalizeText(row && row.changeRequestedByEmail).toLowerCase();
+          if (byEmail) return byEmail === requesterEmail;
+          return normalizeText(row && row['อีเมล']).toLowerCase() === requesterEmail;
+        });
+
+        if (!myRequests.length) {
+          body.innerHTML = '<div class="my-requests-empty">ยังไม่มีคำร้องของคุณ</div>';
+          return;
+        }
+
+        // Sort newest first
+        myRequests.sort(function (a, b) {
+          const da = normalizeText(a.changeRequestedAt || a['ประทับเวลา'] || '');
+          const db = normalizeText(b.changeRequestedAt || b['ประทับเวลา'] || '');
+          return db.localeCompare(da);
+        });
+
+        const items = myRequests.map(function (row) {
+          const sm = getMyRequestStatusMeta(normalizeText(row.changeRequestStatus));
+          const suspect = normalizeText(row['ชื่อ-สกุล ผู้ต้องหา'] || row['ชื่อ-สกุล เจ้าของ'] || '');
+          const actionType = normalizeText(row['การจับกุม ตรวจสอบ'] || '');
+          const seq = row['ลำดับ'] ? 'ลำดับ ' + row['ลำดับ'] : '';
+          const subject = suspect || actionType || seq || '-';
+          const reqTypeRaw = normalizeText(row.changeRequestType || '');
+          const reqTypeLabel = reqTypeRaw === 'delete' ? 'แจ้งลบ' : 'แจ้งแก้ไข';
+          const dateRaw = normalizeText(row.changeRequestedAt || row['ประทับเวลา'] || '');
+          const dateDisplay = dateRaw.length >= 10 ? dateRaw.substring(0, 10) : (dateRaw || '-');
+          return '<button class="my-request-item" type="button">'
+            + '<span class="my-request-status-badge ' + sm.cls + '">' + escapeHtmlMyReq(sm.label) + '</span>'
+            + '<span class="my-request-info">'
+            + '<span class="my-request-subject">' + escapeHtmlMyReq(subject) + '</span>'
+            + '<span class="my-request-meta"><span>' + escapeHtmlMyReq(reqTypeLabel) + '</span><span>' + escapeHtmlMyReq(dateDisplay) + '</span></span>'
+            + '</span>'
+            + '<span class="my-request-arrow">›</span>'
+            + '</button>';
+        }).join('');
+
+        body.innerHTML = '<div class="my-requests-list">' + items + '</div>';
+        body.querySelectorAll('.my-request-item').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            closeMyRequestsSheet();
+            navigateTo('history.html');
+          });
+        });
+      })
+      .catch(function () {
+        body.innerHTML = '<div class="my-requests-empty">เกิดข้อผิดพลาด กรุณาลองใหม่</div>';
+      });
   }
 
   window.closeProfileSheet = function closeProfileSheet() {
@@ -633,11 +1329,15 @@
     const subText = logged ? formatUnit(user) : 'แตะเพื่อเข้าสู่ระบบ';
     const photoUrl = normalizeText(user.avatarUrl || user.googlePhoto);
 
+    disableLegacySidebarControls();
+    ensureFloatingProfileFab();
+    bindFloatingProfileFabPositioning();
     ensureSidebarProfileTop();
     ensurePresenceBadges();
 
     setAvatar(document.getElementById('sidebarAccountAvatar'), displayName, photoUrl);
     setAvatar(document.getElementById('mobileAccountAvatar'), displayName, photoUrl);
+    setAvatar(document.getElementById('floatingProfileAvatar'), displayName, photoUrl);
 
     setText('sidebarAccountName', displayName || 'เข้าสู่ระบบ');
     setText('mobileAccountName', displayName || 'เข้าสู่ระบบ');
@@ -646,8 +1346,10 @@
 
     setDisabled('sidebarLogoutBtn', !logged);
     setDisabled('mobileLogoutBtn', !logged);
-    setHidden('sidebarLogoutBtn', true);
     setHidden('mobileLogoutBtn', true);
+
+    setNotificationState(state.notificationUnread, state.notificationTotal);
+    updateFloatingProfileFabPosition();
 
     refreshProfileSheet(user);
     applyPresence(logged);
@@ -687,11 +1389,15 @@
     window.closeProfileSheet();
     if (typeof window.handleLogout === 'function') {
       window.handleLogout();
+      state.notificationSeenStorageKey = '';
+      resetNotificationSeenState();
       if (typeof window.refreshSidebarAccount === 'function') window.refreshSidebarAccount();
       return;
     }
 
     localStorage.removeItem('CSD1_USER');
+    state.notificationSeenStorageKey = '';
+    resetNotificationSeenState();
     if (typeof window.refreshSidebarAccount === 'function') window.refreshSidebarAccount();
     closePanels();
     toast('ออกจากระบบแล้ว');
@@ -701,6 +1407,10 @@
   };
 
   document.addEventListener('DOMContentLoaded', function () {
+    disableLegacySidebarControls();
+    ensureFloatingProfileFab();
+    bindFloatingProfileFabPositioning();
+    updateFloatingProfileFabPosition();
     if (typeof window.refreshSidebarAccount === 'function') {
       window.refreshSidebarAccount();
     }
@@ -708,6 +1418,7 @@
   });
 
   window.addEventListener('storage', function () {
+    disableLegacySidebarControls();
     if (typeof window.refreshSidebarAccount === 'function') {
       window.refreshSidebarAccount();
     }
@@ -716,18 +1427,21 @@
 
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState !== 'visible') return;
+    disableLegacySidebarControls();
+    updateFloatingProfileFabPosition();
     refreshNotificationIndicator({ user: safeParseUser(), force: true });
   });
 
   window.addEventListener('focus', function () {
+    disableLegacySidebarControls();
+    updateFloatingProfileFabPosition();
     refreshNotificationIndicator({ user: safeParseUser(), force: true });
   });
 
   document.addEventListener('keydown', function (evt) {
-    if (!state.profileOpen) return;
-    if (evt.key === 'Escape') {
-      window.closeProfileSheet();
-    }
+    if (evt.key !== 'Escape') return;
+    if (state.profileOpen) window.closeProfileSheet();
+    closeMyRequestsSheet();
   });
 
   setInterval(function () {

@@ -40,6 +40,8 @@
   --accent-glow: rgba(255, 212, 0, 0.5);
   --accent-glow-soft: rgba(255, 212, 0, 0.15);
   --radius: 18px;
+  --hof-focus-w: 400px;
+  --hof-focus-h: 700px;
 }
 
 [data-theme="light"] {
@@ -2174,6 +2176,201 @@ body.modal-open {
   box-shadow: 0 10px 20px rgba(0, 38, 75, 0.2);
 }
 
+.hof-clickable {
+  cursor: pointer;
+}
+
+.hof-focus-live-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.62);
+  backdrop-filter: blur(7px) saturate(120%);
+  -webkit-backdrop-filter: blur(7px) saturate(120%);
+  z-index: 12790;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.hof-focus-live-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hof-focus-placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.podium.hof-top3-focus-mode {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 1.1rem 1rem 1.2rem;
+  gap: 0.7rem;
+}
+
+.hof-top3-focus-head {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.26rem;
+}
+
+.hof-top3-focus-title {
+  font-size: clamp(1.14rem, 2.75vw, 1.44rem);
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #ffe27a;
+  text-shadow: 0 2px 10px rgba(255, 212, 0, 0.22);
+}
+
+.hof-top3-focus-period {
+  font-size: clamp(0.88rem, 2.1vw, 1rem);
+  line-height: 1.35;
+  font-weight: 600;
+  color: #e8eefb;
+}
+
+.hof-top3-focus-logo-wrap {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0;
+}
+
+.hof-top3-focus-logo {
+  width: min(86%, 300px);
+  max-height: min(45%, 320px);
+  object-fit: contain;
+  filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.36));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  animation: hofTop3LogoFlipOnce 0.42s cubic-bezier(0.16, 0.84, 0.22, 1) 2s 1 both;
+}
+
+.hof-top3-focus-metrics {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+}
+
+.podium.hof-top3-focus-mode .medal {
+  margin: 0;
+}
+
+.podium.hof-top3-focus-mode .unit {
+  font-size: clamp(1.24rem, 4.5vw, 1.88rem);
+}
+
+.podium.hof-top3-focus-mode .score {
+  margin-top: 0.1rem;
+  font-size: clamp(2.3rem, 9.2vw, 3.8rem);
+}
+
+.podium.hof-top3-focus-mode .label {
+  font-size: 0.82rem;
+  color: rgba(232, 238, 251, 0.86);
+}
+
+[data-theme="light"] .hof-top3-focus-title {
+  color: #9f6a00;
+  text-shadow: none;
+}
+
+[data-theme="light"] .hof-top3-focus-period {
+  color: #1a456f;
+}
+
+[data-theme="light"] .podium.hof-top3-focus-mode .label {
+  color: #3a5f84;
+}
+
+.podium.first.hof-top3-focus-mode .hof-top3-focus-logo {
+  filter:
+    drop-shadow(0 0 18px rgba(255, 212, 0, 0.62))
+    drop-shadow(0 0 34px rgba(255, 212, 0, 0.4))
+    drop-shadow(0 14px 26px rgba(0, 0, 0, 0.34));
+}
+
+.podium.second.hof-top3-focus-mode .hof-top3-focus-logo {
+  filter:
+    drop-shadow(0 0 16px rgba(188, 206, 232, 0.6))
+    drop-shadow(0 0 30px rgba(188, 206, 232, 0.38))
+    drop-shadow(0 14px 26px rgba(0, 0, 0, 0.34));
+}
+
+.podium.third.hof-top3-focus-mode .hof-top3-focus-logo {
+  filter:
+    drop-shadow(0 0 16px rgba(224, 162, 102, 0.62))
+    drop-shadow(0 0 30px rgba(224, 162, 102, 0.4))
+    drop-shadow(0 14px 26px rgba(0, 0, 0, 0.34));
+}
+
+@keyframes hofTop3LogoFlipOnce {
+  0% { transform: perspective(1200px) rotateY(0deg); }
+  100% { transform: perspective(1200px) rotateY(720deg); }
+}
+
+.hof-floating-card {
+  position: fixed;
+  margin: 0;
+  z-index: 12810;
+  pointer-events: auto;
+  overflow: hidden;
+  width: min(var(--hof-focus-w), calc(100vw - 1.6rem), calc((100dvh - 1.6rem) * 0.5714286));
+  height: auto;
+  max-height: calc(100dvh - 1.6rem);
+  aspect-ratio: 4 / 7;
+  box-shadow: 0 36px 72px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: left, top, width, height, transform;
+  transition: left 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.36s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: center center;
+}
+
+@keyframes hofFlipPopIn {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(-1080deg) rotateX(10deg) translateY(42px) scale(0.78);
+  }
+  72% {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(16deg) rotateX(-2.8deg) translateY(-6px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(0deg) rotateX(0deg) translateY(0) scale(1);
+  }
+}
+
+@keyframes hofFlipPopOut {
+  from {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(0deg) rotateX(0deg) translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(1080deg) rotateX(-8deg) translateY(34px) scale(0.82);
+  }
+}
+
+[data-theme="light"] .hof-focus-live-backdrop {
+  background: rgba(0, 38, 75, 0.34);
+}
+
 @media (max-width: 1050px) {
   .grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
   .grid .rank-card:nth-child(-n+3),
@@ -2366,7 +2563,7 @@ body.modal-open {
   </a>
   <a class="mobile-mini-link" href="compare.html" onclick="return navigateInApp(event, 'compare.html')" title="เปรียบเทียบ" aria-label="เปรียบเทียบ">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-    <span>เทียบ</span>
+    <span>เปรียบเทียบ</span>
   </a>
   <a class="mobile-mini-link" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')" title="Dashboard (Home)" aria-label="Dashboard หน้าแรก">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -2455,7 +2652,7 @@ body.modal-open {
 
     <!-- Floating Action Menu (FAB) -->
     <div class="fab-menu" id="fabMenu">
-      <button class="fab-btn" id="fabBtn" title="ฟิลด์เตอร์">
+      <button class="fab-btn" id="fabBtn" title="ฟิลด์เตอร์" style="display:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
       </button>
       <div class="fab-menu-items">
@@ -2638,6 +2835,17 @@ const EXPORT_FIXED_SCALE = 2;
 const EXPORT_OUTPUT_WIDTH = 2600;
 const EXPORT_OUTPUT_HEIGHT = 2670;
 const EXPORT_EXCLUDE_SELECTORS = ['.topbar', '#rankFooterActions', '.app-nav-fab', '.mobile-nav-fade', '.mobile-mini-nav', '.mobile-settings-overlay', '.mobile-settings-sheet', '#appSidebar', '#appSidebarOverlay'];
+const HOF_FOCUS_TARGET_WIDTH = 400;
+const HOF_FOCUS_TARGET_HEIGHT = 700;
+const HOF_FOCUS_MARGIN = 16;
+const HOF_FOCUS_ASPECT = HOF_FOCUS_TARGET_WIDTH / HOF_FOCUS_TARGET_HEIGHT;
+const HOF_TOP3_LOGO_FIRST_SRC = 'JJ.png';
+const HOF_TOP3_LOGO_SECOND_SRC = 'JJ2.png';
+const HOF_TOP3_LOGO_THIRD_SRC = 'JJ3.png';
+const HOF_TOP3_LOGO_FALLBACK_SRC = 'Logo CIB Font-02.png';
+let hofFocusBackdrop = null;
+let hofFocusFloatingState = null;
+let hofFocusCloseTimer = null;
 
 const toBE = yr => yr + 543;
 
@@ -3206,6 +3414,7 @@ function renderRankCard(title, subtitle, list, suffix, iconSvg, toneCls) {
 }
 
 function renderAll() {
+  closeHofFocusCard(true);
   const status = document.getElementById('status');
   if (!filteredRows.length) {
     status.textContent = 'ไม่พบข้อมูลในช่วงเวลาที่เลือก';
@@ -3231,6 +3440,7 @@ function renderAll() {
   grid.innerHTML = cardDefs.map(def =>
     renderRankCard(def.title, def.subtitle, rankBy(unitsData, def.getValue), def.suffix, def.icon, def.tone)
   ).join('');
+  bindHofCardFocusEvents();
 
   status.textContent = `อัปเดตล่าสุด ${formatThaiDateTimeStandard(new Date())}`;
   document.getElementById('podiumWrap').style.display = '';
@@ -3381,6 +3591,220 @@ function closeScoreDetails(evt) {
   if (evt && evt.target && evt.target !== modal) return;
   modal.classList.remove('active');
   document.body.classList.remove('modal-open');
+}
+
+function ensureHofFocusBackdrop() {
+  if (hofFocusBackdrop && hofFocusBackdrop.isConnected) return hofFocusBackdrop;
+  const backdrop = document.createElement('div');
+  backdrop.className = 'hof-focus-live-backdrop';
+  backdrop.setAttribute('aria-hidden', 'true');
+  backdrop.addEventListener('click', () => closeHofFocusCard(false));
+  document.body.appendChild(backdrop);
+  hofFocusBackdrop = backdrop;
+  return backdrop;
+}
+
+function getHofFocusTargetRect() {
+  const vw = window.innerWidth || document.documentElement.clientWidth || 0;
+  const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+  const maxWidth = Math.max(220, vw - (HOF_FOCUS_MARGIN * 2));
+  const maxHeight = Math.max(280, vh - (HOF_FOCUS_MARGIN * 2));
+  let width = Math.min(HOF_FOCUS_TARGET_WIDTH, maxWidth, maxHeight * HOF_FOCUS_ASPECT);
+  let height = width / HOF_FOCUS_ASPECT;
+
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * HOF_FOCUS_ASPECT;
+  }
+
+  const left = Math.round((vw - width) / 2);
+  const top = Math.round((vh - height) / 2);
+  return { left, top, width, height };
+}
+
+function buildHofTop3FocusLayout(cardEl) {
+  if (!cardEl || !cardEl.classList || !cardEl.classList.contains('podium')) return null;
+  if (!cardEl.children || !cardEl.children.length) return null;
+
+  const periodVal = document.getElementById('filterPeriod')?.value || 'thisYear';
+  const periodText = formatHeroPeriod(periodVal);
+
+  const header = document.createElement('div');
+  header.className = 'hof-top3-focus-head';
+
+  const title = document.createElement('div');
+  title.className = 'hof-top3-focus-title';
+  title.textContent = 'CSD1 HALL OF FAME';
+
+  const period = document.createElement('div');
+  period.className = 'hof-top3-focus-period';
+  period.textContent = periodText;
+
+  header.appendChild(title);
+  header.appendChild(period);
+
+  const logoWrap = document.createElement('div');
+  logoWrap.className = 'hof-top3-focus-logo-wrap';
+
+  const logo = document.createElement('img');
+  logo.className = 'hof-top3-focus-logo';
+  logo.alt = 'CSD1 Season 12 Logo';
+  logo.decoding = 'async';
+  const logoSrc = cardEl.classList.contains('second')
+    ? HOF_TOP3_LOGO_SECOND_SRC
+    : cardEl.classList.contains('third')
+      ? HOF_TOP3_LOGO_THIRD_SRC
+      : HOF_TOP3_LOGO_FIRST_SRC;
+  logo.src = logoSrc;
+  logo.addEventListener('error', () => {
+    if (logo.dataset.fallbackApplied === '1') return;
+    logo.dataset.fallbackApplied = '1';
+    logo.src = HOF_TOP3_LOGO_FALLBACK_SRC;
+  }, { once: true });
+  logoWrap.appendChild(logo);
+
+  const metricsWrap = document.createElement('div');
+  metricsWrap.className = 'hof-top3-focus-metrics';
+  Array.from(cardEl.children).forEach((node) => metricsWrap.appendChild(node));
+
+  cardEl.classList.add('hof-top3-focus-mode');
+  cardEl.appendChild(header);
+  cardEl.appendChild(logoWrap);
+  cardEl.appendChild(metricsWrap);
+
+  return { header, logoWrap, metricsWrap };
+}
+
+function cleanupHofFloatingCard(state) {
+  if (!state) return;
+  const { card, placeholder, top3Layout } = state;
+
+  if (top3Layout && top3Layout.metricsWrap && top3Layout.metricsWrap.parentNode === card) {
+    Array.from(top3Layout.metricsWrap.children).forEach((node) => card.appendChild(node));
+    if (top3Layout.header && top3Layout.header.parentNode === card) card.removeChild(top3Layout.header);
+    if (top3Layout.logoWrap && top3Layout.logoWrap.parentNode === card) card.removeChild(top3Layout.logoWrap);
+    card.removeChild(top3Layout.metricsWrap);
+  }
+  card.classList.remove('hof-top3-focus-mode');
+
+  if (placeholder && placeholder.parentNode) {
+    placeholder.parentNode.insertBefore(card, placeholder);
+    placeholder.parentNode.removeChild(placeholder);
+  }
+  card.classList.remove('hof-floating-card');
+  card.style.left = '';
+  card.style.top = '';
+  card.style.width = '';
+  card.style.height = '';
+  card.style.animation = '';
+  card.style.transform = '';
+  card.style.transition = '';
+  card.style.zIndex = '';
+  card.style.pointerEvents = '';
+  card.style.margin = '';
+  card.style.maxWidth = '';
+  card.style.maxHeight = '';
+  card.style.minWidth = '';
+  card.style.minHeight = '';
+  if (hofFocusBackdrop) {
+    hofFocusBackdrop.classList.remove('active');
+    hofFocusBackdrop.setAttribute('aria-hidden', 'true');
+  }
+  document.body.classList.remove('modal-open');
+}
+
+function closeHofFocusCard(immediate) {
+  if (!hofFocusFloatingState) return;
+  if (hofFocusCloseTimer) {
+    clearTimeout(hofFocusCloseTimer);
+    hofFocusCloseTimer = null;
+  }
+
+  const state = hofFocusFloatingState;
+  cleanupHofFloatingCard(state);
+  hofFocusFloatingState = null;
+}
+
+function openHofFocusCard(cardEl) {
+  if (!cardEl || !cardEl.children || !cardEl.children.length) return;
+  if (hofFocusCloseTimer) {
+    clearTimeout(hofFocusCloseTimer);
+    hofFocusCloseTimer = null;
+  }
+
+  if (hofFocusFloatingState && hofFocusFloatingState.card === cardEl) {
+    closeHofFocusCard(false);
+    return;
+  }
+  if (hofFocusFloatingState) closeHofFocusCard(true);
+
+  const startRect = cardEl.getBoundingClientRect();
+  if (!startRect || startRect.width <= 0 || startRect.height <= 0) return;
+  if (!cardEl.parentNode) return;
+
+  const backdrop = ensureHofFocusBackdrop();
+  const placeholder = document.createElement('div');
+  placeholder.className = 'hof-focus-placeholder';
+  placeholder.style.width = `${startRect.width}px`;
+  placeholder.style.height = `${startRect.height}px`;
+  cardEl.parentNode.insertBefore(placeholder, cardEl);
+
+  document.body.appendChild(cardEl);
+
+  let top3Layout = null;
+  if (cardEl.classList.contains('podium')) {
+    top3Layout = buildHofTop3FocusLayout(cardEl);
+  }
+
+  cardEl.classList.add('hof-floating-card');
+  cardEl.style.left = `${startRect.left}px`;
+  cardEl.style.top = `${startRect.top}px`;
+  cardEl.style.width = `${startRect.width}px`;
+  cardEl.style.height = `${startRect.height}px`;
+  cardEl.style.margin = '0';
+  cardEl.style.maxWidth = 'none';
+  cardEl.style.maxHeight = 'none';
+  cardEl.style.minWidth = '0';
+  cardEl.style.minHeight = '0';
+  cardEl.style.pointerEvents = 'auto';
+  cardEl.style.zIndex = '12810';
+  cardEl.style.transform = 'translateZ(0)';
+  cardEl.style.animation = 'none';
+
+  backdrop.classList.add('active');
+  backdrop.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+
+  hofFocusFloatingState = { card: cardEl, placeholder, top3Layout };
+
+  requestAnimationFrame(() => {
+    const target = getHofFocusTargetRect();
+    cardEl.style.animation = 'hofFlipPopIn 620ms cubic-bezier(0.16, 0.84, 0.22, 1) both';
+    cardEl.style.left = `${target.left}px`;
+    cardEl.style.top = `${target.top}px`;
+    cardEl.style.width = `${target.width}px`;
+    cardEl.style.height = `${target.height}px`;
+  });
+}
+
+function bindHofCardFocusEvents() {
+  document.querySelectorAll('.podium, .rank-card').forEach((card) => {
+    if (card.dataset.hofFocusBound === '1') return;
+    card.dataset.hofFocusBound = '1';
+    card.classList.add('hof-clickable');
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.addEventListener('click', () => {
+      if (!card.children.length) return;
+      openHofFocusCard(card);
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      if (!card.children.length) return;
+      openHofFocusCard(card);
+    });
+  });
 }
 
 function saveCanvasImage(canvas, filename) {
@@ -3562,6 +3986,10 @@ function fillUnitOptions() {
 }
 
 function setMobileDataLoading(isLoading) {
+  const fabButton = document.getElementById('fabBtn');
+  if (fabButton) {
+    fabButton.style.display = isLoading ? 'none' : '';
+  }
   const isMobile = window.matchMedia('(max-width: 900px)').matches;
   if (!isMobile) {
     if (!isLoading) document.body.classList.remove('mobile-loading-data');
@@ -3610,11 +4038,22 @@ document.getElementById('filterPeriod').addEventListener('change', applyFilters)
 document.getElementById('filterUnit').addEventListener('change', renderAll);
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    closeHofFocusCard(false);
     closeAppSidebar();
     closeMobileSettings();
     closeScoreWeights();
     closeScoreDetails();
   }
+});
+
+window.addEventListener('resize', () => {
+  if (!hofFocusFloatingState || !hofFocusFloatingState.card) return;
+  const target = getHofFocusTargetRect();
+  const card = hofFocusFloatingState.card;
+  card.style.left = `${target.left}px`;
+  card.style.top = `${target.top}px`;
+  card.style.width = `${target.width}px`;
+  card.style.height = `${target.height}px`;
 });
 
 // ============================================================

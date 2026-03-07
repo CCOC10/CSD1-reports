@@ -1307,6 +1307,23 @@ body.nav-open .app-nav-fab {
 [data-theme="light"] .stat-card.shimmer::before {
   background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 40%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.35) 60%, transparent 100%);
 }
+
+/* ── Card-click cross-filter ── */
+.stat-card, .hero-pill, .stat-list-item { cursor: pointer; }
+#statsGrid.card-filter-active .stat-card:not(.card-filter-on):not(.card-filter-partial) {
+  opacity: 0.38;
+  filter: saturate(0.2);
+  transform: scale(0.97);
+  transition: opacity 0.25s, filter 0.25s, transform 0.25s;
+}
+#statsGrid.card-filter-active .stat-card.card-filter-on {
+  box-shadow: 0 0 0 2px var(--accent), 0 0 24px var(--accent-glow);
+  transition: box-shadow 0.25s;
+}
+#statsGrid.card-filter-active .stat-list-item:not(.card-filter-on) { opacity: 0.38; transition: opacity 0.25s; }
+#statsGrid.card-filter-active .hero-pill:not(.card-filter-on) { opacity: 0.38; transition: opacity 0.25s; }
+.stat-card, .hero-pill, .stat-list-item { transition: opacity 0.25s, filter 0.25s, transform 0.25s, box-shadow 0.25s; }
+
 .stat-label {
   font-size: 0.95rem;
   font-weight: 500;
@@ -2280,7 +2297,7 @@ body.exporting-dashboard [class*="stat-"] {
   </a>
   <a class="mobile-mini-link" href="compare.html" onclick="return navigateInApp(event, 'compare.html')" title="เปรียบเทียบ" aria-label="เปรียบเทียบ">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-    <span>เทียบ</span>
+    <span>เปรียบเทียบ</span>
   </a>
   <a class="mobile-mini-link active" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')" title="Dashboard (Home)" aria-label="Dashboard หน้าแรก">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -2580,7 +2597,7 @@ body.exporting-dashboard [class*="stat-"] {
     </div>
     <div class="report-modal-footer">
       <button class="btn btn-outline btn-sm" onclick="closeReportModal()">ปิดหน้าต่าง</button>
-      <button class="btn btn-success btn-sm" onclick="copyReportText()">&#128203; คัดลอก</button>
+      <button class="btn btn-success btn-sm btn-copy-shimmer" onclick="copyReportText()">&#128203; คัดลอก</button>
       <button class="btn btn-line btn-sm" onclick="shareReportToLine()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.4c0 4.17 3.68 7.66 8.66 8.32.34.07.79.22.91.51.11.26.07.67.04.93l-.15.88c-.04.25-.2.99.87.54s5.79-3.41 7.89-5.84C22.07 13.62 22 12.07 22 10.4 22 5.81 17.52 2 12 2z"/></svg>
         ส่ง LINE
@@ -2600,6 +2617,7 @@ const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbytUmPr668Uwc
 
 let allReportData = [];
 let filteredData = [];
+let activeCardFilter = null; // key of the active card-click filter
 let trendChartInstance = null;
 let unitChartInstance = null;
 let centerChartInstance = null;
@@ -3095,6 +3113,76 @@ function getPeriodRange(periodVal) {
 // ============================================================
 let _searchTimer = null;
 
+// ============================================================
+//  CARD-CLICK CROSS-FILTER
+// ============================================================
+function rowMatchesCardFilter(row, key) {
+  function pickVal(keys) {
+    for (const k of keys) {
+      const v = row[k];
+      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v);
+    }
+    return '';
+  }
+  function norm(s) { return String(s || '').replace(/\s+/g, '').trim(); }
+
+  // Chart-based filters
+  if (key.startsWith('unit_'))   return pickVal(['ชุดปฏิบัติการ']) === key.slice(5);
+  if (key.startsWith('center_')) return pickVal(['หน้างานศูนย์', 'workCenter']).includes(key.slice(7));
+
+  const action   = pickVal(['การจับกุม ตรวจสอบ', 'actionType']);
+  const wType    = pickVal(['ประเภทหมายจับ', 'warrantType']);
+  const mobilize = pickVal(['หน้างานห้วงระดม', 'workMobilize']);
+  const media    = pickVal(['งานออกสื่อ', 'workMedia']);
+
+  const directAlien = pickVal(['หน้างานต่างด้าว','หน้างานต่างด้าว(ตามตัวชี้วัด)','หน้างานต่างด้าว (ตามตัวชี้วัด)','workAlien']);
+  let alienNorm = directAlien ? norm(directAlien) : '';
+  if (!alienNorm) {
+    const ak = Object.keys(row).find(k => { const nk = norm(k); return nk.includes('หน้างานต่างด้าว') || nk === 'workalien' || (nk.includes('ต่างด้าว') && nk.includes('หน้างาน')); });
+    if (ak) alienNorm = norm(row[ak] || '');
+    else {
+      const av = Object.values(row).map(v => String(v || '')).find(v => { const nv = norm(v); return nv.includes('จับกุมนายจ้าง') || nv.includes('จับกุมลูกจ้าง') || nv.includes('จับกุมต่างด้าว'); });
+      alienNorm = av ? norm(av) : '';
+    }
+  }
+
+  switch (key) {
+    case 'total':          return action === 'จับซึ่งหน้า' || action === 'จับตามหมาย';
+    case 'jabSungNa':      return action === 'จับซึ่งหน้า';
+    case 'jabTaamMai':     return action === 'จับตามหมาย';
+    case 'warrantRegular': return action === 'จับตามหมาย' && wType !== 'หมายใน(ใหม่)' && wType !== 'หมายใน(เก่า)';
+    case 'warrantIn':      return action === 'จับตามหมาย' && (wType === 'หมายใน(ใหม่)' || wType === 'หมายใน(เก่า)');
+    case 'yaSepTid':       return mobilize.includes('ยาเสพติด');
+    case 'neeNokRabop':    return mobilize.includes('หนี้นอกระบบ');
+    case 'awudPuen':       return mobilize.includes('อาวุธปืน');
+    case 'alienInspect':   return action === 'ตรวจสอบสถานประกอบการ' || alienNorm.includes('ตรวจสถานประกอบการ');
+    case 'alienArrest':    return alienNorm.includes('จับกุมนายจ้าง') || alienNorm.includes('นายจ้าง') || alienNorm.includes('จับกุมลูกจ้าง') || alienNorm.includes('ลูกจ้าง') || (alienNorm.includes('จับกุมต่างด้าว') && !alienNorm.includes('นายจ้าง') && !alienNorm.includes('ลูกจ้าง'));
+    case 'prNews':         return media.includes('ประชาสัมพันธ์ข่าว');
+    case 'pressConf':      return media.includes('แถลงข่าว');
+    default: return true;
+  }
+}
+
+function updateCardFilterHighlight() {
+  const grid = document.getElementById('statsGrid');
+  if (!grid) return;
+  grid.querySelectorAll('.card-filter-on, .card-filter-partial').forEach(el => el.classList.remove('card-filter-on', 'card-filter-partial'));
+  if (!activeCardFilter) { grid.classList.remove('card-filter-active'); return; }
+  // Chart-based (unit/center) filters: don't dim stat cards — numbers already updated
+  if (activeCardFilter.startsWith('unit_') || activeCardFilter.startsWith('center_')) {
+    grid.classList.remove('card-filter-active');
+    return;
+  }
+  grid.classList.add('card-filter-active');
+  grid.querySelectorAll(`[data-card-key="${activeCardFilter}"]`).forEach(el => {
+    el.classList.add('card-filter-on');
+    if (!el.classList.contains('stat-card')) {
+      const pc = el.closest('.stat-card');
+      if (pc) pc.classList.add('card-filter-partial');
+    }
+  });
+}
+
 function applyFilters() {
   const searchVal = (document.getElementById('filterSearch').value || '').trim().toLowerCase();
   const unitVal = document.getElementById('filterUnit').value;
@@ -3127,15 +3215,21 @@ function applyFilters() {
     return true;
   });
 
+  if (activeCardFilter) {
+    filteredData = filteredData.filter(row => rowMatchesCardFilter(row, activeCardFilter));
+  }
+
   updateAllComponents();
 }
 
 function clearFilters() {
+  activeCardFilter = null;
   document.getElementById('filterSearch').value = '';
   document.getElementById('filterUnit').value = '';
   document.getElementById('filterType').value = '';
   document.getElementById('filterPeriod').value = 'thisMonth';
   applyFilters();
+  updateCardFilterHighlight();
 }
 
 function setDefaultFilters() {
@@ -3372,8 +3466,8 @@ function updateStatsCards() {
   }
 
   // Build a list-row item
-  function listItem(label, val, colorCls, tInfo, tagsHtml) {
-    return `<div class="stat-list-item ${colorCls}">
+  function listItem(label, val, colorCls, tInfo, tagsHtml, cardKey) {
+    return `<div class="stat-list-item ${colorCls}"${cardKey ? ` data-card-key="${cardKey}"` : ''}>
       <div class="stat-list-head">
         <span class="stat-list-label">${label}</span>
         <span class="stat-list-val" data-target="${val}">0</span>
@@ -3391,16 +3485,16 @@ function updateStatsCards() {
     <div class="arrest-grid">`;
 
   // Hero: รวมทั้งหมด with pill badges
-  html += `<div class="stat-card stat-hero c-green reveal" style="animation-delay:${idx++ * 60}ms">
+  html += `<div class="stat-card stat-hero c-green reveal" data-card-key="total" style="animation-delay:${idx++ * 60}ms">
     <div class="stat-value" data-target="${totalArrest}">0</div>
     <div class="stat-label">ผลจับกุมทั้งหมด</div>
     <div class="hero-pills">
-      <div class="hero-pill">
+      <div class="hero-pill" data-card-key="jabSungNa">
         <span class="hero-pill-dot" style="background:#3b82f6;box-shadow:0 0 6px rgba(59,130,246,0.5);"></span>
         <span class="hero-pill-val" data-target="${stats.jabSungNa}">0</span>
         <span class="hero-pill-label">จับซึ่งหน้า</span>
       </div>
-      <div class="hero-pill">
+      <div class="hero-pill" data-card-key="jabTaamMai">
         <span class="hero-pill-dot" style="background:#a855f7;box-shadow:0 0 6px rgba(168,85,247,0.5);"></span>
         <span class="hero-pill-val" data-target="${stats.jabTaamMai}">0</span>
         <span class="hero-pill-label">จับตามหมาย</span>
@@ -3414,12 +3508,12 @@ function updateStatsCards() {
     <span class="stat-tag">หมายในเก่า <b data-target="${stats.warrantOldIn}">0</b></span>
   </div>`;
 
-  html += `<div class="stat-card reveal c-purple" style="animation-delay:${idx++ * 60}ms">
+  html += `<div class="stat-card reveal c-purple" data-card-key="jabTaamMai" style="animation-delay:${idx++ * 60}ms">
     <div class="stat-value" data-target="${stats.jabTaamMai}">0</div>
     <div class="stat-label">จับตามหมาย</div>
     <div class="stat-list">
-      ${listItem('หมายทั่วไป', stats.warrantRegular, 'li-blue', warrantRegTarget)}
-      ${listItem('หมายใน', warrantIn, 'li-purple', warrantInTarget, warrantInTags)}
+      ${listItem('หมายทั่วไป', stats.warrantRegular, 'li-blue', warrantRegTarget, '', 'warrantRegular')}
+      ${listItem('หมายใน', warrantIn, 'li-purple', warrantInTarget, warrantInTags, 'warrantIn')}
     </div>
   </div>`;
 
@@ -3428,15 +3522,15 @@ function updateStatsCards() {
   // ═══ Section 2: ส่วนงานห้วงระดม ═══
   html += `<div class="stats-section">
     <div class="stats-grid-inner">
-      <div class="stat-card reveal c-red" style="animation-delay:${idx++ * 60}ms">
+      <div class="stat-card reveal c-red" data-card-key="yaSepTid" style="animation-delay:${idx++ * 60}ms">
         <div class="stat-value" data-target="${stats.yaSepTid}">0</div>
         <div class="stat-label">พ.ร.บ.ยาเสพติด</div>
       </div>
-      <div class="stat-card reveal c-pink" style="animation-delay:${idx++ * 60}ms">
+      <div class="stat-card reveal c-pink" data-card-key="neeNokRabop" style="animation-delay:${idx++ * 60}ms">
         <div class="stat-value" data-target="${stats.neeNokRabop}">0</div>
         <div class="stat-label">พ.ร.บ.หนี้นอกระบบ</div>
       </div>
-      <div class="stat-card reveal c-orange" style="animation-delay:${idx++ * 60}ms">
+      <div class="stat-card reveal c-orange" data-card-key="awudPuen" style="animation-delay:${idx++ * 60}ms">
         <div class="stat-value" data-target="${stats.awudPuen}">0</div>
         <div class="stat-label">พ.ร.บ.อาวุธปืนฯ</div>
       </div>
@@ -3451,23 +3545,23 @@ function updateStatsCards() {
 
   html += `<div class="stats-section">
     <div class="bottom-quad-grid">
-      <div class="stat-card reveal c-teal" style="animation-delay:${idx++ * 60}ms">
+      <div class="stat-card reveal c-teal" data-card-key="alienInspect" style="animation-delay:${idx++ * 60}ms">
         <div class="stat-value" data-target="${stats.alienInspect}">0</div>
         <div class="stat-label">ตรวจสถานประกอบการ</div>
         ${progHtml(alienInspTarget)}
       </div>
-      <div class="stat-card reveal c-blue" style="animation-delay:${idx++ * 60}ms">
+      <div class="stat-card reveal c-blue" data-card-key="alienArrest" style="animation-delay:${idx++ * 60}ms">
         <div class="stat-value" data-target="${alienArrestTotal}">0</div>
         <div class="stat-label">จับกุมต่างด้าว</div>
         ${progHtml(alienArrTarget)}
         ${alienArrTags}
       </div>
-      <div class="stat-card reveal c-purple" style="animation-delay:${idx++ * 60}ms">
+      <div class="stat-card reveal c-purple" data-card-key="prNews" style="animation-delay:${idx++ * 60}ms">
         <div class="stat-value" data-target="${stats.prNews}">0</div>
         <div class="stat-label">ประชาสัมพันธ์ข่าว</div>
         ${progHtml(prNewsTarget)}
       </div>
-      <div class="stat-card reveal c-pink" style="animation-delay:${idx++ * 60}ms">
+      <div class="stat-card reveal c-pink" data-card-key="pressConf" style="animation-delay:${idx++ * 60}ms">
         <div class="stat-value" data-target="${stats.pressConf}">0</div>
         <div class="stat-label">แถลงข่าว</div>
       </div>
@@ -3475,6 +3569,9 @@ function updateStatsCards() {
   </div>`;
 
   grid.innerHTML = html;
+
+  // Re-apply highlight after grid rebuild
+  updateCardFilterHighlight();
 
   // Trigger count-up for all countable elements
   grid.querySelectorAll('[data-target]').forEach((el, i) => {
@@ -3766,6 +3863,9 @@ function updateUnitChart() {
   const textColor = getChartTextColor();
   const gridColor = getChartGridColor();
 
+  const activeUnit = activeCardFilter && activeCardFilter.startsWith('unit_') ? activeCardFilter.slice(5) : null;
+  const unitBg = (base, unit) => activeUnit && unit !== activeUnit ? base.replace(/[\d.]+\)$/, '0.18)') : base;
+
   unitChartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -3774,24 +3874,24 @@ function updateUnitChart() {
         {
           label: 'จับซึ่งหน้า',
           data: jabSungNaData,
-          backgroundColor: 'rgba(59,130,246,0.75)',
-          borderColor: '#3b82f6',
+          backgroundColor: unitLabels.map(u => unitBg('rgba(59,130,246,0.75)', u)),
+          borderColor: unitLabels.map(u => activeUnit && u !== activeUnit ? 'rgba(59,130,246,0.2)' : '#3b82f6'),
           borderWidth: 1,
           borderRadius: 3
         },
         {
           label: 'จับตามหมาย',
           data: jabTaamMaiData,
-          backgroundColor: 'rgba(168,85,247,0.75)',
-          borderColor: '#a855f7',
+          backgroundColor: unitLabels.map(u => unitBg('rgba(168,85,247,0.75)', u)),
+          borderColor: unitLabels.map(u => activeUnit && u !== activeUnit ? 'rgba(168,85,247,0.2)' : '#a855f7'),
           borderWidth: 1,
           borderRadius: 3
         },
         {
           label: 'ตรวจสอบ',
           data: truatSobData,
-          backgroundColor: 'rgba(20,184,166,0.75)',
-          borderColor: '#14b8a6',
+          backgroundColor: unitLabels.map(u => unitBg('rgba(20,184,166,0.75)', u)),
+          borderColor: unitLabels.map(u => activeUnit && u !== activeUnit ? 'rgba(20,184,166,0.2)' : '#14b8a6'),
           borderWidth: 1,
           borderRadius: 3
         }
@@ -3803,6 +3903,20 @@ function updateUnitChart() {
       interaction: {
         mode: 'index',
         intersect: false
+      },
+      onClick: function(event, elements) {
+        if (elements.length > 0) {
+          const unit = unitLabels[elements[0].index];
+          const key = 'unit_' + unit;
+          activeCardFilter = (activeCardFilter === key) ? null : key;
+        } else {
+          activeCardFilter = null;
+        }
+        applyFilters();
+        updateCardFilterHighlight();
+      },
+      onHover: function(event, elements) {
+        event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
       },
       plugins: {
         legend: {
@@ -3897,12 +4011,15 @@ function updateCenterChart() {
   const colors = CENTER_CONFIG.map(c => c.color);
   const totalCenter = dataValues.reduce((a, b) => a + b, 0);
 
-  // Update legend list
+  const activeCenterKey = activeCardFilter && activeCardFilter.startsWith('center_') ? activeCardFilter.slice(7) : null;
+
+  // Update legend list with click targets + highlight
   const legendList = document.getElementById('centerLegendList');
   legendList.innerHTML = CENTER_CONFIG.map((c, i) => {
-    return `<li class="center-legend-item">
-      <span class="center-legend-dot" style="background:${c.color}; --dot-glow:${c.color}55;"></span>
-      <span class="center-legend-name">${c.label}<br><span style="font-size:0.65rem;font-weight:400;color:var(--text-muted);">${c.fullName}</span></span>
+    const isActive = !activeCenterKey || c.key === activeCenterKey;
+    return `<li class="center-legend-item" data-center-key="${c.key}" style="cursor:pointer;opacity:${isActive ? 1 : 0.35};transition:opacity 0.25s;">
+      <span class="center-legend-dot" style="background:${c.color}; --dot-glow:${c.color}55;${activeCenterKey && c.key === activeCenterKey ? 'box-shadow:0 0 0 2px '+c.color+',0 0 8px '+c.color+'88;' : ''}"></span>
+      <span class="center-legend-name" style="${activeCenterKey && c.key === activeCenterKey ? 'font-weight:700;' : ''}">${c.label}<br><span style="font-size:0.65rem;font-weight:400;color:var(--text-muted);">${c.fullName}</span></span>
       <span class="center-legend-count">${counts[c.key]}</span>
     </li>`;
   }).join('');
@@ -3913,14 +4030,21 @@ function updateCenterChart() {
 
   const textColor = getChartTextColor();
 
+  const sliceBg = CENTER_CONFIG.map(c =>
+    activeCenterKey && c.key !== activeCenterKey ? c.color + '33' : c.color + 'CC'
+  );
+  const sliceBorder = CENTER_CONFIG.map(c =>
+    activeCenterKey && c.key !== activeCenterKey ? c.color + '44' : c.color
+  );
+
   centerChartInstance = new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels: labels,
       datasets: [{
         data: dataValues,
-        backgroundColor: colors.map(c => c + 'CC'),
-        borderColor: colors,
+        backgroundColor: sliceBg,
+        borderColor: sliceBorder,
         borderWidth: 2,
         hoverOffset: 8,
         spacing: 2
@@ -3930,6 +4054,20 @@ function updateCenterChart() {
       responsive: true,
       maintainAspectRatio: true,
       cutout: '55%',
+      onClick: function(event, elements) {
+        if (elements.length > 0) {
+          const cKey = CENTER_CONFIG[elements[0].index].key;
+          const key = 'center_' + cKey;
+          activeCardFilter = (activeCardFilter === key) ? null : key;
+        } else {
+          activeCardFilter = null;
+        }
+        applyFilters();
+        updateCardFilterHighlight();
+      },
+      onHover: function(event, elements) {
+        event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+      },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -4787,6 +4925,47 @@ document.getElementById('filterPeriod').addEventListener('change', applyFilters)
 document.getElementById('filterSearch').addEventListener('input', function() {
   clearTimeout(_searchTimer);
   _searchTimer = setTimeout(applyFilters, 300); // debounce 300ms
+});
+
+// ── Card-click cross-filter handlers ──
+document.addEventListener('click', function(e) {
+  const grid = document.getElementById('statsGrid');
+  if (!grid) return;
+
+  // Center chart legend item click
+  const legendItem = e.target.closest('.center-legend-item[data-center-key]');
+  if (legendItem) {
+    const key = 'center_' + legendItem.dataset.centerKey;
+    activeCardFilter = (activeCardFilter === key) ? null : key;
+    applyFilters();
+    updateCardFilterHighlight();
+    return;
+  }
+
+  // Determine clicked card element (pill > list-item > card, order of specificity)
+  const pill   = e.target.closest('.hero-pill[data-card-key]');
+  const listIt = e.target.closest('.stat-list-item[data-card-key]');
+  const card   = e.target.closest('.stat-card[data-card-key]');
+  const el = pill || listIt || card;
+
+  if (el && grid.contains(el)) {
+    const key = el.dataset.cardKey;
+    activeCardFilter = (activeCardFilter === key) ? null : key;
+    applyFilters();
+    updateCardFilterHighlight();
+    return;
+  }
+
+  // Don't reset when clicking chart canvases (charts have their own onClick)
+  const chartIds = ['trendChart', 'unitChart', 'centerChart'];
+  if (chartIds.some(id => e.target === document.getElementById(id))) return;
+
+  // Click outside any interactive element — reset
+  if (activeCardFilter && !grid.contains(e.target)) {
+    activeCardFilter = null;
+    applyFilters();
+    updateCardFilterHighlight();
+  }
 });
 
 // ============================================================
