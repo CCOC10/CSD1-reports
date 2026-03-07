@@ -1056,19 +1056,6 @@ textarea:focus {
   }
 }
 
-/* Standalone app shell guardrails (A2HS/PWA mode) */
-html.is-standalone-app,
-html.is-standalone-app body {
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 100dvh !important;
-  overscroll-behavior: none !important;
-}
-
-html.is-standalone-app body {
-  touch-action: manipulation !important;
-}
-
 /* Request/History tables: force opaque sticky header to avoid overlap bleed */
 .notification-sheet thead th,
 .history-sheet thead th {
@@ -1201,5 +1188,16 @@ html.is-standalone-app body {
   html[data-theme="light"] body.mobile-loading-data::after {
     content: none !important;
     display: none !important;
+  }
+}
+
+/* While page data is loading, hide mobile bottom controls until ready */
+@media (max-width: 900px) {
+  body.mobile-loading-data .mobile-mini-nav,
+  body.mobile-loading-data .app-nav-fab {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(110%) !important;
   }
 }

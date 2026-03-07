@@ -10,8 +10,6 @@
 <title>สรุปผลการจับกุม กก.1 บก.ป.</title>
 <link rel="icon" type="image/png" href="web logo.png">
 <link rel="apple-touch-icon" href="web logo.png">
-<link rel="manifest" href="manifest.webmanifest">
-<script src="app-shell-lock.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
@@ -58,8 +56,8 @@
 }
 
 [data-theme="light"] {
-  --primary: #ffffff;
-  --primary-deep: #ffffff;
+  --primary: #f8fafc;
+  --primary-deep: #e2e8f0;
   --primary-surface: #ffffff;
   --accent: #d4a800;
   --accent-dim: #a38200;
@@ -78,7 +76,7 @@
   --card-bg-solid: #ffffff;
   --input-bg: rgba(0,0,0,0.04);
   --input-bg-focus: rgba(0,0,0,0.06);
-  --body-bg: #ffffff;
+  --body-bg: linear-gradient(160deg, #e8ecf2 0%, #f0f3f7 40%, #e2e8f0 100%);
   --header-bg: linear-gradient(135deg, #00264B 0%, #001a33 100%);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
   --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
@@ -155,7 +153,7 @@ body {
   font-size: 2rem;
   margin-top: 0;
   font-weight: 800;
-  color: #FFD400;
+  color: var(--accent);
   letter-spacing: 0.03em;
 }
 .dash-header p {
@@ -184,570 +182,78 @@ body {
   box-shadow: 0 0 6px rgba(34,197,94,0.5);
 }
 
-/* ==================== SIDEBAR THEME SWITCH ==================== */
-.app-sidebar-theme {
-  margin-top: 0.9rem;
-  padding-top: 0.95rem;
-  border-top: 1px solid var(--border, rgba(255,255,255,0.14));
+/* ==================== THEME TOGGLE (floating) ==================== */
+.theme-fab {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  right: 1.25rem;
+  z-index: 4000;
 }
-.app-sidebar-theme-label {
-  margin: 0 0 0.55rem;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-secondary, #94a3b8);
-}
-.app-theme-switch {
-  position: relative;
-  display: block;
-  width: 56px;
-  height: 32px;
-  border-radius: 999px;
-  border: 2px solid #bcc1ca;
-  background: #d8dce1;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.app-theme-switch:hover {
-  box-shadow: 0 0 0 2px rgba(255, 212, 0, 0.22), 0 0 16px rgba(255, 212, 0, 0.28);
-}
-.app-theme-switch:hover .app-theme-switch-thumb {
-  box-shadow: 0 0 0 2px rgba(255, 212, 0, 0.3), 0 0 18px rgba(255, 212, 0, 0.35);
-}
-[data-theme="dark"] .app-theme-switch {
-  background: #252c36;
-  border-color: #3d4654;
-}
-[data-theme="light"] .app-theme-switch {
-  background: #d8dce1;
-  border-color: #bcc1ca;
-}
-.app-theme-switch input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.app-theme-switch-track {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-}
-.app-theme-switch-thumb {
-  position: absolute;
-  top: 50%;
-  left: 6px;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+.theme-fab-btn {
+  width: 44px; height: 44px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.96);
-  color: #6b7280;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
-  transition: transform 0.28s ease, background 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
-}
-[data-theme="dark"] .app-theme-switch-thumb {
-  transform: translate(24px, -50%);
-  background: #05070b;
-  color: #f8fafc;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
-}
-.app-theme-switch-sun,
-.app-theme-switch-moon {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.app-theme-switch-moon {
-  display: none;
-}
-[data-theme="dark"] .app-theme-switch-sun {
-  display: none;
-}
-[data-theme="dark"] .app-theme-switch-moon {
-  display: block;
-}
-
-/* ==================== APP SIDEBAR ==================== */
-body.nav-open {
-  overflow-x: hidden;
-}
-body.settings-open {
-  overflow: hidden;
-}
-.app-nav-fab {
-  position: fixed;
-  top: calc(env(safe-area-inset-top) + 0.9rem);
-  left: 1rem;
-  width: 40px;
-  height: 41px;
-  border-radius: 0;
-  border: none;
-  background: transparent;
-  color: #FFD400;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: none;
-  z-index: 4305;
-  transition: transform 0.18s ease, opacity 0.18s ease;
-  padding: 0;
-}
-body.nav-open .app-nav-fab {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-8px);
-}
-.app-nav-fab:hover {
-  transform: translateY(-1px);
-  box-shadow: none;
-}
-.app-nav-fab:active {
-  transform: translateY(0);
-}
-.app-nav-fab svg {
-  width: 40px;
-  height: 41px;
-  stroke: currentColor;
-  stroke-width: 4.2;
-  filter: drop-shadow(0 0 4px rgba(255, 212, 0, 0.22));
-}
-.app-nav-fab svg line {
-  vector-effect: non-scaling-stroke;
-}
-.app-sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  z-index: 4200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-.app-sidebar-overlay.show {
-  opacity: 0;
-  pointer-events: none;
-}
-.app-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100dvh;
-  width: min(320px, 86vw);
-  padding: calc(env(safe-area-inset-top) + 1rem) 0.9rem calc(env(safe-area-inset-bottom) + 1rem);
-  background: rgba(0, 38, 75, 0.5);
-  border-right: 1px solid rgba(255, 212, 0, 0.48);
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(26px) saturate(150%);
-  -webkit-backdrop-filter: blur(26px) saturate(150%);
-  transform: translateX(-105%);
-  transition: transform 0.28s ease;
-  z-index: 4301;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  overflow: hidden;
-}
-.app-sidebar::before {
-  content: "";
-  position: absolute;
-  inset: -12% -42% auto -28%;
-  height: 42%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 72%);
-  pointer-events: none;
-}
-.app-sidebar::after {
-  content: "";
-  position: absolute;
-  inset: auto -24% 14% -26%;
-  height: 40%;
-  background: radial-gradient(circle, rgba(255, 212, 0, 0.22) 0%, rgba(255, 212, 0, 0) 70%);
-  pointer-events: none;
-}
-.app-sidebar > * {
-  position: relative;
-  z-index: 1;
-}
-.app-sidebar.show {
-  transform: translateX(0);
-}
-.app-sidebar-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.3rem 0.35rem 0.55rem;
-  border-bottom: 1px solid rgba(255, 212, 0, 0.34);
-}
-.app-sidebar-title {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #FFD400;
-}
-.app-sidebar-close {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 212, 0, 0.44);
-  background: rgba(0, 0, 0, 0.22);
-  color: #f8fafc;
+  border: 1px solid var(--border-accent);
+  background: var(--card-bg-solid);
+  color: var(--accent);
   font-size: 1.2rem;
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: var(--transition);
-}
-.app-sidebar-close:hover {
-  background: rgba(255, 212, 0, 0.22);
-  border-color: rgba(255, 212, 0, 0.72);
-  color: #ffffff;
-  box-shadow: 0 0 16px rgba(255, 212, 0, 0.32);
-}
-.app-sidebar-nav {
   display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-.app-sidebar-link {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.65rem 0.72rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  background: rgba(255, 255, 255, 0.08);
-  color: #f8fafc;
-  text-decoration: none;
-  font-size: 0.86rem;
-  font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-}
-.app-sidebar-link svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  color: currentColor;
-  stroke: currentColor;
-  opacity: 0.95;
-}
-.app-sidebar-link:hover {
-  transform: translateX(2px);
-  background: rgba(255, 212, 0, 0.24);
-  border-color: rgba(255, 212, 0, 0.66);
-  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.22) inset, 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-.app-sidebar-link.active {
-  background: rgba(255, 212, 0, 0.4);
-  border-color: rgba(255, 212, 0, 0.78);
-  color: #001a33;
-  box-shadow: 0 0 18px rgba(255, 212, 0, 0.26);
-}
-[data-theme="light"] .app-sidebar-overlay {
-  background: transparent;
-}
-[data-theme="light"] .app-sidebar {
-  background: rgba(255, 255, 255, 0.92);
-  border-right-color: rgba(0, 38, 75, 0.28);
-  box-shadow: 0 20px 44px rgba(14, 31, 58, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-[data-theme="light"] .app-sidebar::before {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 72%);
-}
-[data-theme="light"] .app-sidebar::after {
-  background: radial-gradient(circle, rgba(0, 38, 75, 0.24) 0%, rgba(0, 38, 75, 0) 72%);
-}
-[data-theme="light"] .app-sidebar-head {
-  border-bottom-color: rgba(0, 38, 75, 0.3);
-}
-[data-theme="light"] .app-sidebar-title {
-  color: #00264B;
-}
-[data-theme="light"] .app-sidebar-close {
-  border-color: rgba(0, 38, 75, 0.4);
-  background: rgba(255, 255, 255, 0.42);
-  color: #00264B;
-}
-[data-theme="light"] .app-sidebar-close:hover {
-  background: rgba(0, 38, 75, 0.2);
-  border-color: rgba(0, 38, 75, 0.62);
-  color: #001a33;
-  box-shadow: 0 0 14px rgba(0, 38, 75, 0.22);
-}
-[data-theme="light"] .app-sidebar-link {
-  border-color: rgba(0, 38, 75, 0.26);
-  background: rgba(0, 38, 75, 0.12);
-  color: #00264B;
-}
-[data-theme="light"] .app-sidebar-link:hover {
-  background: rgba(0, 38, 75, 0.2);
-  border-color: rgba(0, 38, 75, 0.42);
-  box-shadow: 0 0 0 1px rgba(0, 38, 75, 0.14) inset, 0 10px 18px rgba(0, 38, 75, 0.16);
-}
-[data-theme="light"] .app-sidebar-link.active {
-  background: rgba(0, 38, 75, 0.36);
-  border-color: rgba(0, 38, 75, 0.58);
-  color: #ffffff;
-  box-shadow: 0 0 16px rgba(0, 38, 75, 0.24);
-}
-
-.mobile-mini-nav {
-  position: fixed;
-  left: max(0.5rem, env(safe-area-inset-left));
-  right: max(0.5rem, env(safe-area-inset-right));
-  bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
-  height: 48px;
-  padding: 0.25rem;
-  border-radius: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.36);
-  background: rgba(2, 6, 23, 0.94);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  z-index: 4307;
-  display: none;
-  gap: 0.15rem;
-}
-.mobile-mini-link,
-.mobile-mini-settings {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  border: none;
-  border-radius: 14px;
-  background: transparent;
-  color: #f8fafc;
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  display: inline-flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.1rem;
-  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
-}
-.mobile-mini-link svg,
-.mobile-mini-settings svg {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  stroke-width: 2.2;
-}
-[data-theme="dark"] .mobile-mini-link.active {
-  background: rgba(255, 212, 0, 0.16);
-  color: #FFD400;
-  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.42) inset, 0 0 14px rgba(255, 212, 0, 0.46);
-  text-shadow: 0 0 10px rgba(255, 212, 0, 0.45);
-}
-[data-theme="dark"] .mobile-mini-link.active svg {
-  filter: drop-shadow(0 0 6px rgba(255, 212, 0, 0.75));
-}
-.mobile-mini-settings {
-  cursor: pointer;
-  font-family: inherit;
-  color: #f8fafc;
-}
-.mobile-mini-link:active,
-.mobile-mini-settings:active {
-  transform: scale(0.96);
-}
-
-.mobile-settings-overlay,
-.mobile-settings-sheet {
-  display: none;
-}
-.mobile-settings-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.52);
-  z-index: 4308;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.22s ease;
-}
-.mobile-settings-sheet {
-  position: fixed;
-  left: max(0.7rem, env(safe-area-inset-left));
-  right: max(0.7rem, env(safe-area-inset-right));
-  bottom: calc(env(safe-area-inset-bottom) + 5rem);
-  background: rgba(0, 38, 75, 0.86);
-  border: 1px solid rgba(255, 212, 0, 0.42);
-  border-radius: 16px;
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  z-index: 4309;
-  padding: 0.75rem 0.85rem 0.9rem;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(14px);
-  transition: opacity 0.22s ease, transform 0.22s ease;
-}
-.mobile-settings-overlay.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-.mobile-settings-sheet.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-.mobile-settings-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 0.55rem;
-  border-bottom: 1px solid rgba(255, 212, 0, 0.3);
-}
-.mobile-settings-title {
-  font-size: 0.94rem;
-  font-weight: 800;
-  color: #FFD400;
-}
-.mobile-settings-close {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  border: 1px solid rgba(255, 212, 0, 0.36);
-  background: rgba(255, 255, 255, 0.08);
-  color: #f8fafc;
-  font-size: 1.1rem;
-  line-height: 1;
-  cursor: pointer;
-}
-.mobile-settings-row {
-  margin-top: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-.mobile-settings-label {
-  font-size: 0.86rem;
-  font-weight: 700;
-  color: #f8fafc;
-}
-.mobile-settings-action {
-  width: 100%;
-  padding: 0.58rem 0.7rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 212, 0, 0.34);
-  background: rgba(255, 212, 0, 0.14);
-  color: #f8fafc;
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-align: left;
-  cursor: pointer;
+  box-shadow: var(--shadow-md);
   transition: var(--transition);
 }
-.mobile-settings-action:hover {
-  background: rgba(255, 212, 0, 0.22);
-  border-color: rgba(255, 212, 0, 0.52);
+.theme-fab-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px var(--accent-glow-soft), var(--shadow-md);
 }
-.sidebar-settings-action {
-  margin-top: 0.65rem;
-  width: 100%;
-  padding: 0.55rem 0.62rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 212, 0, 0.36);
-  background: rgba(255, 212, 0, 0.16);
-  color: #f8fafc;
+.theme-fab-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--card-bg-solid);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: scale(0.85) translateY(6px);
+  transform-origin: bottom right;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 130px;
+}
+.theme-fab-menu.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+.theme-fab-option {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem 0.4rem 0.5rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text);
   font-family: inherit;
   font-size: 0.78rem;
-  font-weight: 700;
-  text-align: left;
+  font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
   transition: var(--transition);
 }
-.sidebar-settings-action:hover {
-  background: rgba(255, 212, 0, 0.24);
-  border-color: rgba(255, 212, 0, 0.58);
+.theme-fab-option:hover {
+  background: rgba(255,255,255,0.08);
 }
-
-[data-theme="light"] .mobile-mini-nav {
-  background: rgba(0, 38, 75, 0.6);
-  border-color: rgba(0, 38, 75, 0.36);
-  box-shadow: 0 12px 24px rgba(0, 38, 75, 0.18);
-}
-[data-theme="light"] .mobile-mini-link,
-[data-theme="light"] .mobile-mini-settings {
-  color: #f8fafc;
-}
-[data-theme="light"] .mobile-mini-link.active {
-  background: rgba(0, 38, 75, 0.32);
-  color: #ffffff;
-}
-[data-theme="light"] .mobile-settings-overlay {
-  background: rgba(0, 38, 75, 0.28);
-}
-[data-theme="light"] .mobile-settings-sheet {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(0, 38, 75, 0.38);
-  box-shadow: 0 16px 30px rgba(0, 38, 75, 0.18);
-}
-[data-theme="light"] .mobile-settings-head {
-  border-bottom-color: rgba(0, 38, 75, 0.26);
-}
-[data-theme="light"] .mobile-settings-title,
-[data-theme="light"] .mobile-settings-label {
-  color: #00264B;
-}
-[data-theme="light"] .mobile-settings-action {
-  border-color: rgba(255, 255, 255, 0.32);
-  background: rgba(255, 255, 255, 0.16);
-  color: #f8fafc;
-}
-[data-theme="light"] .mobile-settings-action:hover {
-  background: rgba(255, 255, 255, 0.24);
-}
-[data-theme="light"] .mobile-settings-close {
-  border-color: rgba(0, 38, 75, 0.32);
-  background: rgba(255, 255, 255, 0.5);
-  color: #00264B;
-}
-[data-theme="light"] .sidebar-settings-action {
-  border-color: rgba(255, 255, 255, 0.34);
-  background: rgba(255, 255, 255, 0.18);
-  color: #f8fafc;
-}
-[data-theme="light"] .sidebar-settings-action:hover {
-  background: rgba(255, 255, 255, 0.26);
-}
-
-@media (max-width: 900px) {
-  body {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 4rem);
-  }
-  .app-nav-fab {
-    display: none !important;
-  }
-  .mobile-mini-nav,
-  .mobile-settings-overlay,
-  .mobile-settings-sheet {
-    display: block;
-  }
-  .mobile-mini-nav {
-    display: flex;
-  }
-  .app-sidebar-theme {
-    display: none;
-  }
+.theme-fab-option.active {
+  background: var(--accent);
+  color: #001a33;
+  font-weight: 700;
 }
 
 /* ==================== CONTAINER ==================== */
@@ -798,16 +304,9 @@ body.nav-open .app-nav-fab {
 .action-pill.ap-pdf:hover { box-shadow: 0 0 14px rgba(220,38,38,0.45); }
 
 .action-pill.ap-filter {
-  background: var(--accent); color: #001a33; border-color: #FFD400;
+  background: var(--accent); color: #001a33; border-color: var(--accent);
 }
 .action-pill.ap-filter:hover { box-shadow: 0 0 12px var(--accent-glow); }
-
-.action-pill.ap-report {
-  background: var(--accent);
-  color: #001a33;
-  border-color: #FFD400;
-}
-.action-pill.ap-report:hover { box-shadow: 0 0 12px var(--accent-glow); }
 
 /* Reset button inside filter bar */
 .filter-reset-btn {
@@ -859,9 +358,6 @@ body.nav-open .app-nav-fab {
   padding: 1.1rem 1.25rem;
   border-bottom: 1px solid var(--border);
 }
-.report-modal-header-left {
-  min-width: 0;
-}
 .report-modal-header h3 {
   font-size: 1rem;
   font-weight: 700;
@@ -871,33 +367,9 @@ body.nav-open .app-nav-fab {
   gap: 0.4rem;
 }
 .report-modal-header p {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
-  margin-top: 0.2rem;
-}
-.report-modal-header-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-/* ---- Regenerate button (same pattern as index) ---- */
-.btn-regen {
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 0.3rem 0.45rem;
-  display: inline-flex;
-  align-items: center;
-  transition: var(--transition);
-}
-.btn-regen:hover {
-  color: #FFD400;
-  border-color: #FFD400;
-  box-shadow: 0 0 12px var(--accent-glow-soft);
-  transform: rotate(-20deg);
+  margin-top: 0.15rem;
 }
 .report-modal-close {
   width: 32px; height: 32px;
@@ -924,69 +396,25 @@ body.nav-open .app-nav-fab {
   padding: 1.25rem;
   -webkit-overflow-scrolling: touch;
 }
-.report-warning {
-  font-size: 0.78rem;
-  color: var(--danger);
-  margin: 0.1rem 0 0.65rem;
-  font-weight: 500;
-}
 .report-text-box {
   background: var(--input-bg);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 1.25rem;
   font-family: 'IBM Plex Sans Thai', sans-serif;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   line-height: 1.8;
   color: var(--text);
   white-space: pre-wrap;
   word-break: break-word;
-  min-height: 260px;
-  max-height: 58vh;
-  overflow-y: auto;
+  min-height: 200px;
   outline: none;
   cursor: text;
-  transition: var(--transition);
-  margin-bottom: 0.5rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 .report-text-box:focus {
-  border-color: #FFD400;
-  box-shadow: 0 0 0 3px var(--accent-glow-soft), 0 0 15px var(--accent-glow-soft);
-}
-.report-text-box.edited {
-  border-color: rgba(255, 212, 0, 0.35);
-}
-.report-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 0.9rem;
-  padding: 0 0.25rem;
-}
-.report-edited-badge {
-  background: var(--accent-glow-soft);
-  color: #FFD400;
-  padding: 0.15rem 0.6rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.3s, transform 0.3s;
-}
-.report-text-box.edited ~ .report-meta .report-edited-badge {
-  opacity: 1;
-  transform: scale(1);
-}
-.action-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow-soft);
 }
 .report-modal-footer {
   display: flex;
@@ -995,29 +423,6 @@ body.nav-open .app-nav-fab {
   gap: 0.6rem;
   padding: 1rem 1.25rem;
   border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-
-/* Extra button styles used in dashboard report modal */
-.btn-success {
-  background: rgba(0,26,51,0.8);
-  color: #FFD400;
-  border: 1.5px solid var(--accent);
-}
-.btn-success:hover {
-  background: rgba(0,38,75,0.9);
-  box-shadow: 0 0 20px var(--accent-glow-soft);
-  transform: translateY(-1px);
-}
-.btn-line {
-  background: #06c755;
-  color: #fff;
-  font-weight: 700;
-}
-.btn-line:hover {
-  background: #05b34c;
-  box-shadow: 0 0 20px rgba(6,199,85,0.4), 0 5px 15px rgba(0,0,0,0.2);
-  transform: translateY(-2px);
 }
 @media (max-width: 500px) {
   .report-modal {
@@ -1027,11 +432,8 @@ body.nav-open .app-nav-fab {
     padding: 0.85rem;
   }
   .report-text-box {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     padding: 0.85rem;
-  }
-  .report-modal-footer .btn {
-    width: 100%;
   }
 }
 
@@ -1043,16 +445,6 @@ body.nav-open .app-nav-fab {
   margin-bottom: 1.25rem;
   animation: fadeIn 0.5s ease;
   flex-wrap: wrap;
-  position: sticky;
-  top: calc(env(safe-area-inset-top) + 0.35rem);
-  z-index: 3500;
-  padding: 0.65rem;
-  border-radius: 12px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 }
 
 /* Search input */
@@ -1066,13 +458,9 @@ body.nav-open .app-nav-fab {
   left: 0.85rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: var(--text-muted);
   pointer-events: none;
   width: 16px; height: 16px;
-}
-.filter-search .search-icon svg {
-  stroke: currentColor;
-  stroke-width: 2.15;
 }
 .filter-search input {
   width: 100%;
@@ -1093,7 +481,7 @@ body.nav-open .app-nav-fab {
   font-weight: 400;
 }
 .filter-search input:focus {
-  border-color: #FFD400;
+  border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow-soft);
   background: var(--input-bg-focus);
 }
@@ -1110,15 +498,13 @@ body.nav-open .app-nav-fab {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 0.85rem;
   display: flex;
   align-items: center;
 }
 .filter-select-wrap .sel-icon svg {
   width: 16px; height: 16px;
-  stroke: currentColor;
-  stroke-width: 2.15;
 }
 .filter-select-wrap select {
   width: 100%;
@@ -1140,7 +526,7 @@ body.nav-open .app-nav-fab {
   appearance: none;
 }
 .filter-select-wrap select:focus {
-  border-color: #FFD400;
+  border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow-soft);
 }
 .filter-select-wrap select option {
@@ -1153,23 +539,8 @@ body.nav-open .app-nav-fab {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   width: 14px; height: 14px;
-}
-.filter-search:focus-within .search-icon,
-.filter-select-wrap:focus-within .sel-icon,
-.filter-select-wrap:focus-within .sel-chevron {
-  color: #FFD400;
-}
-[data-theme="dark"] .filter-search .search-icon,
-[data-theme="dark"] .filter-select-wrap .sel-icon,
-[data-theme="dark"] .filter-select-wrap .sel-chevron {
-  color: #cbd5e1;
-}
-[data-theme="light"] .filter-search .search-icon,
-[data-theme="light"] .filter-select-wrap .sel-icon,
-[data-theme="light"] .filter-select-wrap .sel-chevron {
-  color: #1f4f78;
 }
 
 /* Period select — wider */
@@ -1220,7 +591,7 @@ body.nav-open .app-nav-fab {
   font-size: 2.5rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #FFD400;
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1295,7 +666,7 @@ body.nav-open .app-nav-fab {
   border-radius: 20px;
   margin-top: 0.35rem;
   background: var(--accent-glow-soft);
-  color: #FFD400;
+  color: var(--accent);
 }
 
 /* Color variants */
@@ -1311,8 +682,8 @@ body.nav-open .app-nav-fab {
 .c-orange .stat-value { color: #f97316; }
 .c-orange .stat-pct { background: rgba(249,115,22,0.12); color: #f97316; }
 
-.c-yellow { border-left-color: #FFD400; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255,212,0,0.08) 100%); border-color: rgba(255,212,0,0.2); border-left-color: #FFD400; }
-.c-yellow .stat-value { color: #FFD400; }
+.c-yellow { border-left-color: var(--accent); background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255,212,0,0.08) 100%); border-color: rgba(255,212,0,0.2); border-left-color: var(--accent); }
+.c-yellow .stat-value { color: var(--accent); }
 
 .c-blue { border-left-color: #3b82f6; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(59,130,246,0.10) 100%); border-color: rgba(59,130,246,0.2); border-left-color: #3b82f6; }
 .c-blue .stat-value { color: #3b82f6; }
@@ -1437,7 +808,7 @@ body.nav-open .app-nav-fab {
 .stat-list-item.li-blue { border-left-color: #3b82f6; }
 .stat-list-item.li-purple { border-left-color: #a855f7; }
 .stat-list-item.li-teal { border-left-color: #14b8a6; }
-.stat-list-item.li-yellow { border-left-color: #FFD400; }
+.stat-list-item.li-yellow { border-left-color: var(--accent); }
 
 .stat-list-head {
   display: flex;
@@ -1559,12 +930,7 @@ body.exporting-dashboard .dash-header,
 body.exporting-dashboard .filter-bar,
 body.exporting-dashboard .table-card,
 body.exporting-dashboard .bottom-actions,
-body.exporting-dashboard .app-nav-fab,
-body.exporting-dashboard .mobile-mini-nav,
-body.exporting-dashboard .mobile-settings-overlay,
-body.exporting-dashboard .mobile-settings-sheet,
-body.exporting-dashboard .app-sidebar,
-body.exporting-dashboard .app-sidebar-overlay,
+body.exporting-dashboard .theme-fab,
 body.exporting-dashboard .summary-save-row,
 body.exporting-dashboard .report-modal-overlay {
   display: none !important;
@@ -1636,7 +1002,7 @@ body.exporting-dashboard [class*="stat-"] {
 .card-title {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #FFD400;
+  color: var(--accent);
   margin-bottom: 0.85rem;
   display: flex;
   align-items: center;
@@ -1694,7 +1060,7 @@ body.exporting-dashboard [class*="stat-"] {
 .center-legend-count {
   font-size: 0.85rem;
   font-weight: 800;
-  color: #FFD400;
+  color: var(--accent);
   min-width: 30px;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -1736,7 +1102,7 @@ body.exporting-dashboard [class*="stat-"] {
 }
 .data-table thead th {
   background: linear-gradient(135deg, rgba(0,26,51,0.9), rgba(0,16,41,0.9));
-  color: #FFD400;
+  color: var(--accent);
   font-weight: 700;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -1769,7 +1135,7 @@ body.exporting-dashboard [class*="stat-"] {
 }
 .data-table .total-row td {
   font-weight: 800;
-  color: #FFD400;
+  color: var(--accent);
   border-top: 2px solid var(--accent);
   border-bottom: 2px solid var(--accent);
   background: rgba(255,212,0,0.05);
@@ -1808,7 +1174,7 @@ body.exporting-dashboard [class*="stat-"] {
   flex: 1;
 }
 .summary-title-center h2 {
-  color: #FFD400;
+  color: var(--accent);
   font-size: 1.4rem;
   font-weight: 800;
   margin: 0;
@@ -1940,16 +1306,14 @@ body.exporting-dashboard [class*="stat-"] {
   border-radius: 6px;
 }
 [data-theme="light"] .summary-footer-note { background: #FFD966; color: #1e293b; }
-[data-theme="dark"] .summary-footer-note { background: rgba(255,212,0,0.15); color: #FFD400; border: 1px solid rgba(255,212,0,0.25); }
+[data-theme="dark"] .summary-footer-note { background: rgba(255,212,0,0.15); color: var(--accent); border: 1px solid rgba(255,212,0,0.25); }
 
 /* Save table row */
 .summary-save-row {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 0.8rem 0 1rem;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: 0.6rem 0;
   border: none;
   background: transparent;
 }
@@ -1972,7 +1336,6 @@ body.exporting-dashboard [class*="stat-"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   gap: 0.75rem;
   padding: 1rem 0 2rem;
   animation: fadeIn 0.5s ease 0.4s both;
@@ -1995,11 +1358,6 @@ body.exporting-dashboard [class*="stat-"] {
   position: relative;
   overflow: hidden;
   text-decoration: none;
-}
-.btn svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
 }
 .btn::after {
   content: '';
@@ -2029,8 +1387,8 @@ body.exporting-dashboard [class*="stat-"] {
   border: 1.5px solid var(--border);
 }
 .btn-outline:hover {
-  border-color: #FFD400;
-  color: #FFD400;
+  border-color: var(--accent);
+  color: var(--accent);
   box-shadow: 0 0 15px var(--accent-glow-soft);
   transform: translateY(-1px);
 }
@@ -2074,7 +1432,7 @@ body.exporting-dashboard [class*="stat-"] {
 .spinner {
   width: 48px; height: 48px;
   border: 4px solid var(--border);
-  border-top-color: #FFD400;
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -2082,14 +1440,6 @@ body.exporting-dashboard [class*="stat-"] {
   font-size: 0.9rem;
   color: var(--text-muted);
   font-weight: 500;
-}
-[data-theme="light"] .loading-overlay {
-  background: #ffffff;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-[data-theme="light"] .loading-text {
-  color: #00264B;
 }
 
 /* ==================== TOAST ==================== */
@@ -2134,9 +1484,6 @@ body.exporting-dashboard [class*="stat-"] {
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-  .app-nav-fab {
-    display: none;
-  }
   .dash-header { padding: 1rem 0.75rem; }
   .dash-header-logo { width: 56px !important; height: 56px !important; }
   .dash-header h1 { font-size: 1.25rem; }
@@ -2152,9 +1499,6 @@ body.exporting-dashboard [class*="stat-"] {
   }
   .filter-bar {
     gap: 0.4rem;
-    padding-left: 0.65rem;
-    position: static;
-    top: auto;
   }
   .filter-search { min-width: 140px; }
   .filter-select-wrap { min-width: 100px; }
@@ -2177,9 +1521,6 @@ body.exporting-dashboard [class*="stat-"] {
   }
   .dash-header p {
     font-size: 0.75rem;
-  }
-  .filter-bar {
-    padding-left: 0.55rem;
   }
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2232,182 +1573,12 @@ body.exporting-dashboard [class*="stat-"] {
   .stat-hero .stat-value { font-size: 2.4rem; }
 }
 </style>
-<link rel="stylesheet" href="theme-sync-dashboard.css">
-<link rel="stylesheet" href="sidebar-account.css">
-<link rel="stylesheet" href="buttons-legacy.css">
-<link rel="stylesheet" href="luxury-2026.css">
 </head>
 <body>
-
-<button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
-  <svg viewBox="0 0 40 41" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="9.5" x2="32" y2="9.5"></line><line x1="8" y1="20.5" x2="32" y2="20.5"></line><line x1="8" y1="31.5" x2="32" y2="31.5"></line></svg>
-</button>
-<nav class="mobile-mini-nav" aria-label="เมนูหลักมือถือ">
-  <a class="mobile-mini-link" href="index.html" onclick="return navigateInApp(event, 'index.html')" title="หน้ากรอกแบบฟอร์ม" aria-label="หน้ากรอกแบบฟอร์ม">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-    <span>ฟอร์ม</span>
-  </a>
-  <a class="mobile-mini-link" href="compare.html" onclick="return navigateInApp(event, 'compare.html')" title="เปรียบเทียบ" aria-label="เปรียบเทียบ">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-    <span>เทียบ</span>
-  </a>
-  <a class="mobile-mini-link active" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')" title="Dashboard (Home)" aria-label="Dashboard หน้าแรก">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-    <span>Dashboard</span>
-  </a>
-  <a class="mobile-mini-link" href="rank.html" onclick="return navigateInApp(event, 'rank.html')" title="Hall of Fam" aria-label="Hall of Fam">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
-    <span>HOF</span>
-  </a>
-  <button class="mobile-mini-settings" type="button" onclick="openMobileSettings(event)" aria-label="หน้าตั้งค่า" title="หน้าตั้งค่า">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34a1.7 1.7 0 0 0-1.04 1.55V22a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.55a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87a1.7 1.7 0 0 0-1.55-1.04H2a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.04a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.04a1.7 1.7 0 0 0 1-1.54V2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.55a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.04a1.7 1.7 0 0 0 1.54 1H22a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.04z"></path></svg>
-    <span>ตั้งค่า</span>
-  </button>
-</nav>
-<div class="mobile-settings-overlay" id="mobileSettingsOverlay" onclick="closeMobileSettings()"></div>
-<section class="mobile-settings-sheet" id="mobileSettingsSheet" aria-label="หน้าตั้งค่า">
-  <div class="mobile-settings-head">
-    <div class="mobile-settings-title">หน้าตั้งค่า</div>
-    <button class="mobile-settings-close" type="button" onclick="closeMobileSettings()" aria-label="ปิดหน้าตั้งค่า">&times;</button>
-  </div>
-  <div class="mobile-settings-row">
-    <div class="mobile-settings-label">โหมดธีม</div>
-    <label class="app-theme-switch" for="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
-      <input type="checkbox" id="mobileThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
-      <span class="app-theme-switch-track">
-        <span class="app-theme-switch-thumb">
-          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.2"></circle>
-            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
-            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
-            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
-            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
-            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
-            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
-            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
-            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
-          </svg>
-          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
-          </svg>
-        </span>
-      </span>
-    </label>
-  </div>
-  <div class="mobile-settings-row mobile-account-row">
-    <button class="mobile-account-btn" type="button" onclick="handleAvatarAccess(event)">
-      <span class="mobile-account-avatar" id="mobileAccountAvatar">U</span>
-      <span class="mobile-account-text">
-        <span class="mobile-account-name" id="mobileAccountName">เข้าสู่ระบบ</span>
-        <span class="mobile-account-sub" id="mobileAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
-      </span>
-    </button>
-  </div>
-  <div class="mobile-settings-row">
-    <button class="mobile-settings-action mobile-logout-btn is-hidden" id="mobileLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-      <span>ออกจากระบบ</span>
-    </button>
-  </div>
-  <div class="mobile-settings-row" id="mobileHistoryMenuRow" data-admin-history style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
-  </div>
-  <div class="mobile-settings-row" id="mobileNotificationMenuRow" data-admin-notification style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
-  </div>
-</section>
-<div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
-<aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
-  <div class="app-sidebar-head">
-    <div class="app-sidebar-title">เมนูหลัก</div>
-    <button class="app-sidebar-close" type="button" onclick="closeAppSidebar()" aria-label="ปิดเมนู">&times;</button>
-  </div>
-  <nav class="app-sidebar-nav">
-    <a class="app-sidebar-link active" href="dashboard.html" onclick="return navigateViaSidebar(event, 'dashboard.html')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-      <span>Dashboard</span>
-    </a>
-    <a class="app-sidebar-link" href="compare.html" onclick="return navigateViaSidebar(event, 'compare.html')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-      <span>เปรียบเทียบ</span>
-    </a>
-    <a class="app-sidebar-link" href="rank.html" onclick="return navigateViaSidebar(event, 'rank.html')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
-      <span>HALL OF FAM</span>
-    </a>
-    <a class="app-sidebar-link" href="index.html" onclick="return navigateViaSidebar(event, 'index.html')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-      <span>หน้ากรอกแบบฟอร์ม</span>
-    </a>
-  </nav>
-  <div class="app-sidebar-theme">
-    <div class="app-sidebar-theme-label">Theme</div>
-    <button class="sidebar-account-btn" id="sidebarAccountBtn" type="button" onclick="handleAvatarAccess(event)">
-      <span class="sidebar-account-avatar" id="sidebarAccountAvatar">U</span>
-      <span class="sidebar-account-meta">
-        <span class="sidebar-account-name" id="sidebarAccountName">เข้าสู่ระบบ</span>
-        <span class="sidebar-account-sub" id="sidebarAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
-      </span>
-    </button>
-    <label class="app-theme-switch" for="sidebarThemeToggle" title="สลับโหมดสว่าง/มืด">
-      <input type="checkbox" id="sidebarThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
-      <span class="app-theme-switch-track">
-        <span class="app-theme-switch-thumb">
-          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.2"></circle>
-            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
-            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
-            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
-            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
-            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
-            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
-            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
-            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
-          </svg>
-          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
-          </svg>
-        </span>
-      </span>
-    </label>
-    <button class="sidebar-settings-action" id="sidebarHistoryMenuBtn" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
-    <button class="sidebar-settings-action" id="sidebarNotificationMenuBtn" data-admin-notification type="button" style="display:none;" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
-    <button class="sidebar-logout-btn is-hidden" id="sidebarLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-      <span>ออกจากระบบ</span>
-    </button>
-  </div>
-</aside>
 
 <!-- ==================== LOADING OVERLAY ==================== -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="duck-race" aria-hidden="true">
-    <span class="duck-lane">
-      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
-        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
-        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
-        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
-      </svg>
-    </span>
-    <span class="duck-lane">
-      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
-        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
-        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
-        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
-      </svg>
-    </span>
-    <span class="duck-lane">
-      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
-        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
-        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
-        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
-      </svg>
-    </span>
-  </div>
   <div class="loading-text">กำลังโหลดข้อมูล...</div>
 </div>
 
@@ -2589,11 +1760,13 @@ body.exporting-dashboard [class*="stat-"] {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           บันทึกตาราง
         </button>
-        <button class="action-pill ap-report" onclick="showReportModal()" title="สรุปข้อความรายงาน">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h8"></path><path d="M8 9h2"></path></svg>
-          สรุปข้อความรายงาน
-        </button>
       </div>
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="bottom-actions">
+      <a href="index.html" class="btn btn-outline">&#8592; กรอกแบบฟอร์ม</a>
+      <button class="btn btn-accent" onclick="showReportModal()">&#128203; สรุปข้อความรายงาน</button>
     </div>
 
   </div>
@@ -2603,39 +1776,36 @@ body.exporting-dashboard [class*="stat-"] {
 <div class="report-modal-overlay" id="reportModalOverlay" onclick="if(event.target===this)closeReportModal()">
   <div class="report-modal">
     <div class="report-modal-header">
-      <div class="report-modal-header-left">
+      <div>
         <h3>&#128203; ตัวอย่างรายงาน</h3>
-        <p>สามารถปรับแก้ข้อความได้ก่อนนำไปใช้</p>
+        <p style="color:var(--danger);font-weight:600;">โปรดตรวจสอบความถูกต้องอีกครั้ง</p>
       </div>
-      <div class="report-modal-header-actions">
-        <button class="btn-regen" onclick="regenerateReportModal()" title="สร้างข้อความใหม่">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6a6 6 0 016 6 6 6 0 01-6 6 6 6 0 01-6-6H4a8 8 0 008 8 8 8 0 008-8 8 8 0 00-8-8z"/></svg>
-        </button>
-        <button class="report-modal-close" onclick="closeReportModal()">&times;</button>
-      </div>
+      <button class="report-modal-close" onclick="closeReportModal()">&times;</button>
     </div>
     <div class="report-modal-body">
-      <p class="report-warning">*โปรดตรวจสอบรายละเอียดอีกครั้ง โดยสามารถแก้ไขเพิ่มเติมได้</p>
       <div class="report-text-box" id="reportTextBox" contenteditable="true" spellcheck="false"></div>
-      <div class="report-meta">
-        <span id="reportCharCount">0 ตัวอักษร</span>
-        <span class="report-edited-badge" id="editedBadge">แก้ไขแล้ว</span>
-      </div>
-      <div class="action-label">ดำเนินการ</div>
     </div>
     <div class="report-modal-footer">
       <button class="btn btn-outline btn-sm" onclick="closeReportModal()">ปิดหน้าต่าง</button>
-      <button class="btn btn-success btn-sm" onclick="copyReportText()">&#128203; คัดลอก</button>
-      <button class="btn btn-line btn-sm" onclick="shareReportToLine()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.4c0 4.17 3.68 7.66 8.66 8.32.34.07.79.22.91.51.11.26.07.67.04.93l-.15.88c-.04.25-.2.99.87.54s5.79-3.41 7.89-5.84C22.07 13.62 22 12.07 22 10.4 22 5.81 17.52 2 12 2z"/></svg>
-        ส่ง LINE
-      </button>
+      <button class="btn btn-accent btn-sm" onclick="copyReportText()">&#128203; คัดลอกรายงาน</button>
     </div>
   </div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Theme FAB -->
+<div class="theme-fab" id="themeFab">
+  <div class="theme-fab-menu" id="themeFabMenu">
+    <button class="theme-fab-option" data-theme-val="light" onclick="setTheme('light')">&#9728;&#65039; สว่าง</button>
+    <button class="theme-fab-option" data-theme-val="dark" onclick="setTheme('dark')">&#127769; มืด</button>
+    <button class="theme-fab-option" data-theme-val="auto" onclick="setTheme('auto')">&#128187; อัตโนมัติ</button>
+  </div>
+  <button class="theme-fab-btn" id="themeFabBtn" onclick="toggleThemeFab()">
+    <span id="themeIcon">&#127769;</span>
+  </button>
+</div>
 
 <script>
 // ============================================================
@@ -2648,14 +1818,13 @@ let filteredData = [];
 let trendChartInstance = null;
 let unitChartInstance = null;
 let centerChartInstance = null;
-let deepSearchEnabled = false;
 
 const UNITS = ['ชป.10','ชป.11','ชป.12','ชป.13','ชป.14','ชป.15','ชป.16','ชป.17','ชป.18','ชป.19'];
 
 // เป้าหมาย — ไม่นับ ชป.10 (9 ชป.)
 const TARGETS = {
   warrantRegular:  { perUnit: 5, orgTotal: 45 },  // หมายทั่วไป
-  warrantIn:       { perUnit: 1, orgTotal: 3  },   // หมายในเก่า+ใหม่
+  warrantIn:       { perUnit: 1, orgTotal: 9  },   // หมายในเก่า+ใหม่
   alienInspect:    { perUnit: 3, orgTotal: 27 },   // ตรวจต่างด้าว
   alienArrest:     { perUnit: 1, orgTotal: 9  },   // จับกุมนายจ้าง+จับกุมลูกจ้าง
   prNews:          { perUnit: 1, orgTotal: 9  }    // ประชาสัมพันธ์ข่าว
@@ -2684,27 +1853,8 @@ const THAI_MONTH_SHORT = [
 // ============================================================
 //  UTILITIES
 // ============================================================
-function normalizeSheetUrl(rawValue) {
-  const raw = String(rawValue == null ? '' : rawValue).trim();
-  if (!raw) return DEFAULT_SHEET_URL;
-  const candidate = /^https?:\/\//i.test(raw) ? raw : ('https://' + raw);
-  try {
-    const parsed = new URL(candidate);
-    if (!/^https?:$/i.test(parsed.protocol)) throw new Error('invalid protocol');
-    return parsed.href;
-  } catch (_) {
-    return DEFAULT_SHEET_URL;
-  }
-}
-
 function getSheetUrl() {
-  const stored = localStorage.getItem('CSD1_SHEET_URL');
-  const resolved = normalizeSheetUrl(stored);
-  const normalizedStored = String(stored == null ? '' : stored).trim();
-  if (normalizedStored && normalizedStored !== resolved) {
-    localStorage.setItem('CSD1_SHEET_URL', resolved);
-  }
-  return resolved;
+  return localStorage.getItem('CSD1_SHEET_URL') || DEFAULT_SHEET_URL;
 }
 
 function showToast(msg, duration) {
@@ -2715,223 +1865,58 @@ function showToast(msg, duration) {
   toast._timer = setTimeout(() => toast.classList.remove('show'), duration || 2800);
 }
 
-function getSessionToken(user) {
-  if (!user || typeof user !== 'object') return '';
-  return String(
-    user.sessionToken ||
-    user.session_token ||
-    (user.session && user.session.token) ||
-    user.token ||
-    user.accessToken ||
-    ''
-  ).trim();
-}
-
-function hasDeepSearchSession(user) {
-  return !!(user && user.email && getSessionToken(user));
-}
-
-function updateSearchModeUI() {
-  const searchInput = document.getElementById('filterSearch');
-  if (!searchInput) return;
-
-  if (deepSearchEnabled) {
-    searchInput.placeholder = 'ค้นหาเชิงลึก: ชื่อ/ข้อหา/ผู้รายงาน/สถานที่...';
-    searchInput.title = 'โหมดค้นหาเชิงลึก (เข้าสู่ระบบแล้ว)';
-  } else {
-    searchInput.placeholder = 'ค้นหา: วันที่/ชุดปฏิบัติการ/ประเภทงาน...';
-    searchInput.title = 'โหมดสาธารณะ';
-  }
-}
-
-function buildSearchHaystack(row) {
-  const baseFields = [
-    row['วันที่'] || '',
-    row['ชุดปฏิบัติการ'] || '',
-    row['การจับกุม ตรวจสอบ'] || '',
-    row['ประเภทหมายจับ'] || '',
-    row['หน้างานต่างด้าว'] || '',
-    row['หน้างานห้วงระดม'] || '',
-    row['หน้างานศูนย์'] || '',
-    row['งานออกสื่อ'] || ''
-  ];
-
-  if (deepSearchEnabled) {
-    baseFields.push(
-      row['ชื่อ-สกุล ผู้ต้องหา'] || '',
-      row['ข้อหา (ฐานความผิด)'] || '',
-      row['ผู้รายงาน'] || '',
-      row['สถานที่ (จับกุม/หรือตรวจสอบ)'] || '',
-      row['พร้อมของกลาง (ถ้ามี)'] || '',
-      row['อีเมล'] || ''
-    );
-  }
-
-  return baseFields.join(' ').toLowerCase();
-}
-
-function isAuthErrorMessage(message) {
-  const msg = String(message || '');
-  return msg.includes('เซสชัน') || msg.includes('เข้าสู่ระบบ') || msg.includes('ไม่มีสิทธิ์');
-}
-
-function resolveInAppUrl(targetPath) {
-  const rawTarget = String(targetPath == null ? '' : targetPath).trim();
-  if (!rawTarget) return new URL(window.location.href);
-  if (/^https?:\/\//i.test(rawTarget)) return new URL(rawTarget);
-
-  const pathName = window.location.pathname || '/';
-  const hasFileName = /\/[^/]+\.[a-z0-9]+$/i.test(pathName);
-  const basePath = hasFileName
-    ? pathName.replace(/[^/]+$/, '')
-    : (pathName.endsWith('/') ? pathName : pathName + '/');
-  const cleanedTarget = rawTarget.replace(/^\/+/, '');
-  return new URL(cleanedTarget, window.location.origin + basePath);
-}
-
-function navigateInApp(evt, targetPath) {
-  if (evt) evt.preventDefault();
-  const nextUrl = resolveInAppUrl(targetPath);
-  const standaloneMode =
-    window.matchMedia('(display-mode: standalone)').matches ||
-    window.matchMedia('(display-mode: fullscreen)').matches ||
-    window.navigator.standalone === true;
-  if (standaloneMode && nextUrl.origin === window.location.origin) {
-    window.location.assign(nextUrl.pathname + nextUrl.search + nextUrl.hash);
-    return false;
-  }
-  window.location.assign(nextUrl.href);
-  return false;
-}
-
-function getStoredUserSafe() {
-  try {
-    return JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
-  } catch (_) {
-    return {};
-  }
-}
-
-function isAdminRole(user) {
-  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'admin';
-}
-
-function isUserRole(user) {
-  return String(user && user.role ? user.role : '').trim().toLowerCase() === 'user';
-}
-
-function syncAdminHistoryMenus(user) {
-  const hasSession = hasDeepSearchSession(user);
-  const userVisible = isUserRole(user) && hasSession;
-  const adminVisible = isAdminRole(user) && hasSession;
-  document.querySelectorAll('[data-admin-history]').forEach((el) => {
-    el.style.display = userVisible ? '' : 'none';
-  });
-  document.querySelectorAll('[data-admin-notification]').forEach((el) => {
-    el.style.display = adminVisible ? '' : 'none';
-  });
-}
-
-function openHistoryPage(evt) {
-  closeMobileSettings();
-  closeAppSidebar();
-  return navigateInApp(evt, 'history.html');
-}
-
-function openNotificationPage(evt) {
-  closeMobileSettings();
-  closeAppSidebar();
-  return navigateInApp(evt, 'notification.html');
-}
-
-let appSidebarOpen = false;
-function openAppSidebar() {
-  closeMobileSettings();
-  appSidebarOpen = true;
-  document.body.classList.add('nav-open');
-  document.getElementById('appSidebar')?.classList.add('show');
-  document.getElementById('appSidebarOverlay')?.classList.add('show');
-}
-function closeAppSidebar() {
-  appSidebarOpen = false;
-  document.body.classList.remove('nav-open');
-  document.getElementById('appSidebar')?.classList.remove('show');
-  document.getElementById('appSidebarOverlay')?.classList.remove('show');
-}
-function toggleAppSidebar(evt) {
-  if (evt) evt.stopPropagation();
-  if (appSidebarOpen) closeAppSidebar();
-  else openAppSidebar();
-}
-let mobileSettingsOpen = false;
-function openMobileSettings(evt) {
-  if (evt) evt.stopPropagation();
-  closeAppSidebar();
-  mobileSettingsOpen = true;
-  document.body.classList.add('settings-open');
-  document.getElementById('mobileSettingsOverlay')?.classList.add('show');
-  document.getElementById('mobileSettingsSheet')?.classList.add('show');
-}
-function closeMobileSettings() {
-  mobileSettingsOpen = false;
-  document.body.classList.remove('settings-open');
-  document.getElementById('mobileSettingsOverlay')?.classList.remove('show');
-  document.getElementById('mobileSettingsSheet')?.classList.remove('show');
-}
-function navigateViaSidebar(evt, targetPath) {
-  closeAppSidebar();
-  return navigateInApp(evt, targetPath);
-}
-
-function isMobileSidebarGestureEnabled() {
-  return false;
-}
-
-function setupSidebarEdgeSwipe() {}
-
-setupSidebarEdgeSwipe();
-
 // ============================================================
 //  THEME
 // ============================================================
-function getPreferredTheme() {
-  const stored = localStorage.getItem('CSD1_THEME') || 'dark';
-  if (stored === 'light' || stored === 'dark') return stored;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
+let themeFabOpen = false;
 
-function syncThemeSwitch(mode) {
-  const isDark = mode === 'dark';
-  const sidebarToggleEl = document.getElementById('sidebarThemeToggle');
-  if (sidebarToggleEl) sidebarToggleEl.checked = isDark;
-  const mobileToggleEl = document.getElementById('mobileThemeToggle');
-  if (mobileToggleEl) mobileToggleEl.checked = isDark;
+function getPreferredTheme() {
+  return localStorage.getItem('CSD1_THEME') || 'dark';
 }
 
 function applyTheme(mode) {
-  const normalized = mode === 'light' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', normalized);
-  syncThemeSwitch(normalized);
-  const themeColor = normalized === 'dark' ? '#020617' : '#e8ecf2';
+  let effective = mode;
+  if (mode === 'auto') {
+    effective = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', effective);
+
+  const iconEl = document.getElementById('themeIcon');
+  if (iconEl) {
+    if (mode === 'light') iconEl.innerHTML = '&#9728;&#65039;';
+    else if (mode === 'dark') iconEl.innerHTML = '&#127769;';
+    else iconEl.innerHTML = '&#128187;';
+  }
+
+  document.querySelectorAll('.theme-fab-option').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.themeVal === mode);
+  });
+
+  const themeColor = effective === 'dark' ? '#020617' : '#e8ecf2';
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) metaTheme.setAttribute('content', themeColor);
 }
 
 function setTheme(mode) {
-  const normalized = mode === 'light' ? 'light' : 'dark';
-  localStorage.setItem('CSD1_THEME', normalized);
-  applyTheme(normalized);
+  localStorage.setItem('CSD1_THEME', mode);
+  applyTheme(mode);
+  closeThemeFab();
 }
 
-function toggleThemeSwitch(evt) {
-  const isDark = !!evt?.target?.checked;
-  setTheme(isDark ? 'dark' : 'light');
+function toggleThemeFab() {
+  themeFabOpen = !themeFabOpen;
+  document.getElementById('themeFabMenu').classList.toggle('show', themeFabOpen);
 }
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    closeAppSidebar();
-    closeMobileSettings();
+function closeThemeFab() {
+  themeFabOpen = false;
+  document.getElementById('themeFabMenu').classList.remove('show');
+}
+
+// Close theme fab when clicking outside
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('themeFab').contains(e.target)) {
+    closeThemeFab();
   }
 });
 
@@ -2940,24 +1925,13 @@ document.addEventListener('keydown', function(e) {
 // ============================================================
 function checkAuth() {
   const userStr = localStorage.getItem('CSD1_USER');
-  if (!userStr) {
-    syncAdminHistoryMenus(null);
-    return null;
-  }
+  if (!userStr) return null;
   try {
     const user = JSON.parse(userStr);
-    if (!hasDeepSearchSession(user)) {
-      syncAdminHistoryMenus(null);
-      return null;
-    }
-    const normalized = Object.assign({}, user, { sessionToken: getSessionToken(user) });
-    localStorage.setItem('CSD1_USER', JSON.stringify(normalized));
     const headerUserEl = document.getElementById('headerUserName');
-    if (headerUserEl) headerUserEl.textContent = normalized.name || normalized.email || '-';
-    syncAdminHistoryMenus(normalized);
-    return normalized;
+    if (headerUserEl) headerUserEl.textContent = user.name || user.email || '-';
+    return user;
   } catch (e) {
-    syncAdminHistoryMenus(null);
     return null;
   }
 }
@@ -3028,83 +2002,34 @@ function parseThaiDate(str) {
 // ============================================================
 //  DATA FETCHING
 // ============================================================
-function setMobileDataLoading(isLoading) {
-  const isMobile = window.matchMedia('(max-width: 900px)').matches;
-  if (!isMobile) {
-    if (!isLoading) document.body.classList.remove('mobile-loading-data');
-    return;
-  }
-  document.body.classList.toggle('mobile-loading-data', !!isLoading);
-}
-
 function fetchData(user) {
   const url = getSheetUrl();
-  setMobileDataLoading(true);
-
-  function requestRows(payload) {
-    return fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    }).then(r => r.json());
-  }
-
-  function applyRows(result, useDeepSearch) {
-    if (result.status !== 'success') {
-      throw new Error(result.message || 'ไม่ทราบสาเหตุ');
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'getData', email: user ? user.email : '', public: true })
+  })
+  .then(r => r.json())
+  .then(result => {
+    if (result.status === 'success') {
+      allReportData = (result.data || []).map(row => {
+        row._parsedDate = parseThaiDate(row['วันที่']);
+        return row;
+      });
+      applyFilters();
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('dashboardApp').style.display = '';
+    } else {
+      showToast('โหลดข้อมูลล้มเหลว: ' + (result.message || 'ไม่ทราบสาเหตุ'));
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('dashboardApp').style.display = '';
     }
-
-    deepSearchEnabled = !!useDeepSearch;
-    updateSearchModeUI();
-    allReportData = (result.data || []).map(row => {
-      row._parsedDate = parseThaiDate(row['วันที่']);
-      return row;
-    });
-    applyFilters();
-    setMobileDataLoading(false);
+  })
+  .catch(err => {
+    showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์: ' + err.message);
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('dashboardApp').style.display = '';
-  }
-
-  const canDeepSearch = hasDeepSearchSession(user);
-  const privatePayload = canDeepSearch
-    ? {
-        action: 'getData',
-        email: String(user.email || '').trim(),
-        sessionToken: getSessionToken(user)
-      }
-    : null;
-  const publicPayload = { action: 'getPublicData' };
-
-  const failLoad = (err) => {
-    showToast('โหลดข้อมูลล้มเหลว: ' + (err.message || 'ไม่ทราบสาเหตุ'));
-    setMobileDataLoading(false);
-    document.getElementById('loadingOverlay').classList.add('hidden');
-    document.getElementById('dashboardApp').style.display = '';
-  };
-
-  if (privatePayload) {
-    requestRows(privatePayload)
-      .then(result => applyRows(result, true))
-      .catch(err => {
-        if (!isAuthErrorMessage(err.message)) throw err;
-        localStorage.removeItem('CSD1_USER');
-        const headerUserEl = document.getElementById('headerUserName');
-        if (headerUserEl) headerUserEl.textContent = '-';
-        deepSearchEnabled = false;
-        updateSearchModeUI();
-        return requestRows(publicPayload).then(result => {
-          applyRows(result, false);
-          showToast('โหมดค้นหาเชิงลึกหมดอายุ แสดงข้อมูลสาธารณะแทน', 3600);
-        });
-      })
-      .catch(failLoad);
-    return;
-  }
-
-  requestRows(publicPayload)
-    .then(result => applyRows(result, false))
-    .catch(failLoad);
+  });
 }
 
 // ============================================================
@@ -3165,7 +2090,14 @@ function applyFilters() {
 
     // Filter by search keyword
     if (searchVal) {
-      const haystack = buildSearchHaystack(row);
+      const haystack = [
+        row['ชื่อ-สกุล ผู้ต้องหา'] || '',
+        row['ข้อหา (ฐานความผิด)'] || '',
+        row['ผู้รายงาน'] || '',
+        row['สถานที่ (จับกุม/หรือตรวจสอบ)'] || '',
+        row['พร้อมของกลาง (ถ้ามี)'] || '',
+        row['ชุดปฏิบัติการ'] || ''
+      ].join(' ').toLowerCase();
       if (!haystack.includes(searchVal)) return false;
     }
 
@@ -3211,48 +2143,6 @@ function exportCSV() {
 //  STATS COMPUTATION
 // ============================================================
 function computeStats(data) {
-  function pickRowValue(row, keys) {
-    for (const k of keys) {
-      const v = row[k];
-      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v);
-    }
-    return '';
-  }
-
-  function normalizeThaiText(s) {
-    return String(s || '').replace(/\s+/g, '').trim();
-  }
-
-  function getField(row, keys) {
-    const v = pickRowValue(row, keys);
-    return String(v || '');
-  }
-
-  function pickAlienValue(row) {
-    const direct = pickRowValue(row, [
-      'หน้างานต่างด้าว',
-      'หน้างานต่างด้าว(ตามตัวชี้วัด)',
-      'หน้างานต่างด้าว (ตามตัวชี้วัด)',
-      'workAlien'
-    ]);
-    if (direct) return direct;
-
-    const key = Object.keys(row).find(k => {
-      const nk = normalizeThaiText(k);
-      return nk.includes('หน้างานต่างด้าว') || nk === 'workalien' || (nk.includes('ต่างด้าว') && nk.includes('หน้างาน'));
-    });
-    if (key) return String(row[key] || '');
-
-    // Fallback for legacy/misaligned sheet columns:
-    // detect alien-arrest terms in any field value.
-    const rawValues = Object.values(row).map(v => String(v || ''));
-    const alienLike = rawValues.find(v => {
-      const nv = normalizeThaiText(v);
-      return nv.includes('จับกุมนายจ้าง') || nv.includes('จับกุมลูกจ้าง') || nv.includes('จับกุมต่างด้าว');
-    });
-    return alienLike || '';
-  }
-
   const stats = {
     total: data.length,
     jabSungNa: 0,
@@ -3279,44 +2169,34 @@ function computeStats(data) {
   };
 
   data.forEach(row => {
-    const action = getField(row, ['การจับกุม ตรวจสอบ', 'actionType']);
-    const alienRaw = pickAlienValue(row);
-    const alienNorm = normalizeThaiText(alienRaw);
-
+    const action = row['การจับกุม ตรวจสอบ'] || '';
     if (action === 'จับซึ่งหน้า') stats.jabSungNa++;
     if (action === 'จับตามหมาย') {
       stats.jabTaamMai++;
-      const wType = getField(row, ['ประเภทหมายจับ', 'warrantType']);
+      const wType = row['ประเภทหมายจับ'] || '';
       if (wType === 'หมายใน(ใหม่)') stats.warrantNewIn++;
       else if (wType === 'หมายใน(เก่า)') stats.warrantOldIn++;
       else stats.warrantRegular++;
     }
-    if (action === 'ตรวจสอบสถานประกอบการ' || alienNorm.includes('ตรวจสถานประกอบการ')) {
+    if (action === 'ตรวจสอบสถานประกอบการ') {
       stats.truatSob++;
       stats.alienInspect++;
     }
 
-    const mobilize = getField(row, ['หน้างานห้วงระดม', 'workMobilize']);
+    const mobilize = row['หน้างานห้วงระดม'] || '';
     if (mobilize.includes('ยาเสพติด')) stats.yaSepTid++;
     if (mobilize.includes('อาวุธปืน')) stats.awudPuen++;
     if (mobilize.includes('หนี้นอกระบบ')) stats.neeNokRabop++;
 
-    if (alienNorm) stats.tangDao++;
-    if (alienNorm.includes('จับกุมนายจ้าง') || alienNorm.includes('นายจ้าง')) stats.alienEmployer++;
-    if (alienNorm.includes('จับกุมลูกจ้าง') || alienNorm.includes('ลูกจ้าง')) stats.alienEmployee++;
-    if (
-      alienNorm.includes('จับกุมต่างด้าว') &&
-      !alienNorm.includes('นายจ้าง') &&
-      !alienNorm.includes('ลูกจ้าง')
-    ) {
-      // fallback for legacy data that stores generic "จับกุมต่างด้าว"
-      stats.alienEmployee++;
-    }
+    const alien = row['หน้างานต่างด้าว'] || '';
+    if (alien.trim()) stats.tangDao++;
+    if (alien.includes('จับกุมนายจ้าง')) stats.alienEmployer++;
+    if (alien.includes('จับกุมลูกจ้าง')) stats.alienEmployee++;
 
-    const center = getField(row, ['หน้างานศูนย์', 'workCenter']);
+    const center = row['หน้างานศูนย์'] || '';
     if (center.trim()) stats.soonTor++;
 
-    const media = getField(row, ['งานออกสื่อ', 'workMedia']);
+    const media = row['งานออกสื่อ'] || '';
     if (media.trim()) stats.ookSue++;
     if (media.includes('ประชาสัมพันธ์ข่าว')) stats.prNews++;
     if (media.includes('แถลงข่าว')) stats.pressConf++;
@@ -3377,15 +2257,11 @@ function animateCountUp(el, target, duration, delay) {
 // ============================================================
 function getTargetForContext(targetKey) {
   const unitVal = document.getElementById('filterUnit').value;
-  const periodVal = document.getElementById('filterPeriod').value;
   const t = TARGETS[targetKey];
   if (!t) return null;
-  let periodMultiplier = 1;
-  if (periodVal === 'thisQuarter') periodMultiplier = 3;
-  else if (periodVal === 'thisYear') periodMultiplier = 12;
   if (unitVal === 'ชป.10') return null; // ชป.10 ไม่มีเป้า
-  if (unitVal) return t.perUnit * periodMultiplier;
-  return t.orgTotal * periodMultiplier;
+  if (unitVal) return t.perUnit;
+  return t.orgTotal;
 }
 
 function targetPct(actual, targetKey) {
@@ -4579,6 +3455,8 @@ function exportPDF() {
   showToast('กำลังสร้าง PDF...');
 
   const dashApp = document.getElementById('dashboardApp');
+  const themeFab = document.getElementById('themeFab');
+  themeFab.style.display = 'none';
 
   html2canvas(dashApp, {
     backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-deep').trim() || '#020617',
@@ -4590,6 +3468,8 @@ function exportPDF() {
     windowWidth: dashApp.scrollWidth,
     windowHeight: dashApp.scrollHeight
   }).then(canvas => {
+    themeFab.style.display = '';
+
     const { jsPDF } = window.jspdf;
     const imgData = canvas.toDataURL('image/jpeg', 0.92);
 
@@ -4620,6 +3500,7 @@ function exportPDF() {
     pdf.save('CSD1_Dashboard_' + dateStr + '.pdf');
     showToast('บันทึก PDF เรียบร้อย ✓');
   }).catch(err => {
+    themeFab.style.display = '';
     showToast('เกิดข้อผิดพลาด: ' + err.message);
   });
 }
@@ -4700,39 +3581,13 @@ function generateReportText() {
   return text;
 }
 
-let _reportBaseText = '';
-
-function getReportTextValue() {
-  const el = document.getElementById('reportTextBox');
-  return el ? (el.innerText || '').replace(/\u00A0/g, ' ') : '';
-}
-
-function updateReportMeta() {
-  const text = getReportTextValue();
-  const countEl = document.getElementById('reportCharCount');
-  if (countEl) countEl.textContent = text.length + ' ตัวอักษร';
-}
-
-function syncReportEditedState() {
-  const box = document.getElementById('reportTextBox');
-  if (!box) return;
-  const now = getReportTextValue().trim();
-  const base = String(_reportBaseText || '').trim();
-  box.classList.toggle('edited', now !== base);
-  updateReportMeta();
-}
-
 function showReportModal() {
   if (filteredData.length === 0) {
     showToast('ไม่มีข้อมูลสำหรับสร้างรายงาน');
     return;
   }
   const text = generateReportText();
-  _reportBaseText = text;
-  const box = document.getElementById('reportTextBox');
-  box.textContent = text;
-  box.classList.remove('edited');
-  updateReportMeta();
+  document.getElementById('reportTextBox').textContent = text;
   document.getElementById('reportModalOverlay').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -4743,7 +3598,7 @@ function closeReportModal() {
 }
 
 function copyReportText() {
-  const text = getReportTextValue();
+  const text = document.getElementById('reportTextBox').innerText;
   navigator.clipboard.writeText(text).then(() => {
     showToast('คัดลอกรายงานเรียบร้อย ✓');
   }).catch(() => {
@@ -4758,69 +3613,9 @@ function copyReportText() {
   });
 }
 
-function regenerateReportModal() {
-  if (filteredData.length === 0) {
-    showToast('ไม่มีข้อมูลสำหรับสร้างรายงาน');
-    return;
-  }
-  const text = generateReportText();
-  _reportBaseText = text;
-  const box = document.getElementById('reportTextBox');
-  box.textContent = text;
-  box.classList.remove('edited');
-  updateReportMeta();
-  showToast('สร้างข้อความรายงานใหม่แล้ว');
-}
-
-function shareReportToLine() {
-  const text = getReportTextValue();
-  if (!text.trim()) {
-    showToast('ไม่มีข้อความสำหรับส่ง');
-    return;
-  }
-  const url = 'https://line.me/R/msg/text/?' + encodeURIComponent(text);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true;
-
-  if (isStandalone) {
-    const a = document.createElement('a');
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  } else {
-    window.open(url, '_blank');
-  }
-}
-
 // Close modal with Escape key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeReportModal();
-});
-
-const _reportTextBoxEl = document.getElementById('reportTextBox');
-if (_reportTextBoxEl) {
-  _reportTextBoxEl.addEventListener('input', syncReportEditedState);
-  _reportTextBoxEl.addEventListener('keyup', updateReportMeta);
-}
-
-// ============================================================
-//  PWA: FIX WHITE SCREEN ON RETURN FROM LINE / EXTERNAL APPS
-// ============================================================
-window.addEventListener('pageshow', function(e) {
-  if (e.persisted) {
-    document.body.style.display = 'none';
-    document.body.offsetHeight;
-    document.body.style.display = '';
-  }
-});
-
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'visible') {
-    document.body.style.opacity = '1';
-  }
 });
 
 // ============================================================
@@ -4841,13 +3636,16 @@ document.getElementById('filterSearch').addEventListener('input', function() {
 applyTheme(getPreferredTheme());
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Re-apply theme to sync sidebar switch state
+  // Re-apply theme to update icons
   applyTheme(getPreferredTheme());
+
+  // Auto theme listener
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (getPreferredTheme() === 'auto') applyTheme('auto');
+  });
 
   // Check auth (optional - dashboard is public)
   const user = checkAuth();
-  deepSearchEnabled = hasDeepSearchSession(user);
-  updateSearchModeUI();
 
   // Set default month filter
   setDefaultFilters();
@@ -4857,6 +3655,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src="sidebar-account.js"></script>
 </body>
 </html>

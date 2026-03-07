@@ -209,7 +209,7 @@ body {
 .login-card h2 {
   font-size: 1.4rem;
   font-weight: 800;
-  color: var(--accent);
+  color: #FFD400;
   margin-bottom: 0.25rem;
 }
 .login-card .login-subtitle {
@@ -241,7 +241,7 @@ body {
 [data-theme="light"] .login-settings-link {
   color: rgba(226, 232, 240, 0.82);
 }
-.login-settings-link:hover { color: var(--accent); }
+.login-settings-link:hover { color: #FFD400; }
 
 /* ==================== SETTINGS MODAL ==================== */
 .modal-overlay {
@@ -279,10 +279,84 @@ body {
 .modal-card h3 {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--accent);
+  color: #FFD400;
   margin-bottom: 1.25rem;
 }
-
+.edit-request-confirm-card {
+  max-width: 760px;
+  max-height: min(84vh, 860px);
+  overflow: auto;
+}
+.edit-request-confirm-subtitle {
+  margin-top: -0.7rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.edit-request-confirm-body {
+  display: grid;
+  gap: 0.72rem;
+}
+.request-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  border-radius: 999px;
+  padding: 0.34rem 0.64rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+.request-preview-badge.edit {
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  background: rgba(22, 163, 74, 0.16);
+  color: #86efac;
+}
+.request-preview-badge.delete {
+  border: 1px solid rgba(239, 68, 68, 0.56);
+  background: rgba(185, 28, 28, 0.17);
+  color: #fecaca;
+}
+.request-preview-target,
+.request-preview-note {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.35);
+  padding: 0.64rem 0.74rem;
+  font-size: 0.84rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+.request-preview-note strong {
+  color: var(--text-secondary);
+}
+.request-preview-list {
+  display: grid;
+  gap: 0.56rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.request-preview-item {
+  border: 1px solid rgba(34, 197, 94, 0.46);
+  border-radius: 11px;
+  background: rgba(22, 163, 74, 0.12);
+  padding: 0.56rem 0.66rem;
+}
+.request-preview-item-label {
+  font-size: 0.79rem;
+  font-weight: 800;
+  color: #86efac;
+}
+.request-preview-item-values {
+  margin-top: 0.28rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+.request-preview-item-values b {
+  color: var(--text);
+}
 /* ==================== HEADER ==================== */
 .header {
   background: var(--header-bg);
@@ -307,7 +381,7 @@ body {
   font-size: 1.6rem; 
   margin-top: 0; /* บังคับไม่ให้มีระยะขอบบน */
   font-weight: 800;
-  color: var(--accent);
+  color: #FFD400;
   letter-spacing: 0.03em;
 }
 
@@ -643,12 +717,12 @@ body.settings-open {
   position: fixed;
   top: calc(env(safe-area-inset-top) + 0.9rem);
   left: 1rem;
-  width: 53px;
-  height: 53px;
+  width: 40px;
+  height: 41px;
   border-radius: 0;
   border: none;
   background: transparent;
-  color: var(--accent);
+  color: #FFD400;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -657,22 +731,30 @@ body.settings-open {
   justify-content: center;
   box-shadow: none;
   z-index: 4305;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: transform 0.18s ease, opacity 0.18s ease;
   padding: 0;
 }
 body.nav-open .app-nav-fab {
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-10px) scale(0.92);
+  transform: translateX(-8px);
 }
 .app-nav-fab:hover {
-  transform: scale(1.05);
+  transform: translateY(-1px);
   box-shadow: none;
 }
+.app-nav-fab:active {
+  transform: translateY(0);
+}
 .app-nav-fab svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 2.6;
+  width: 40px;
+  height: 41px;
+  stroke: currentColor;
+  stroke-width: 4.2;
+  filter: drop-shadow(0 0 4px rgba(255, 212, 0, 0.22));
+}
+.app-nav-fab svg line {
+  vector-effect: non-scaling-stroke;
 }
 .app-sidebar-overlay {
   position: fixed;
@@ -856,9 +938,9 @@ body.nav-open .app-nav-fab {
   left: max(0.5rem, env(safe-area-inset-left));
   right: max(0.5rem, env(safe-area-inset-right));
   bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
-  height: 68px;
-  padding: 0.35rem;
-  border-radius: 18px;
+  height: 48px;
+  padding: 0.25rem;
+  border-radius: 14px;
   border: 1px solid rgba(148, 163, 184, 0.36);
   background: rgba(2, 6, 23, 0.94);
   box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
@@ -1079,7 +1161,7 @@ body.nav-open .app-nav-fab {
 
 @media (max-width: 900px) {
   body {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 5.5rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 4rem);
   }
   .app-nav-fab {
     display: none !important;
@@ -1149,7 +1231,7 @@ body.nav-open .app-nav-fab {
 .step.active .step-circle {
   background: var(--accent);
   color: #001a33;
-  border-color: var(--accent);
+  border-color: #FFD400;
   animation: pulseGlow 2.5s ease-in-out infinite;
 }
 .step.done .step-circle {
@@ -1164,8 +1246,101 @@ body.nav-open .app-nav-fab {
   color: var(--text-muted);
   transition: color 0.3s;
 }
-.step.active .step-label { color: var(--accent); font-weight: 600; }
+.step.active .step-label { color: #FFD400; font-weight: 600; }
 .step.done .step-label { color: var(--success); }
+
+.edit-request-banner {
+  display: none;
+  margin: -0.4rem 0 1rem;
+  border: 1px solid rgba(34, 197, 94, 0.42);
+  border-radius: 12px;
+  background: rgba(22, 163, 74, 0.12);
+  padding: 0.75rem 0.85rem;
+}
+.edit-request-banner.show {
+  display: block;
+}
+.edit-request-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #86efac;
+}
+.edit-request-subtitle {
+  margin-top: 0.2rem;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+.edit-request-changed-list {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.34rem;
+}
+.edit-request-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 197, 94, 0.46);
+  background: rgba(22, 163, 74, 0.18);
+  color: #bbf7d0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.34rem 0.58rem;
+}
+.edit-request-action-panel {
+  margin-top: 0.62rem;
+  padding-top: 0.62rem;
+  border-top: 1px dashed rgba(34, 197, 94, 0.4);
+}
+.edit-request-type-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin-bottom: 0.6rem;
+}
+.edit-request-type-pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.44);
+  background: rgba(2, 6, 23, 0.45);
+  color: var(--text-secondary);
+  font-size: 0.79rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.edit-request-type-pill input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.edit-request-type-pill.active {
+  border-color: rgba(34, 197, 94, 0.64);
+  background: rgba(22, 163, 74, 0.2);
+  color: #bbf7d0;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
+}
+.edit-request-delete-fields {
+  display: none;
+  margin-bottom: 0.58rem;
+  padding: 0.62rem;
+  border: 1px dashed rgba(251, 191, 36, 0.54);
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.08);
+}
+.edit-request-note-field {
+  margin-bottom: 0;
+}
+.edit-request-note-field textarea {
+  min-height: 72px;
+}
 
 /* ==================== CARD ==================== */
 .card {
@@ -1188,7 +1363,7 @@ body.nav-open .app-nav-fab {
 .card-title {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--accent);
+  color: #FFD400;
   margin-bottom: 1.2rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-accent);
@@ -1231,6 +1406,69 @@ body.nav-open .app-nav-fab {
   animation: errorShake 0.4s ease;
 }
 
+.edit-field-changed {
+  border-color: rgba(34, 197, 94, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2), 0 0 14px rgba(34, 197, 94, 0.2) !important;
+  background: rgba(22, 163, 74, 0.1) !important;
+}
+.edit-field-changed label {
+  color: #86efac !important;
+}
+[data-theme="light"] .edit-request-banner {
+  border-color: rgba(22, 163, 74, 0.35);
+  background: rgba(22, 163, 74, 0.12);
+}
+[data-theme="light"] .edit-request-title {
+  color: #166534;
+}
+[data-theme="light"] .edit-request-chip {
+  border-color: rgba(22, 163, 74, 0.34);
+  background: rgba(22, 163, 74, 0.16);
+  color: #166534;
+}
+[data-theme="light"] .edit-request-type-pill {
+  border-color: rgba(148, 163, 184, 0.45);
+  background: rgba(255, 255, 255, 0.82);
+  color: #334155;
+}
+[data-theme="light"] .edit-request-type-pill.active {
+  border-color: rgba(22, 163, 74, 0.52);
+  background: rgba(22, 163, 74, 0.16);
+  color: #166534;
+}
+[data-theme="light"] .edit-request-delete-fields {
+  border-color: rgba(180, 83, 9, 0.36);
+  background: rgba(251, 191, 36, 0.14);
+}
+[data-theme="light"] .edit-field-changed {
+  border-color: rgba(22, 163, 74, 0.42) !important;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.14), 0 0 10px rgba(22, 163, 74, 0.14) !important;
+  background: rgba(22, 163, 74, 0.08) !important;
+}
+[data-theme="light"] .edit-field-changed label {
+  color: #166534 !important;
+}
+[data-theme="light"] .request-preview-badge.edit {
+  border-color: rgba(22, 163, 74, 0.42);
+  background: rgba(22, 163, 74, 0.18);
+  color: #166534;
+}
+[data-theme="light"] .request-preview-badge.delete {
+  border-color: rgba(220, 38, 38, 0.42);
+  background: rgba(220, 38, 38, 0.16);
+  color: #991b1b;
+}
+[data-theme="light"] .request-preview-target,
+[data-theme="light"] .request-preview-note {
+  background: rgba(255, 255, 255, 0.86);
+}
+[data-theme="light"] .request-preview-item {
+  border-color: rgba(22, 163, 74, 0.34);
+  background: rgba(22, 163, 74, 0.14);
+}
+[data-theme="light"] .request-preview-item-label {
+  color: #166534;
+}
 .field input,
 .field select,
 .field textarea {
@@ -1249,7 +1487,7 @@ body.nav-open .app-nav-fab {
 .field select:focus,
 .field textarea:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: #FFD400;
   box-shadow: 0 0 0 3px var(--accent-glow-soft), 0 0 15px var(--accent-glow-soft);
   background: var(--input-bg-focus);
 }
@@ -1309,7 +1547,7 @@ body.nav-open .app-nav-fab {
   border: 1.5px solid var(--accent);
   border-radius: var(--radius-sm);
   background: linear-gradient(135deg, rgba(255,212,0,0.08), rgba(255,212,0,0.15));
-  color: var(--accent);
+  color: #FFD400;
   font-family: 'IBM Plex Sans Thai', sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
@@ -1350,7 +1588,7 @@ body.nav-open .app-nav-fab {
 .foreign-toggle input[type="checkbox"] {
   width: 1rem;
   height: 1rem;
-  accent-color: var(--accent);
+  accent-color: #FFD400;
 }
 .foreign-fields,
 .row.foreign-fields {
@@ -1410,7 +1648,7 @@ body.nav-open .app-nav-fab {
 .suspect-item-title {
   font-size: 0.86rem;
   font-weight: 700;
-  color: var(--accent);
+  color: #FFD400;
 }
 .warrant-remove-btn,
 .suspect-remove-btn {
@@ -1501,7 +1739,7 @@ body.nav-open .app-nav-fab {
   box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 .radio-option input:checked + label {
-  border-color: var(--accent);
+  border-color: #FFD400;
   background: var(--accent);
   color: #001a33;
   font-weight: 600;
@@ -1571,15 +1809,15 @@ body.nav-open .app-nav-fab {
   border: 1.5px solid var(--border);
 }
 .btn-outline:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: #FFD400;
+  color: #FFD400;
   box-shadow: 0 0 15px var(--accent-glow-soft);
   transform: translateY(-1px);
 }
 
 .btn-success {
   background: rgba(0,26,51,0.8);
-  color: var(--accent);
+  color: #FFD400;
   border: 1.5px solid var(--accent);
 }
 .btn-success:hover {
@@ -1631,7 +1869,7 @@ body.nav-open .app-nav-fab {
   transition: var(--transition);
 }
 .leader-info.visible { display: block; animation: fadeIn 0.3s ease; }
-.leader-info strong { color: var(--accent); }
+.leader-info strong { color: #FFD400; }
 
 /* ==================== REPORT BOX ==================== */
 .report-warning {
@@ -1661,7 +1899,7 @@ body.nav-open .app-nav-fab {
 }
 .report-box:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: #FFD400;
   box-shadow: 0 0 0 3px var(--accent-glow-soft), 0 0 15px var(--accent-glow-soft);
 }
 .report-box.edited {
@@ -1680,7 +1918,7 @@ body.nav-open .app-nav-fab {
 }
 .report-edited-badge {
   background: var(--accent-glow-soft);
-  color: var(--accent);
+  color: #FFD400;
   padding: 0.15rem 0.6rem;
   border-radius: 6px;
   font-size: 0.7rem;
@@ -1708,8 +1946,8 @@ body.nav-open .app-nav-fab {
   transition: var(--transition);
 }
 .btn-regen:hover {
-  color: var(--accent);
-  border-color: var(--accent);
+  color: #FFD400;
+  border-color: #FFD400;
   box-shadow: 0 0 12px var(--accent-glow-soft);
   transform: rotate(-30deg);
 }
@@ -2151,7 +2389,7 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 
 /* สีเริ่มต้น (สีเหลืองทอง) */
 .pill-option input:checked + label {
-  border-color: var(--accent);
+  border-color: #FFD400;
   background: var(--accent);
   color: #001a33;
   font-weight: 700;
@@ -2248,7 +2486,7 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 <div id="mainApp" style="display:none;">
 
 <button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+  <svg viewBox="0 0 40 41" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="9.5" x2="32" y2="9.5"></line><line x1="8" y1="20.5" x2="32" y2="20.5"></line><line x1="8" y1="31.5" x2="32" y2="31.5"></line></svg>
 </button>
 <nav class="mobile-mini-nav" aria-label="เมนูหลักมือถือ">
   <a class="mobile-mini-link active" href="index.html" onclick="return navigateInApp(event, 'index.html')" title="หน้ากรอกแบบฟอร์ม" aria-label="หน้ากรอกแบบฟอร์ม">
@@ -2429,6 +2667,24 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
       <div class="step-label">รายงาน</div>
     </div>
   </div>
+
+  <section class="edit-request-banner" id="editRequestBanner">
+    <div class="edit-request-type-group" id="editRequestTypeGroup">
+      <label class="edit-request-type-pill active" data-request-type="edit">
+        <input type="radio" name="editRequestType" value="edit" checked style="display:none;">
+        <span>แจ้งแก้ไขข้อมูล</span>
+      </label>
+    </div>
+    <div class="edit-request-title">ฟอร์มนี้เหมือนหน้า index เดิม 100% และจะแจ้งคอลัมน์ที่เปลี่ยนให้แอดมินอัตโนมัติ</div>
+    <div class="edit-request-subtitle" id="editRequestChangedCount">แก้ไขแล้ว 0 คอลัมน์ (ไฮไลต์สีเขียว)</div>
+    <div class="edit-request-changed-list" id="editRequestChangedList"></div>
+    <div class="edit-request-action-panel" id="editRequestActionPanel">
+      <div class="field edit-request-note-field">
+        <label>หมายเหตุถึงแอดมิน (ถ้ามี)</label>
+        <textarea id="editRequestNote" placeholder="อธิบายเพิ่มเติม เพื่อให้แอดมินตรวจสอบได้เร็วขึ้น"></textarea>
+      </div>
+    </div>
+  </section>
 
   <div id="step1">
     <div class="card">
@@ -2810,9 +3066,9 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
         </button>
       </div>
       <div class="btn-row">
-        <button class="btn btn-accent" onclick="submitToSheet()">
+        <button class="btn btn-accent" id="primarySubmitBtn" onclick="submitToSheet()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 3v12m0 0l-4-4m4 4l4-4"/></svg>
-          บันทึกข้อมูล
+          <span id="primarySubmitBtnText">บันทึกข้อมูล</span>
         </button>
       </div>
     </div>
@@ -2847,7 +3103,7 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
         <div class="feature-announcement-badge">NEW FEATURE</div>
         <h3 class="feature-announcement-title" id="featureAnnouncementTitle">น้องเป็ดเหลือง Update ฟีเจอร์ใหม่</h3>
         <p class="feature-announcement-subtitle">
-          ตอนนี้ผู้ใช้สามารถแจ้งลบ หรือแจ้งแก้ไขข้อมูลที่กรอกไปแล้วผ่านระบบได้ทันที
+          ตอนนี้ผู้ใช้สามารถแจ้งแก้ไขข้อมูลที่กรอกไปแล้วผ่านระบบได้ทันที
         </p>
       </div>
       <div class="feature-announcement-graphic" aria-hidden="true" onclick="triggerDuckBounce(event)">
@@ -2872,7 +3128,7 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
       <ul class="feature-announcement-list">
         <li class="feature-announcement-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-          <span>ผู้ใช้สามารถแจ้งลบ หรือแจ้งเปลี่ยนแปลงแก้ไขข้อมูลที่เคยกรอกได้แล้ว โดยไปที่ ตั้งค่า > ประวัติ > แจ้งลบ/แก้ไขข้อมูล</span>
+          <span>ผู้ใช้สามารถแจ้งเปลี่ยนแปลงแก้ไขข้อมูลที่เคยกรอกได้แล้ว โดยไปที่ ตั้งค่า > ประวัติ > แจ้งลบ/แก้ไขข้อมูล</span>
         </li>
         <li class="feature-announcement-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
@@ -2883,6 +3139,18 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
         <button class="feature-announcement-btn" type="button" onclick="closeFeatureAnnouncement()">รับทราบแล้ว</button>
       </div>
       <p class="feature-announcement-footnote">ประกาศนี้จะแสดงเฉพาะผู้มีสิทธิ์ User เท่านั้น</p>
+    </div>
+  </section>
+</div>
+
+<div class="modal-overlay" id="editRequestConfirmOverlay" onclick="if (event.target === this) closeEditRequestConfirm(false)">
+  <section class="modal-card edit-request-confirm-card" role="dialog" aria-modal="true" aria-labelledby="editRequestConfirmTitle">
+    <h3 id="editRequestConfirmTitle">ตรวจสอบคำขอก่อนส่ง</h3>
+    <div class="edit-request-confirm-subtitle" id="editRequestConfirmSubtitle">กรุณาตรวจสอบรายละเอียดให้ถูกต้องก่อนยืนยันส่งถึงแอดมิน</div>
+    <div class="edit-request-confirm-body" id="editRequestConfirmBody">-</div>
+    <div class="btn-row btn-row-half" style="margin-top:0.9rem;">
+      <button class="btn btn-outline" type="button" onclick="closeEditRequestConfirm(false)">ย้อนกลับ</button>
+      <button class="btn btn-accent" id="editRequestConfirmSubmitBtn" type="button" onclick="closeEditRequestConfirm(true)">ยืนยันส่งคำขอ</button>
     </div>
   </section>
 </div>
@@ -2907,6 +3175,10 @@ const unitLeaders = {
 };
 
 const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbytUmPr668UwcPsbmwtZm9wSL3qnhDjYJG8b7DzIiqxqyo6vKLVtDgGdmdvA2hE00xX9Q/exec";
+const EDIT_REQUEST_CONTEXT_KEY = 'CSD1_EDIT_REQUEST_CONTEXT';
+const EDIT_REQUEST_CONTEXT_FALLBACK_KEY = 'CSD1_EDIT_REQUEST_CONTEXT_SESSION';
+const EDIT_REQUEST_CONTEXT_WINDOW_PREFIX = 'CSD1_EDIT_REQUEST_CONTEXT_WINDOW:';
+const EDIT_REQUEST_PARAM = 'editRequest';
 const IS_LOCAL_DEV_HOST = /^(localhost|127\.0\.0\.1|::1)$/.test(window.location.hostname);
 const DEV_BYPASS_MODE = IS_LOCAL_DEV_HOST && new URLSearchParams(window.location.search).get('dev') === '1';
 const DEV_BYPASS_USER = {
@@ -2916,6 +3188,10 @@ const DEV_BYPASS_USER = {
   role: 'dev',
   __devBypass: true
 };
+
+let editRequestContext = null;
+let editRequestMode = false;
+let editRequestConfirmResolver = null;
 
 function resolveInAppUrl(targetPath) {
   const rawTarget = String(targetPath == null ? '' : targetPath).trim();
@@ -3282,6 +3558,15 @@ function parseResponseBody(rawText) {
   }
 }
 
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function setMobileDataLoading(isLoading) {
   const isMobile = window.matchMedia('(max-width: 900px)').matches;
   if (!isMobile) {
@@ -3382,7 +3667,12 @@ function showMainApp() {
     sel.dispatchEvent(new Event('change'));
   }
 
-  maybeShowFeatureAnnouncement(user);
+  initEditRequestModeIfNeeded();
+  if (!editRequestMode) {
+    maybeShowFeatureAnnouncement(user);
+  } else {
+    closeFeatureAnnouncement();
+  }
 }
 
 function showLoginPage() {
@@ -3454,6 +3744,37 @@ function formatThaiDateShort(dateStr) {
                    "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
   const d = new Date(dateStr);
   return `${d.getDate()} ${months[d.getMonth()]} ${(d.getFullYear() + 543) % 100}`;
+}
+
+function formatThaiDateTimeStandard(value) {
+  const dt = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dt.getTime())) return '';
+  try {
+    const months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.",
+      "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+    const parts = new Intl.DateTimeFormat('en-GB-u-ca-gregory', {
+      timeZone: 'Asia/Bangkok',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).formatToParts(dt);
+    const map = {};
+    parts.forEach((part) => {
+      if (part && part.type) map[part.type] = part.value;
+    });
+    const year = Number(map.year);
+    const month = Number(map.month);
+    const day = Number(map.day);
+    const hour = String(map.hour || '').padStart(2, '0');
+    const minute = String(map.minute || '').padStart(2, '0');
+    if (![year, month, day].every(Number.isFinite) || month < 1 || month > 12) return '';
+    return `${day} ${months[month - 1]} ${String((year + 543) % 100).padStart(2, '0')} เวลา ${hour}.${minute} น.`;
+  } catch (_) {
+    return dt.toLocaleString('th-TH');
+  }
 }
 
 function joinWithThaiAnd(items) {
@@ -3591,7 +3912,8 @@ function normalizeCourtText(value) {
 function isCourtPlaceholderOnly(value) {
   const courtText = normalizeCourtText(value);
   if (!courtText) return true;
-  return /^ศาล\s*$/u.test(courtText);
+  if (/^ศาล\s*$/u.test(courtText)) return true;
+  return /^ศาลที่ออกหมาย(?:จับ|ค้น)?\s*$/u.test(courtText);
 }
 
 function sanitizeCourtValue(value) {
@@ -3629,6 +3951,10 @@ function updateWarrantItemMeta() {
 }
 
 function addWarrantItem(initial = {}) {
+  if (editRequestMode && !initial.__fromEditPrefill) {
+    showToast('โหมดแก้ไขไม่สามารถเพิ่มหมายจับได้');
+    return;
+  }
   const list = document.getElementById('warrantList');
   if (!list) return;
   const warrantCourtValue = String(initial.arrestCourt || '').trim() ? String(initial.arrestCourt) : DEFAULT_COURT_PREFIX;
@@ -3751,6 +4077,10 @@ function updateSuspectItemMeta() {
 }
 
 function addSuspectItem(initial = {}) {
+  if (editRequestMode && !initial.__fromEditPrefill) {
+    showToast('โหมดแก้ไขไม่สามารถเพิ่มผู้ต้องหาได้');
+    return;
+  }
   const list = document.getElementById('suspectList');
   if (!list) return;
 
@@ -4068,7 +4398,8 @@ let currentStep = 1;
 let originalReportText = '';
 
 function goToStep(step) {
-  if (step > currentStep) {
+  const shouldValidateStep = !editRequestMode || getCurrentEditRequestType() === 'edit';
+  if (step > currentStep && shouldValidateStep) {
     if (currentStep === 1 && !validateStep1()) return;
     if (currentStep === 2 && !validateStep2()) return;
   }
@@ -4351,6 +4682,24 @@ function validateStep2() {
   return true;
 }
 
+function validateForm() {
+  return validateStep1() && validateStep2();
+}
+
+function validateFormForSubmit() {
+  const step1Valid = validateStep1();
+  if (!step1Valid) {
+    goToStep(1);
+    return false;
+  }
+  const step2Valid = validateStep2();
+  if (!step2Valid) {
+    goToStep(2);
+    return false;
+  }
+  return true;
+}
+
 // ============================================================
 //  REPORT GENERATION
 // ============================================================
@@ -4611,6 +4960,737 @@ function getCheckedValues(name) {
   return Array.from(checkboxes).map(cb => cb.value).join(', ');
 }
 
+function isEditRequestRoute() {
+  return new URLSearchParams(window.location.search).get(EDIT_REQUEST_PARAM) === '1';
+}
+
+function decodeBase64Utf8(input) {
+  return decodeURIComponent(escape(atob(String(input || ''))));
+}
+
+function readEditRequestContextFromWindowName() {
+  try {
+    const rawName = String(window.name || '');
+    if (!rawName || rawName.indexOf(EDIT_REQUEST_CONTEXT_WINDOW_PREFIX) !== 0) return null;
+    const encoded = rawName.slice(EDIT_REQUEST_CONTEXT_WINDOW_PREFIX.length);
+    if (!encoded) return null;
+    const parsed = JSON.parse(decodeBase64Utf8(encoded));
+    return parsed && parsed.context && typeof parsed.context === 'object'
+      ? parsed.context
+      : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function clearEditRequestContextWindowName() {
+  try {
+    const rawName = String(window.name || '');
+    if (rawName.indexOf(EDIT_REQUEST_CONTEXT_WINDOW_PREFIX) === 0) {
+      window.name = '';
+    }
+  } catch (_) {}
+}
+
+function parseThaiDateToISO(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  const months = {
+    'มกราคม': '01', 'ม.ค.': '01', 'ม.ค': '01',
+    'กุมภาพันธ์': '02', 'ก.พ.': '02', 'ก.พ': '02',
+    'มีนาคม': '03', 'มี.ค.': '03', 'มี.ค': '03',
+    'เมษายน': '04', 'เม.ย.': '04', 'เม.ย': '04',
+    'พฤษภาคม': '05', 'พ.ค.': '05', 'พ.ค': '05',
+    'มิถุนายน': '06', 'มิ.ย.': '06', 'มิ.ย': '06',
+    'กรกฎาคม': '07', 'ก.ค.': '07', 'ก.ค': '07',
+    'สิงหาคม': '08', 'ส.ค.': '08', 'ส.ค': '08',
+    'กันยายน': '09', 'ก.ย.': '09', 'ก.ย': '09',
+    'ตุลาคม': '10', 'ต.ค.': '10', 'ต.ค': '10',
+    'พฤศจิกายน': '11', 'พ.ย.': '11', 'พ.ย': '11',
+    'ธันวาคม': '12', 'ธ.ค.': '12', 'ธ.ค': '12'
+  };
+  const m = raw.match(/(\d{1,2})\s+([^\s]+)\s+(\d{2,4})/);
+  if (!m) return '';
+  const day = String(m[1]).padStart(2, '0');
+  const month = months[m[2]] || '';
+  if (!month) return '';
+  let yearNum = Number(m[3]);
+  if (!Number.isFinite(yearNum)) return '';
+  if (yearNum > 2400) yearNum -= 543;
+  if (yearNum < 100) yearNum += 2000;
+  const year = String(yearNum);
+  return `${year}-${month}-${day}`;
+}
+
+function parseTimeToHHMM(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  const m = raw.match(/(\d{1,2})[:.](\d{2})/);
+  if (!m) return '';
+  const hh = String(m[1]).padStart(2, '0');
+  const mm = String(m[2]).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function parseForeignIdentityText(rawText) {
+  const raw = String(rawText || '').trim();
+  if (!raw) return { isForeign: false, thaiId: '' };
+  if (!/passport/i.test(raw)) {
+    return { isForeign: false, thaiId: raw.replace(/\D/g, '').slice(0, 13) };
+  }
+  const passMatch = raw.match(/passport\s*:?\s*([^|]+)/i);
+  const nationMatch = raw.match(/สัญชาติ\s*:?\s*(.+)$/i);
+  return {
+    isForeign: true,
+    passport: passMatch ? String(passMatch[1]).trim() : '',
+    nationality: nationMatch ? String(nationMatch[1]).trim() : ''
+  };
+}
+
+function setInputValue(selector, value) {
+  const el = document.querySelector(selector);
+  if (el) el.value = String(value || '');
+}
+
+function setCheckedValuesByName(name, csv, scope) {
+  const root = scope || document;
+  const values = String(csv || '')
+    .split(',')
+    .map((v) => String(v || '').trim())
+    .filter(Boolean);
+  root.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+    input.checked = values.indexOf(input.value) !== -1;
+  });
+}
+
+function setWarrantGroupValues(item, groupName, csv) {
+  if (!item) return;
+  const values = String(csv || '')
+    .split(',')
+    .map((v) => String(v || '').trim())
+    .filter(Boolean);
+  item.querySelectorAll(`.warrant-work-input[data-work-group="${groupName}"]`).forEach((input) => {
+    input.checked = values.indexOf(input.value) !== -1;
+  });
+}
+
+function setIdentityValue(prefix, sheetValue) {
+  const parsed = parseForeignIdentityText(sheetValue);
+  const foreignRadio = document.querySelector(`input[name="${prefix}IdentityType"][value="foreign"]`);
+  const thaiRadio = document.querySelector(`input[name="${prefix}IdentityType"][value="thai"]`);
+  if (parsed.isForeign) {
+    if (foreignRadio) foreignRadio.checked = true;
+    setInputValue(`[name="${prefix}Passport"]`, parsed.passport || '');
+    setInputValue(`[name="${prefix}Nationality"]`, parsed.nationality || '');
+    setInputValue(`[name="${prefix}ID"]`, '');
+  } else {
+    if (thaiRadio) thaiRadio.checked = true;
+    setInputValue(`[name="${prefix}ID"]`, parsed.thaiId || '');
+    setInputValue(`[name="${prefix}Passport"]`, '');
+    setInputValue(`[name="${prefix}Nationality"]`, '');
+  }
+  applyForeignIdentityState(prefix);
+}
+
+function lockEditModeAddButtons() {
+  document.querySelectorAll('.btn-add-warrant').forEach((btn) => {
+    btn.style.display = 'none';
+    btn.disabled = true;
+  });
+}
+
+function collectEditComparableFields() {
+  const unit = document.querySelector('[name="unit"]')?.value || '';
+  const leader = unitLeaders[unit] || { name: '', phone: '' };
+  const actionType = document.querySelector('[name="actionType"]:checked')?.value || '';
+  const searchBy = document.querySelector('[name="searchBy"]:checked')?.value || '';
+  const isSearchWarrant = searchBy === 'ตามหมายค้น';
+  const warrant = getWarrantEntries()[0] || {};
+  const suspect = getArrestSuspectEntries(actionType)[0] || { personName: '', personAge: '', personID: '', personAddress: '' };
+  const ownerIdentity = getIdentityState('owner');
+  const useWarrantWork = actionType === 'จับตามหมาย';
+
+  return {
+    'ชุดปฏิบัติการ': unit,
+    'หัวหน้าชุด': leader.name || '',
+    'หมายเลขโทรศัพท์': leader.phone || '',
+    'วันที่': formatThaiDate(document.getElementById('actionDate')?.value || ''),
+    'เวลา': document.querySelector('[name="time"]')?.value || '',
+    'สถานที่ (จับกุม/หรือตรวจสอบ)': document.querySelector('[name="location"]')?.value || '',
+    'พิกัด Google Maps': document.querySelector('[name="coordinates"]')?.value || '',
+    'การจับกุม ตรวจสอบ': actionType,
+    'ศาลที่ออกหมายจับ': sanitizeCourtValue(warrant.arrestCourt || ''),
+    'เลขที่หมายจับ': warrant.arrestNo || '',
+    'วันเดือนปีที่ออกหมาย': formatThaiDate(warrant.warrantDateRaw || ''),
+    'ประเภทหมายจับ': warrant.warrantType || '',
+    'ชื่อ-สกุล ผู้ต้องหา': suspect.personName || '',
+    'อายุ (ปี) #1': suspect.personAge || '',
+    'เลขประจำตัวประชาชน (13 หลัก) #1': suspect.personID || '',
+    'ที่อยู่ (ตามบัตร) #1': suspect.personAddress || '',
+    'ข้อหา (ฐานความผิด)': actionType === 'จับตามหมาย' ? (warrant.charges || '') : (document.querySelector('[name="charges"]')?.value || ''),
+    'พร้อมของกลาง (ถ้ามี)': document.querySelector('[name="evidence"]')?.value || '',
+    'นำส่งพนักงานสอบสวน': document.querySelector('[name="investigator"]')?.value || '',
+    'ชื่อ-สกุล เจ้าของสถานที่ / พยาน นำตรวจ': document.querySelector('[name="ownerName"]')?.value || '',
+    'อายุ (ปี)': document.querySelector('[name="ownerAge"]')?.value || '',
+    'เลขประจำตัวประชาชน (13 หลัก)': ownerIdentity.sheetValue || '',
+    'ที่อยู่ (ตามบัตร)': document.querySelector('[name="ownerAddress"]')?.value || '',
+    'ผลการตรวจสอบ': document.querySelector('[name="inspectionResult"]')?.value || '',
+    'ตรวจค้น จับกุมโดย': searchBy,
+    'ศาลที่ออกหมายค้น': isSearchWarrant ? sanitizeCourtValue(document.querySelector('[name="searchCourt"]')?.value || '') : '',
+    'เลขที่หมายค้น': isSearchWarrant ? ((document.querySelector('[name="searchNo"]')?.value || '').trim()) : '',
+    'วันเดือนปีที่ออกหมายค้น': isSearchWarrant ? formatThaiDate(document.getElementById('searchDate')?.value || '') : '',
+    'หน้างานต่างด้าว': useWarrantWork ? (warrant.workAlien || '') : getCheckedValues('workAlien'),
+    'หน้างานห้วงระดม': useWarrantWork ? (warrant.workMobilize || '') : getCheckedValues('workMobilize'),
+    'หน้างานศูนย์': useWarrantWork ? (warrant.workCenter || '') : getCheckedValues('workCenter'),
+    'งานออกสื่อ': getCheckedValues('workMedia')
+  };
+}
+
+function normalizeComparableValue(value) {
+  return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
+}
+
+function buildChangedFieldsFromEdit(sourceRow) {
+  const source = sourceRow && typeof sourceRow === 'object' ? sourceRow : {};
+  const current = collectEditComparableFields();
+  const changed = {};
+  Object.keys(current).forEach((key) => {
+    const nextVal = normalizeComparableValue(current[key]);
+    const prevVal = normalizeComparableValue(source[key]);
+    if (nextVal !== prevVal) changed[key] = nextVal;
+  });
+  return changed;
+}
+
+function formatEditColumnLabel(key) {
+  const text = String(key || '').trim();
+  if (!text) return '-';
+  const match = text.match(/^(.*)\s#(\d+)$/);
+  if (!match) return text;
+  const label = String(match[1] || '').trim();
+  const slot = Number(match[2] || 0);
+  if (slot <= 1) return label;
+  return `${label} (ช่อง ${slot})`;
+}
+
+function normalizeEditRequestType(value) {
+  return 'edit';
+}
+
+function getCurrentEditRequestType() {
+  return 'edit';
+}
+
+function setCurrentEditRequestType(value) {
+  const target = document.querySelector('input[name="editRequestType"][value="edit"]');
+  if (target) target.checked = true;
+}
+
+function updateEditRequestTypePills() {
+  document.querySelectorAll('.edit-request-type-pill').forEach((pill) => {
+    const pillType = normalizeEditRequestType(pill.getAttribute('data-request-type') || '');
+    pill.classList.toggle('active', pillType === 'edit');
+  });
+}
+
+function formatEditRequestValueByKey(key, value) {
+  const raw = String(value == null ? '' : value).trim();
+  if (!raw) return '-';
+  const normalizedKey = String(key || '').trim();
+  if (normalizedKey === 'เวลา') {
+    const hhmm = parseTimeToHHMM(raw);
+    if (hhmm) {
+      const parts = hhmm.split(':');
+      return `${parts[0]}.${parts[1]} น.`;
+    }
+  }
+  if (normalizedKey === 'วันที่' || normalizedKey.indexOf('วันเดือนปี') === 0) {
+    const iso = parseThaiDateToISO(raw);
+    if (iso) return formatThaiDateShort(iso);
+  }
+  return raw;
+}
+
+function getEditRequestTargetSummaryHtml() {
+  const row = editRequestContext && editRequestContext.sourceRow ? editRequestContext.sourceRow : {};
+  const no = String((editRequestContext && editRequestContext.targetNo) || row['ลำดับ'] || '-').trim() || '-';
+  const suspect = String(row['ชื่อ-สกุล ผู้ต้องหา'] || '-').trim() || '-';
+  const citizen = String(row['เลขประจำตัวประชาชน (13 หลัก) #1'] || row['เลขประจำตัวประชาชน (13 หลัก)'] || '-').trim() || '-';
+  const warrant = String(row['เลขที่หมายจับ'] || row['เลขที่หมายค้น'] || '-').trim() || '-';
+  return (
+    '<div class="request-preview-target">' +
+      `<strong>รายการอ้างอิง:</strong> ลำดับ ${escapeHtml(no)} | ผู้ต้องหา ${escapeHtml(suspect)} | เลขบัตร ${escapeHtml(citizen)} | หมายจับ/ค้น ${escapeHtml(warrant)}` +
+    '</div>'
+  );
+}
+
+function buildEditConfirmHtml(changedFields, note) {
+  const source = editRequestContext && editRequestContext.sourceRow ? editRequestContext.sourceRow : {};
+  const changedKeys = Object.keys(changedFields || {});
+  const listHtml = changedKeys.map((key) => {
+    const before = formatEditRequestValueByKey(key, source[key]);
+    const after = formatEditRequestValueByKey(key, changedFields[key]);
+    return (
+      '<li class="request-preview-item">' +
+        `<div class="request-preview-item-label">${escapeHtml(formatEditColumnLabel(key))}</div>` +
+        `<div class="request-preview-item-values">เดิม: <b>${escapeHtml(before)}</b><br>ใหม่: <b>${escapeHtml(after)}</b></div>` +
+      '</li>'
+    );
+  }).join('');
+  const noteHtml = String(note || '').trim()
+    ? `<div class="request-preview-note"><strong>หมายเหตุ:</strong> ${escapeHtml(note).replace(/\n/g, '<br>')}</div>`
+    : '';
+  return (
+    `<span class="request-preview-badge edit">คำขอแก้ไขข้อมูล (${changedKeys.length} คอลัมน์)</span>` +
+    getEditRequestTargetSummaryHtml() +
+    `<ul class="request-preview-list">${listHtml}</ul>` +
+    noteHtml
+  );
+}
+
+function closeEditRequestConfirm(confirmed) {
+  const overlay = document.getElementById('editRequestConfirmOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('show');
+  const resolver = editRequestConfirmResolver;
+  editRequestConfirmResolver = null;
+  if (typeof resolver === 'function') resolver(!!confirmed);
+}
+
+function showEditRequestConfirm(config) {
+  const cfg = config && typeof config === 'object' ? config : {};
+  const overlay = document.getElementById('editRequestConfirmOverlay');
+  const titleEl = document.getElementById('editRequestConfirmTitle');
+  const subtitleEl = document.getElementById('editRequestConfirmSubtitle');
+  const bodyEl = document.getElementById('editRequestConfirmBody');
+  const submitBtn = document.getElementById('editRequestConfirmSubmitBtn');
+  if (!overlay || !titleEl || !subtitleEl || !bodyEl || !submitBtn) {
+    return Promise.resolve(window.confirm('ยืนยันส่งคำขอหรือไม่'));
+  }
+  titleEl.textContent = String(cfg.title || 'ตรวจสอบคำขอก่อนส่ง');
+  subtitleEl.textContent = String(cfg.subtitle || 'กรุณาตรวจสอบรายละเอียดให้ถูกต้องก่อนยืนยันส่งถึงแอดมิน');
+  bodyEl.innerHTML = String(cfg.bodyHtml || '-');
+  submitBtn.textContent = String(cfg.submitLabel || 'ยืนยันส่งคำขอ');
+  overlay.classList.add('show');
+  return new Promise((resolve) => {
+    editRequestConfirmResolver = resolve;
+  });
+}
+
+function syncEditRequestModeUI() {
+  if (!editRequestMode) return;
+  updateEditRequestTypePills();
+  const submitText = document.getElementById('primarySubmitBtnText');
+  if (submitText) submitText.textContent = 'ส่งคำขอแก้ไข';
+  refreshEditChangeIndicators();
+}
+
+function bindEditRequestTypeControls() {
+  // โหมดคำร้องหน้า index จำกัดให้ส่งแบบแก้ไขเท่านั้น
+}
+
+function getEditFieldContainerBySelector(selector, root) {
+  const scope = root || document;
+  const el = scope.querySelector(selector);
+  if (!el) return null;
+  return el.closest('.field') || el.closest('.warrant-item') || el.closest('.card') || el;
+}
+
+function getEditHighlightTargets(columnKey) {
+  const key = String(columnKey || '').trim();
+  const actionType = document.querySelector('[name="actionType"]:checked')?.value || '';
+  const firstWarrant = document.querySelector('#warrantList .warrant-item');
+  const targets = [];
+
+  switch (key) {
+    case 'ชุดปฏิบัติการ':
+    case 'หัวหน้าชุด':
+    case 'หมายเลขโทรศัพท์':
+      targets.push(getEditFieldContainerBySelector('[name="unit"]'));
+      targets.push(document.getElementById('leaderInfo'));
+      break;
+    case 'วันที่':
+      targets.push(getEditFieldContainerBySelector('#actionDate'));
+      break;
+    case 'เวลา':
+      targets.push(getEditFieldContainerBySelector('[name="time"]'));
+      break;
+    case 'สถานที่ (จับกุม/หรือตรวจสอบ)':
+      targets.push(getEditFieldContainerBySelector('[name="location"]'));
+      break;
+    case 'พิกัด Google Maps':
+      targets.push(getEditFieldContainerBySelector('[name="coordinates"]'));
+      break;
+    case 'การจับกุม ตรวจสอบ':
+      targets.push(getEditFieldContainerBySelector('[name="actionType"]'));
+      break;
+    case 'ศาลที่ออกหมายจับ':
+      if (firstWarrant) targets.push(getEditFieldContainerBySelector('.warrant-court', firstWarrant));
+      break;
+    case 'เลขที่หมายจับ':
+      if (firstWarrant) targets.push(getEditFieldContainerBySelector('.warrant-no', firstWarrant));
+      break;
+    case 'วันเดือนปีที่ออกหมาย':
+      if (firstWarrant) targets.push(getEditFieldContainerBySelector('.warrant-date', firstWarrant));
+      break;
+    case 'ประเภทหมายจับ':
+      if (firstWarrant) targets.push(getEditFieldContainerBySelector('.warrant-type', firstWarrant));
+      break;
+    case 'ชื่อ-สกุล ผู้ต้องหา':
+      targets.push(getEditFieldContainerBySelector('[name="personName"]'));
+      break;
+    case 'อายุ (ปี) #1':
+      targets.push(getEditFieldContainerBySelector('[name="personAge"]'));
+      break;
+    case 'เลขประจำตัวประชาชน (13 หลัก) #1':
+      targets.push(document.getElementById('personThaiIdField'));
+      targets.push(document.getElementById('personForeignFields'));
+      break;
+    case 'ที่อยู่ (ตามบัตร) #1':
+      targets.push(getEditFieldContainerBySelector('[name="personAddress"]'));
+      break;
+    case 'ข้อหา (ฐานความผิด)':
+      if (actionType === 'จับตามหมาย' && firstWarrant) {
+        targets.push(getEditFieldContainerBySelector('.warrant-charges', firstWarrant));
+      } else {
+        targets.push(getEditFieldContainerBySelector('[name="charges"]'));
+      }
+      break;
+    case 'พร้อมของกลาง (ถ้ามี)':
+      targets.push(getEditFieldContainerBySelector('[name="evidence"]'));
+      break;
+    case 'นำส่งพนักงานสอบสวน':
+      targets.push(getEditFieldContainerBySelector('[name="investigator"]'));
+      break;
+    case 'ชื่อ-สกุล เจ้าของสถานที่ / พยาน นำตรวจ':
+      targets.push(getEditFieldContainerBySelector('[name="ownerName"]'));
+      break;
+    case 'อายุ (ปี)':
+      targets.push(getEditFieldContainerBySelector('[name="ownerAge"]'));
+      break;
+    case 'เลขประจำตัวประชาชน (13 หลัก)':
+      targets.push(document.getElementById('ownerThaiIdField'));
+      targets.push(document.getElementById('ownerForeignFields'));
+      break;
+    case 'ที่อยู่ (ตามบัตร)':
+      targets.push(getEditFieldContainerBySelector('[name="ownerAddress"]'));
+      break;
+    case 'ผลการตรวจสอบ':
+      targets.push(getEditFieldContainerBySelector('[name="inspectionResult"]'));
+      break;
+    case 'ตรวจค้น จับกุมโดย':
+      targets.push(getEditFieldContainerBySelector('[name="searchBy"]'));
+      break;
+    case 'ศาลที่ออกหมายค้น':
+      targets.push(getEditFieldContainerBySelector('[name="searchCourt"]'));
+      break;
+    case 'เลขที่หมายค้น':
+      targets.push(getEditFieldContainerBySelector('[name="searchNo"]'));
+      break;
+    case 'วันเดือนปีที่ออกหมายค้น':
+      targets.push(getEditFieldContainerBySelector('#searchDate'));
+      break;
+    case 'หน้างานต่างด้าว':
+      if (actionType === 'จับตามหมาย' && firstWarrant) {
+        targets.push(getEditFieldContainerBySelector('.warrant-work-input[data-work-group="alien"]', firstWarrant));
+      } else {
+        targets.push(document.getElementById('globalWorkAlienField'));
+      }
+      break;
+    case 'หน้างานห้วงระดม':
+      if (actionType === 'จับตามหมาย' && firstWarrant) {
+        targets.push(getEditFieldContainerBySelector('.warrant-work-input[data-work-group="mobilize"]', firstWarrant));
+      } else {
+        targets.push(document.getElementById('globalWorkMobilizeField'));
+      }
+      break;
+    case 'หน้างานศูนย์':
+      if (actionType === 'จับตามหมาย' && firstWarrant) {
+        targets.push(getEditFieldContainerBySelector('.warrant-work-input[data-work-group="center"]', firstWarrant));
+      } else {
+        targets.push(document.getElementById('globalWorkCenterField'));
+      }
+      break;
+    case 'งานออกสื่อ':
+      targets.push(getEditFieldContainerBySelector('[name="workMedia"]'));
+      break;
+    default:
+      break;
+  }
+
+  return Array.from(new Set(targets.filter(Boolean)));
+}
+
+function clearEditFieldHighlights() {
+  document.querySelectorAll('.edit-field-changed').forEach((node) => node.classList.remove('edit-field-changed'));
+}
+
+function renderEditChangeBanner(changedFields) {
+  const banner = document.getElementById('editRequestBanner');
+  const countEl = document.getElementById('editRequestChangedCount');
+  const listEl = document.getElementById('editRequestChangedList');
+  if (!banner || !countEl || !listEl) return;
+
+  if (!editRequestMode) {
+    banner.classList.remove('show');
+    listEl.innerHTML = '';
+    return;
+  }
+
+  const keys = Object.keys(changedFields || {});
+  banner.classList.add('show');
+  if (!keys.length) {
+    countEl.textContent = 'ยังไม่มีการแก้ไขข้อมูล';
+    listEl.innerHTML = '<span class="edit-request-chip">แตะแก้ไขช่องที่ต้องการ แล้วระบบจะระบุคอลัมน์ให้อัตโนมัติ</span>';
+    return;
+  }
+
+  countEl.textContent = `แก้ไขแล้ว ${keys.length} คอลัมน์ (ไฮไลต์สีเขียว)`;
+  listEl.innerHTML = keys
+    .map((key) => `<span class="edit-request-chip">${formatEditColumnLabel(key)}</span>`)
+    .join('');
+}
+
+function refreshEditChangeIndicators() {
+  if (!editRequestMode || !editRequestContext || !editRequestContext.sourceRow) return;
+  const changedFields = buildChangedFieldsFromEdit(editRequestContext.sourceRow);
+  clearEditFieldHighlights();
+  Object.keys(changedFields).forEach((key) => {
+    getEditHighlightTargets(key).forEach((node) => node.classList.add('edit-field-changed'));
+  });
+  renderEditChangeBanner(changedFields);
+}
+
+function bindEditChangeTracking() {
+  const root = document.getElementById('mainApp');
+  if (!root || root.dataset.editTrackingBound === '1') return;
+  const handler = (event) => {
+    if (!editRequestMode || !editRequestContext || !editRequestContext.sourceRow) return;
+    const target = event && event.target;
+    if (!target || typeof target.closest !== 'function') return;
+    if (!target.closest('#mainApp')) return;
+    window.requestAnimationFrame(refreshEditChangeIndicators);
+  };
+  root.addEventListener('input', handler, true);
+  root.addEventListener('change', handler, true);
+  root.dataset.editTrackingBound = '1';
+}
+
+function initEditRequestModeIfNeeded() {
+  if (!isEditRequestRoute()) return;
+  let ctx = null;
+  try {
+    const raw = localStorage.getItem(EDIT_REQUEST_CONTEXT_KEY) || sessionStorage.getItem(EDIT_REQUEST_CONTEXT_FALLBACK_KEY);
+    ctx = raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    try {
+      localStorage.removeItem(EDIT_REQUEST_CONTEXT_KEY);
+      sessionStorage.removeItem(EDIT_REQUEST_CONTEXT_FALLBACK_KEY);
+    } catch (_) {}
+  }
+
+  if (!ctx || !ctx.sourceRow) {
+    ctx = readEditRequestContextFromWindowName();
+  }
+  if (!ctx || !ctx.sourceRow) {
+    showToast('ไม่พบข้อมูลคำขอแก้ไข');
+    return;
+  }
+
+  try {
+    localStorage.setItem(EDIT_REQUEST_CONTEXT_KEY, JSON.stringify(ctx));
+  } catch (_) {}
+  try {
+    sessionStorage.setItem(EDIT_REQUEST_CONTEXT_FALLBACK_KEY, JSON.stringify(ctx));
+  } catch (_) {}
+  clearEditRequestContextWindowName();
+
+  try {
+    editRequestContext = ctx;
+    editRequestMode = true;
+    const row = ctx.sourceRow || {};
+
+    // Prefill form using existing index controls/validation logic.
+    setInputValue('[name="unit"]', row['ชุดปฏิบัติการ'] || '');
+    document.getElementById('unitSelect')?.dispatchEvent(new Event('change'));
+
+    const actionType = String(row['การจับกุม ตรวจสอบ'] || '').trim();
+    const actionRadio = document.querySelector(`[name="actionType"][value="${actionType}"]`);
+    if (actionRadio) {
+      actionRadio.checked = true;
+      actionRadio.dispatchEvent(new Event('change'));
+    }
+
+    setInputValue('#actionDate', parseThaiDateToISO(row['วันที่']));
+    setInputValue('[name="time"]', parseTimeToHHMM(row['เวลา']));
+    setInputValue('[name="location"]', row['สถานที่ (จับกุม/หรือตรวจสอบ)'] || '');
+    setInputValue('[name="coordinates"]', row['พิกัด Google Maps'] || '');
+    setInputValue('[name="charges"]', row['ข้อหา (ฐานความผิด)'] || '');
+    setInputValue('[name="evidence"]', row['พร้อมของกลาง (ถ้ามี)'] || '');
+    setInputValue('[name="investigator"]', row['นำส่งพนักงานสอบสวน'] || '');
+    setInputValue('[name="ownerName"]', row['ชื่อ-สกุล เจ้าของสถานที่ / พยาน นำตรวจ'] || '');
+    setInputValue('[name="ownerAge"]', row['อายุ (ปี)'] || '');
+    setInputValue('[name="ownerAddress"]', row['ที่อยู่ (ตามบัตร)'] || '');
+    setInputValue('[name="inspectionResult"]', row['ผลการตรวจสอบ'] || '');
+
+    setInputValue('[name="personName"]', row['ชื่อ-สกุล ผู้ต้องหา'] || '');
+    setInputValue('[name="personAge"]', row['อายุ (ปี) #1'] || row['อายุ (ปี)'] || '');
+    setInputValue('[name="personAddress"]', row['ที่อยู่ (ตามบัตร) #1'] || row['ที่อยู่ (ตามบัตร)'] || '');
+
+    setIdentityValue('person', row['เลขประจำตัวประชาชน (13 หลัก) #1'] || row['เลขประจำตัวประชาชน (13 หลัก)'] || '');
+    setIdentityValue('owner', row['เลขประจำตัวประชาชน (13 หลัก)'] || '');
+
+    const searchBy = String(row['ตรวจค้น จับกุมโดย'] || '').trim();
+    const searchByRadio = document.querySelector(`[name="searchBy"][value="${searchBy}"]`);
+    if (searchByRadio) {
+      searchByRadio.checked = true;
+      searchByRadio.dispatchEvent(new Event('change'));
+    }
+    setInputValue('[name="searchCourt"]', row['ศาลที่ออกหมายค้น'] || '');
+    setInputValue('[name="searchNo"]', row['เลขที่หมายค้น'] || '');
+    setInputValue('#searchDate', parseThaiDateToISO(row['วันเดือนปีที่ออกหมายค้น']));
+
+    if (actionType === 'จับตามหมาย') {
+      const list = document.getElementById('warrantList');
+      if (list) {
+        list.innerHTML = '';
+        warrantItemSeq = 0;
+      }
+      addWarrantItem({
+        __fromEditPrefill: true,
+        arrestCourt: row['ศาลที่ออกหมายจับ'] || '',
+        arrestNo: row['เลขที่หมายจับ'] || '',
+        warrantDateRaw: parseThaiDateToISO(row['วันเดือนปีที่ออกหมาย']),
+        warrantType: row['ประเภทหมายจับ'] || ''
+      });
+      const first = document.querySelector('#warrantList .warrant-item');
+      if (first) {
+        const chargeEl = first.querySelector('.warrant-charges');
+        if (chargeEl) chargeEl.value = String(row['ข้อหา (ฐานความผิด)'] || '');
+        setWarrantGroupValues(first, 'alien', row['หน้างานต่างด้าว'] || '');
+        setWarrantGroupValues(first, 'mobilize', row['หน้างานห้วงระดม'] || '');
+        setWarrantGroupValues(first, 'center', row['หน้างานศูนย์'] || '');
+      }
+    } else {
+      setCheckedValuesByName('workAlien', row['หน้างานต่างด้าว'] || '');
+      setCheckedValuesByName('workMobilize', row['หน้างานห้วงระดม'] || '');
+      setCheckedValuesByName('workCenter', row['หน้างานศูนย์'] || '');
+    }
+    setCheckedValuesByName('workMedia', row['งานออกสื่อ'] || '');
+
+    setCurrentEditRequestType('edit');
+    setInputValue('#editRequestNote', ctx.note || '');
+    lockEditModeAddButtons();
+    document.body.classList.add('edit-request-mode');
+    syncEditRequestModeUI();
+    bindEditChangeTracking();
+    refreshEditChangeIndicators();
+    showToast('โหมดแก้ไข: ใช้ฟอร์มหน้า index และตรวจสอบเงื่อนไขเดิมทั้งหมด');
+  } catch (err) {
+    showToast('ไม่สามารถเตรียมฟอร์มแก้ไขได้: ' + ((err && err.message) ? err.message : 'ไม่ทราบสาเหตุ'));
+  }
+}
+
+async function submitEditRequestFromIndex(submitBtn) {
+  const url = getSheetUrl();
+  if (!url) {
+    showToast('กรุณาตั้งค่า Google Sheets URL');
+    openSettings();
+    unlockSubmitButton(submitBtn);
+    return;
+  }
+
+  const rawUser = JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  const user = normalizeAuthUser(rawUser);
+  if (!user) {
+    showToast('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
+    unlockSubmitButton(submitBtn);
+    handleLogout();
+    return;
+  }
+  localStorage.setItem('CSD1_USER', JSON.stringify(user));
+
+  if (!editRequestContext || !editRequestContext.sourceRow) {
+    showToast('ไม่พบข้อมูลอ้างอิงรายการเดิม');
+    unlockSubmitButton(submitBtn);
+    return;
+  }
+
+  const targetNo = String(editRequestContext.targetNo || editRequestContext.sourceRow['ลำดับ'] || '').trim();
+  const targetTimestamp = String(editRequestContext.targetTimestamp || editRequestContext.sourceRow['ประทับเวลา'] || '').trim();
+  if (!targetNo && !targetTimestamp) {
+    showToast('ไม่พบรายการอ้างอิงสำหรับส่งคำขอ');
+    unlockSubmitButton(submitBtn);
+    return;
+  }
+
+  const note = String(document.getElementById('editRequestNote')?.value || '').trim();
+  let payload = {
+    action: 'submitChangeRequest',
+    email: user.email,
+    sessionToken: pickSessionToken(user),
+    requestType: 'edit',
+    target: { no: targetNo, timestamp: targetTimestamp },
+    deleteReason: '',
+    changedFields: {},
+    note: note,
+    correctedData: ''
+  };
+  let successMsg = 'ส่งคำขอเรียบร้อยแล้ว';
+
+  if (!validateFormForSubmit()) {
+    unlockSubmitButton(submitBtn);
+    return;
+  }
+  const changedFields = buildChangedFieldsFromEdit(editRequestContext.sourceRow);
+  const changedKeys = Object.keys(changedFields);
+  if (!changedKeys.length) {
+    showToast('ยังไม่มีข้อมูลที่เปลี่ยนแปลง');
+    unlockSubmitButton(submitBtn);
+    return;
+  }
+  const confirmedEdit = await showEditRequestConfirm({
+    requestType: 'edit',
+    title: 'ตรวจสอบคำขอแก้ไขก่อนส่ง',
+    subtitle: 'ระบบจะแจ้งแอดมินเฉพาะคอลัมน์ที่เปลี่ยนเท่านั้น',
+    bodyHtml: buildEditConfirmHtml(changedFields, note),
+    submitLabel: 'ยืนยันส่งคำขอแก้ไข'
+  });
+  if (!confirmedEdit) {
+    unlockSubmitButton(submitBtn);
+    return;
+  }
+  payload.changedFields = changedFields;
+  successMsg = `ส่งคำขอแก้ไขแล้ว (${changedKeys.length} คอลัมน์)`;
+
+  setMobileDataLoading(true);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const rawText = await response.text();
+    const result = parseResponseBody(rawText);
+    if (!response.ok || String(result.status || '').toLowerCase() !== 'success') {
+      throw new Error(result.message || ('HTTP ' + response.status));
+    }
+    localStorage.removeItem(EDIT_REQUEST_CONTEXT_KEY);
+    sessionStorage.removeItem(EDIT_REQUEST_CONTEXT_FALLBACK_KEY);
+    clearEditRequestContextWindowName();
+    showToast(successMsg);
+    setTimeout(() => {
+      navigateInApp(null, 'history.html');
+    }, 520);
+  } catch (err) {
+    showToast('ส่งคำขอไม่สำเร็จ: ' + (err.message || err));
+    unlockSubmitButton(submitBtn);
+  } finally {
+    setMobileDataLoading(false);
+  }
+}
+
 let isSubmitting = false;
 
 function unlockSubmitButton(btn) {
@@ -4640,11 +5720,21 @@ async function submitToSheet() {
   if (isSubmitting) return;
   isSubmitting = true;
 
-  const submitBtn = document.querySelector('.btn-accent[onclick="submitToSheet()"]');
+  const submitBtn = document.getElementById('primarySubmitBtn') || document.querySelector('.btn-accent[onclick="submitToSheet()"]');
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.style.opacity = '0.5';
     submitBtn.style.pointerEvents = 'none';
+  }
+
+  if (editRequestMode) {
+    try {
+      await submitEditRequestFromIndex(submitBtn);
+    } catch (err) {
+      showToast('ส่งคำขอไม่สำเร็จ: ' + ((err && err.message) ? err.message : err));
+      unlockSubmitButton(submitBtn);
+    }
+    return;
   }
 
   const url = getSheetUrl();
@@ -4671,7 +5761,7 @@ async function submitToSheet() {
   const timeStr = document.querySelector('[name="time"]').value;
   const loc = document.querySelector('[name="location"]').value;
   const ownerIdentity = getIdentityState('owner');
-  const nowTimestamp = new Date().toLocaleString('th-TH');
+  const nowTimestamp = formatThaiDateTimeStandard(new Date()) || new Date().toLocaleString('th-TH');
   const warrantEntries = getWarrantEntries();
   const workMediaGlobal = getCheckedValues('workMedia');
   const isInspectAction = actionType === 'ตรวจสอบสถานประกอบการ';
@@ -4858,6 +5948,10 @@ function setDefaultDate() {
   const today = now.toISOString().split('T')[0];
   document.getElementById('actionDate').value = today;
 }
+
+document.addEventListener('keydown', function(evt) {
+  if (evt.key === 'Escape') closeEditRequestConfirm(false);
+});
 
 // ============================================================
 //  INIT

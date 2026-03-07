@@ -49,6 +49,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 html {
   background-color: var(--primary-deep);
   overscroll-behavior: none;
@@ -66,45 +71,66 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  animation: pageIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .page-wrap {
-  max-width: 1120px;
+  max-width: 1360px;
   margin: 0 auto;
-  padding: 1.1rem 1rem 6rem;
+  padding: 1.35rem 1.1rem 6.2rem;
 }
 
 .top-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.9rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .title-box {
-  padding: 0.9rem 1rem;
-  border-radius: var(--radius);
+  padding: 1.22rem 1.4rem;
+  border-radius: 18px;
   border: 1px solid var(--border);
-  background: var(--card-bg);
+  background: linear-gradient(135deg, rgba(2, 38, 75, 0.84), rgba(2, 22, 44, 0.92));
   box-shadow: var(--shadow-md);
-  flex: 1 1 420px;
+  text-align: center;
 }
 
 .title-box h1 {
-  font-size: 1.2rem;
-  margin-bottom: 0.15rem;
+  font-size: 2.15rem;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.005em;
+  color: #FFD400;
+  line-height: 1.15;
+  text-shadow: 0 0 36px rgba(255, 212, 0, 0.3), 0 2px 8px rgba(0,0,0,0.4);
 }
 
 .title-box p {
-  font-size: 0.86rem;
+  font-size: 1.03rem;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
+[data-theme="light"] .title-box {
+  background: #00264B;
+  border-color: rgba(0, 38, 75, 0.28);
+}
+
+[data-theme="light"] .title-box h1 {
+  color: #FFD400;
+}
+
+[data-theme="light"] .title-box p {
+  color: rgba(226, 232, 240, 0.9);
+}
+
 .head-actions {
-  display: inline-flex;
-  gap: 0.45rem;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(132px, auto);
+  gap: 0.55rem;
+  align-items: center;
 }
 
 .btn {
@@ -112,9 +138,9 @@ body {
   border-radius: 10px;
   background: var(--card-bg);
   color: var(--text);
-  padding: 0.52rem 0.78rem;
+  padding: 0.56rem 0.9rem;
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
@@ -122,23 +148,50 @@ body {
 }
 
 .btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.head-actions .mini-btn,
+.head-actions .btn {
+  min-height: 66px;
+  border-radius: 16px;
+  padding: 0 1.15rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.head-actions .mini-btn {
+  border-color: rgba(148, 163, 184, 0.32);
+  background: rgba(2, 10, 26, 0.66);
+  color: #f8fafc;
+}
+
+.head-actions .mini-btn:hover {
+  background: rgba(2, 10, 26, 0.8);
 }
 
 .btn-primary {
-  border-color: rgba(255,212,0,0.48);
-  background: rgba(255,212,0,0.18);
+  border-color: rgba(255, 212, 0, 0.6);
+  background: linear-gradient(160deg, rgba(255, 212, 0, 0.34) 0%, rgba(255, 212, 0, 0.18) 100%);
   color: #FFD400;
+  box-shadow: 0 4px 18px rgba(255, 212, 0, 0.14);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(160deg, rgba(255, 212, 0, 0.44) 0%, rgba(255, 212, 0, 0.26) 100%);
+  box-shadow: 0 6px 22px rgba(255, 212, 0, 0.22);
+  border-color: rgba(255, 212, 0, 0.72);
 }
 
 [data-theme="light"] .btn-primary {
-  border-color: rgba(0,38,75,0.36);
-  background: rgba(0,38,75,0.1);
+  border-color: rgba(255, 212, 0, 0.66);
+  background: rgba(255, 212, 0, 0.25);
   color: #00264B;
 }
 
 .user-bar {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
@@ -332,51 +385,106 @@ body {
 .info-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.65rem;
-  margin-bottom: 0.9rem;
+  gap: 0.72rem;
+  margin-bottom: 1.1rem;
 }
 
 .info-card {
   border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--card-bg);
-  padding: 0.7rem 0.85rem;
+  border-left: 3px solid rgba(255, 212, 0, 0.55);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(6, 19, 46, 0.92) 0%, rgba(3, 11, 26, 0.97) 100%);
+  padding: 0.82rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 0 1px rgba(255,212,0,0.12);
 }
 
 .info-label {
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
 
 .info-value {
-  margin-top: 0.2rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-secondary);
+  margin-top: 0.45rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #FFD400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 24px rgba(255, 212, 0, 0.18);
 }
 
 .note {
-  margin-bottom: 0.9rem;
-  border: 1px dashed rgba(255,212,0,0.42);
-  border-radius: 12px;
-  padding: 0.65rem 0.8rem;
-  background: rgba(255,212,0,0.1);
-  color: var(--text-secondary);
-  font-size: 0.8rem;
+  max-width: 820px;
+  margin: 1.1rem auto 1.25rem;
+  border: 1px solid rgba(255, 212, 0, 0.28);
+  border-radius: 14px;
+  padding: 0.88rem 1.3rem;
+  background: linear-gradient(135deg, rgba(30, 44, 15, 0.4), rgba(12, 20, 6, 0.6));
+  color: #cbd5e1;
+  font-size: 0.97rem;
+  text-align: center;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 14px rgba(255, 212, 0, 0.06);
 }
 
 [data-theme="light"] .note {
-  border-color: rgba(0,38,75,0.28);
-  background: rgba(0,38,75,0.06);
+  border-color: rgba(255, 212, 0, 0.5);
+  background: linear-gradient(135deg, rgba(255, 247, 213, 0.96), rgba(248, 239, 198, 0.95));
+  color: #334155;
+}
+
+.note strong {
+  color: #FFD400;
+  font-weight: 800;
+}
+
+[data-theme="light"] .note strong {
+  color: #9a6700;
 }
 
 .filter-panel {
-  margin-bottom: 0.9rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-md);
-  padding: 0.7rem 0.75rem;
+  margin-bottom: 1.15rem;
+  border: 1px solid rgba(255, 212, 0, 0.16);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(6, 18, 50, 0.9) 0%, rgba(4, 12, 34, 0.96) 100%);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+  padding: 1.15rem 1.2rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 0.75rem;
+}
+
+.filter-head {
+  grid-column: 1 / -1;
+}
+
+.filter-grid {
+  grid-column: 1;
+  align-items: end;
+}
+
+.filter-actions {
+  grid-column: 2;
+  align-self: end;
+  margin-top: 0;
+}
+
+.result-note {
+  grid-column: 1 / -1;
 }
 
 .filter-head {
@@ -388,45 +496,102 @@ body {
 }
 
 .filter-title {
-  font-size: 0.82rem;
+  font-size: 1.08rem;
   font-weight: 800;
-  color: var(--text-secondary);
+  color: #FFD400;
 }
 
 .filter-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .filter-field {
   display: flex;
   flex-direction: column;
-  gap: 0.28rem;
+  gap: 0.34rem;
 }
 
 .filter-label {
   font-size: 0.72rem;
   color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
 }
 
 .filter-input {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgba(2, 6, 23, 0.55);
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.72);
   color: var(--text);
-  padding: 0.5rem 0.56rem;
+  padding: 0.78rem 1rem;
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.94rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.filter-input:focus {
+  border-color: rgba(255, 212, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.1), 0 2px 8px rgba(0,0,0,0.2);
 }
 
 [data-theme="light"] .filter-input {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+[data-theme="light"] .filter-panel {
+  background: #ffffff;
+  border-color: rgba(0,38,75,0.15);
+  box-shadow: 0 4px 16px rgba(0,38,75,0.08);
+}
+
+[data-theme="light"] .info-card {
+  background: linear-gradient(145deg, #ffffff, #f6f9ff);
+  border-color: rgba(0,38,75,0.1);
+  border-left-color: rgba(0,38,75,0.55);
+  box-shadow: 0 4px 16px rgba(0,38,75,0.1);
+}
+
+[data-theme="light"] .info-value {
+  color: #00264B;
+  text-shadow: none;
+}
+
+[data-theme="light"] .filter-title {
+  color: #00264B;
+}
+
+[data-theme="light"] .table-wrap {
+  border-color: rgba(0,38,75,0.14);
+  box-shadow: 0 4px 20px rgba(0,38,75,0.1);
+}
+
+[data-theme="light"] thead th {
+  background: rgba(255,255,255,0.98);
+  color: #00264B;
+  border-bottom-color: rgba(0,38,75,0.25);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-theme="light"] tbody tr:hover td {
+  background: rgba(0, 38, 75, 0.05);
+}
+
+[data-theme="light"] .note {
+  border-color: rgba(255, 212, 0, 0.45);
+  background: linear-gradient(135deg, rgba(255, 247, 213, 0.96), rgba(248, 239, 198, 0.95));
+  color: #334155;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 2px 12px rgba(0,38,75,0.06);
 }
 
 .filter-actions {
-  margin-top: 0.55rem;
   display: flex;
   justify-content: flex-end;
   gap: 0.45rem;
@@ -443,21 +608,46 @@ body {
   font-weight: 700;
   cursor: pointer;
 }
+.mini-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
 [data-theme="light"] .mini-btn {
   background: rgba(0,38,75,0.08);
 }
 
+[data-theme="light"] .head-actions .mini-btn {
+  background: rgba(0,38,75,0.1);
+  color: #00264B;
+  border-color: rgba(0,38,75,0.22);
+}
+
+[data-theme="light"] .head-actions .mini-btn:hover {
+  background: rgba(0,38,75,0.18);
+}
+
+.filter-actions .mini-btn {
+  min-height: 56px;
+  border-radius: 14px;
+  padding: 0 1.1rem;
+  font-size: 0.95rem;
+}
+
 .result-note {
-  margin-top: 0.55rem;
-  font-size: 0.74rem;
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
 }
 
 .detail-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.55);
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 4600;
   display: none;
   align-items: center;
@@ -471,14 +661,20 @@ body {
 
 .detail-panel {
   width: min(960px, 96vw);
-  max-height: 86vh;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-md);
+  max-height: 88vh;
+  border: 1px solid rgba(255, 212, 0, 0.22);
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(6, 18, 48, 0.97) 0%, rgba(3, 10, 28, 0.99) 100%);
+  box-shadow: 0 28px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) inset;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+[data-theme="light"] .detail-panel {
+  background: #ffffff;
+  border-color: rgba(0,38,75,0.2);
+  box-shadow: 0 20px 48px rgba(0,38,75,0.18);
 }
 
 .detail-head {
@@ -486,79 +682,404 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0.65rem 0.8rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.82rem 1rem;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.18);
+  background: linear-gradient(135deg, rgba(2, 12, 32, 0.8), rgba(1, 7, 22, 0.9));
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .detail-head {
+  background: linear-gradient(135deg, #00264B, #001e3c);
+  border-bottom-color: rgba(255, 212, 0, 0.3);
 }
 
 .detail-title {
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   font-weight: 800;
-  color: var(--text-secondary);
+  color: #FFD400;
+  letter-spacing: 0.01em;
+}
+
+.detail-head-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.46rem;
+}
+
+.detail-copy-btn {
+  border: 1px solid rgba(255, 212, 0, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+  min-height: 32px;
+  padding: 0.28rem 0.58rem;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+}
+
+.detail-copy-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.detail-copy-btn span {
+  white-space: nowrap;
+}
+
+.detail-copy-btn:hover {
+  background: rgba(255, 212, 0, 0.26);
+  border-color: rgba(255, 212, 0, 0.54);
+}
+
+.detail-copy-btn.is-copied {
+  background: rgba(179, 142, 0, 0.42);
+  border-color: rgba(255, 212, 0, 0.72);
+  color: #fff3bf;
+}
+
+.detail-copy-btn.is-copied:hover {
+  background: rgba(179, 142, 0, 0.56);
+}
+
+[data-theme="light"] .detail-copy-btn.is-copied {
+  background: rgba(146, 112, 0, 0.82);
+  border-color: rgba(146, 112, 0, 0.92);
+  color: #fff8db;
 }
 
 .detail-close {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(255,255,255,0.06);
-  color: var(--text);
-  width: 30px;
-  height: 30px;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: #f1f5f9;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-close:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.32);
 }
 
 .detail-content {
   margin: 0;
+  padding: 1rem 1.1rem 1.2rem;
+  overflow: auto;
+  white-space: normal;
+  font-size: 0.75rem;
+  line-height: 1.65;
+  font-family: 'IBM Plex Sans Thai', ui-monospace, monospace;
+  background: rgba(1, 5, 14, 0.5);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,212,0,0.25) transparent;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: start;
+  gap: 0.36rem;
+}
+
+.detail-row + .detail-row {
+  margin-top: 0.24rem;
+}
+
+.detail-key {
+  color: #FFD400;
+  font-weight: 800;
+}
+
+.detail-value {
+  color: #94a3b8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-empty {
+  color: #64748b;
+}
+
+.detail-content::-webkit-scrollbar { width: 5px; }
+.detail-content::-webkit-scrollbar-track { background: transparent; }
+.detail-content::-webkit-scrollbar-thumb { background: rgba(255,212,0,0.25); border-radius: 99px; }
+
+[data-theme="light"] .detail-content {
+  background: #f1f5f9;
+}
+
+[data-theme="light"] .detail-key {
+  color: #b38e00;
+}
+
+[data-theme="light"] .detail-value {
+  color: #334155;
+}
+
+[data-theme="light"] .detail-empty {
+  color: #64748b;
+}
+
+.change-request-panel {
+  width: min(840px, 96vw);
+}
+
+.change-request-body {
   padding: 0.75rem 0.8rem 0.9rem;
   overflow: auto;
-  white-space: pre-wrap;
-  font-size: 0.76rem;
-  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  gap: 0.68rem;
+}
+
+.change-target {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  padding: 0.62rem 0.72rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
   color: var(--text-secondary);
 }
 
-.table-wrap {
+[data-theme="light"] .change-target {
+  background: rgba(0,38,75,0.05);
+}
+
+.change-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.change-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.change-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.change-input,
+.change-select,
+.change-textarea {
+  width: 100%;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.24);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  padding: 0.55rem 0.62rem;
+}
+
+[data-theme="light"] .change-input,
+[data-theme="light"] .change-select,
+[data-theme="light"] .change-textarea {
+  background: rgba(0,38,75,0.05);
+}
+
+.change-textarea {
+  min-height: 94px;
+  resize: vertical;
+}
+
+.change-hint {
+  border: 1px dashed rgba(34, 197, 94, 0.46);
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: #86efac;
+  background: rgba(22, 163, 74, 0.12);
+}
+
+[data-theme="light"] .change-hint {
+  border-color: rgba(22, 163, 74, 0.38);
+  color: #166534;
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.change-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.change-submit-btn {
+  border: 1px solid rgba(255,212,0,0.52);
+  background: rgba(255,212,0,0.16);
+  color: #FFD400;
+}
+
+[data-theme="light"] .change-submit-btn {
+  border-color: rgba(0,38,75,0.4);
+  background: rgba(0,38,75,0.12);
+  color: #00264B;
+}
+
+.change-submit-btn[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.table-wrap {
+  border: 1px solid rgba(255, 212, 0, 0.16);
+  border-radius: 18px;
   background: var(--card-bg);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.36), inset 0 1px 0 rgba(255,255,255,0.04);
   overflow: hidden;
 }
 
 .table-scroll {
   overflow: auto;
-  max-height: 66vh;
+  max-height: 68vh;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1680px;
+  table-layout: auto;
+}
+
+.history-table {
+  width: max-content;
+  min-width: 100%;
+}
+
+.history-table col.col-no { width: 76px; }
+.history-table col.col-ts { width: 170px; }
+.history-table col.col-reporter { width: 146px; }
+.history-table col.col-email { width: 220px; }
+.history-table col.col-unit { width: 122px; }
+.history-table col.col-center { width: 170px; }
+.history-table col.col-work { width: 170px; }
+.history-table col.col-suspect { width: 220px; }
+.history-table col.col-warrant { width: 150px; }
+.history-table col.col-citizen { width: 150px; }
+.history-table col.col-charge { width: 270px; }
+.history-table col.col-datetime { width: 190px; }
+.history-table col.col-location { width: 310px; }
+.history-table col.col-type { width: 112px; }
+.history-table col.col-detail { width: 124px; }
+.history-table col.col-status { width: 118px; }
+.history-table col.col-notify { width: 140px; }
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.16rem 0.52rem;
+  font-size: 0.67rem;
+  font-weight: 800;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+}
+.status-tag.none { border-color: transparent; background: transparent; color: var(--text-muted); }
+.status-tag.new { border-color: rgba(250, 204, 21, 0.52); background: rgba(250, 204, 21, 0.16); color: #fde68a; }
+.status-tag.processing { border-color: rgba(59, 130, 246, 0.5); background: rgba(59, 130, 246, 0.14); color: #bfdbfe; }
+.status-tag.done { border-color: rgba(34, 197, 94, 0.52); background: rgba(34, 197, 94, 0.16); color: #bbf7d0; }
+.status-tag.rejected { border-color: rgba(244, 63, 94, 0.52); background: rgba(244, 63, 94, 0.15); color: #fda4af; }
+button.status-tag {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  transition: opacity 0.18s ease, transform 0.15s ease;
+}
+button.status-tag:hover {
+  opacity: 0.8;
+  transform: scale(1.06);
+}
+[data-theme="light"] .status-tag { border-color: rgba(100, 116, 139, 0.36); background: rgba(100, 116, 139, 0.12); color: #475569; }
+[data-theme="light"] .status-tag.none { border-color: transparent; background: transparent; color: var(--text-muted); }
+[data-theme="light"] .status-tag.new { border-color: rgba(202, 138, 4, 0.46); background: rgba(202, 138, 4, 0.14); color: #854d0e; }
+[data-theme="light"] .status-tag.processing { border-color: rgba(37, 99, 235, 0.42); background: rgba(37, 99, 235, 0.11); color: #1d4ed8; }
+[data-theme="light"] .status-tag.done { border-color: rgba(22, 163, 74, 0.44); background: rgba(22, 163, 74, 0.12); color: #166534; }
+[data-theme="light"] .status-tag.rejected { border-color: rgba(220, 38, 38, 0.44); background: rgba(220, 38, 38, 0.12); color: #b91c1c; }
+
+.history-table th,
+.history-table td {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 thead th {
   position: sticky;
   top: 0;
-  z-index: 2;
-  background: rgba(0,0,0,0.22);
-  color: var(--text-secondary);
+  z-index: 12;
+  background: rgba(1, 4, 18, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #FFD400;
   text-align: left;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
-  padding: 0.55rem 0.55rem;
-  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.62rem 0.58rem;
+  border-bottom: 2px solid rgba(255, 212, 0, 0.28);
 }
 
 [data-theme="light"] thead th {
-  background: rgba(0,38,75,0.07);
+  background: rgba(255, 255, 255, 0.96);
 }
 
 tbody td {
-  font-size: 0.79rem;
+  font-size: 0.78rem;
   color: var(--text);
-  padding: 0.5rem 0.55rem;
+  padding: 0.52rem 0.58rem;
   border-bottom: 1px solid var(--border);
-  vertical-align: top;
+  vertical-align: middle;
+}
+
+tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="light"] tbody tr:nth-child(even) td {
+  background: rgba(0, 38, 75, 0.025);
+}
+
+tbody tr:hover td {
+  background: rgba(255, 212, 0, 0.055);
+}
+
+[data-theme="light"] tbody tr:hover td {
+  background: rgba(2, 132, 199, 0.09);
+}
+
+.history-table th,
+.history-table td {
+  border-right: 1px solid var(--border);
+}
+.history-table th:last-child,
+.history-table td:last-child {
+  border-right: none;
 }
 
 tbody tr:last-child td {
@@ -585,10 +1106,75 @@ tbody tr:last-child td {
   cursor: pointer;
 }
 
+.notify-btn:hover {
+  border-color: rgba(255,212,0,0.68);
+  background: rgba(255,212,0,0.2);
+}
+
+.notify-btn:active,
+.notify-btn.is-submitted {
+  border-color: rgba(148,163,184,0.42);
+  background: #081734;
+  color: #cbd5e1;
+}
+
+.notify-btn[disabled],
+.notify-btn.is-locked {
+  border-color: rgba(148,163,184,0.2);
+  background: #081734;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
 [data-theme="light"] .notify-btn {
   border-color: rgba(0,38,75,0.35);
   background: rgba(0,38,75,0.1);
   color: #00264B;
+}
+
+[data-theme="light"] .notify-btn:active,
+[data-theme="light"] .notify-btn.is-submitted {
+  border-color: rgba(2, 23, 52, 0.85);
+  background: #081734;
+  color: #e2e8f0;
+}
+
+[data-theme="light"] .notify-btn[disabled],
+[data-theme="light"] .notify-btn.is-locked {
+  border-color: rgba(2, 23, 52, 0.85);
+  background: #081734;
+  color: #93c5fd;
+}
+
+.notify-btn.is-submitted,
+.notify-btn.is-submitted:hover,
+.notify-btn.is-submitted:active,
+.notify-btn.is-submitted[disabled],
+.notify-btn.is-submitted.is-locked {
+  border-color: #00264B;
+  background: #00264B;
+  color: #FFD400;
+}
+
+[data-theme="light"] .notify-btn.is-submitted,
+[data-theme="light"] .notify-btn.is-submitted:hover,
+[data-theme="light"] .notify-btn.is-submitted:active,
+[data-theme="light"] .notify-btn.is-submitted[disabled],
+[data-theme="light"] .notify-btn.is-submitted.is-locked {
+  border-color: #00264B;
+  background: #00264B;
+  color: #FFD400;
+}
+
+.history-table .mini-btn,
+.history-table .notify-btn {
+  height: 30px;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .empty-state {
@@ -602,19 +1188,44 @@ tbody tr:last-child td {
   position: fixed;
   top: calc(env(safe-area-inset-top) + 0.85rem);
   left: 1rem;
-  width: 52px;
-  height: 52px;
+  width: 40px;
+  height: 41px;
+  border-radius: 0;
   border: none;
   background: transparent;
   color: #FFD400;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-shadow: none;
   z-index: 4305;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  padding: 0;
 }
-.app-nav-fab svg { width: 24px; height: 24px; stroke-width: 2.6; }
-body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
+.app-nav-fab:hover {
+  transform: translateY(-1px);
+}
+.app-nav-fab:active {
+  transform: translateY(0);
+}
+.app-nav-fab svg {
+  width: 40px;
+  height: 41px;
+  stroke: currentColor;
+  stroke-width: 4.2;
+  filter: drop-shadow(0 0 4px rgba(255, 212, 0, 0.22));
+}
+.app-nav-fab svg line {
+  vector-effect: non-scaling-stroke;
+}
+body.nav-open .app-nav-fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+}
 
 .app-sidebar-overlay {
   position: fixed;
@@ -757,9 +1368,9 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   cursor: pointer;
 }
 [data-theme="light"] .sidebar-settings-action {
-  border-color: rgba(255,255,255,0.34);
-  background: rgba(255,255,255,0.18);
-  color: #f8fafc;
+  border-color: rgba(0,38,75,0.25);
+  background: rgba(0,38,75,0.09);
+  color: #00264B;
 }
 
 .mobile-mini-nav {
@@ -767,9 +1378,9 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   left: max(0.5rem, env(safe-area-inset-left));
   right: max(0.5rem, env(safe-area-inset-right));
   bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
-  height: 68px;
-  padding: 0.35rem;
-  border-radius: 18px;
+  height: 48px;
+  padding: 0.25rem;
+  border-radius: 14px;
   border: 1px solid rgba(148, 163, 184, 0.36);
   background: rgba(2, 6, 23, 0.94);
   box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
@@ -849,6 +1460,11 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   font-size: 1.1rem;
   cursor: pointer;
 }
+[data-theme="light"] .mobile-settings-close {
+  border-color: rgba(0, 38, 75, 0.28);
+  background: rgba(0, 38, 75, 0.07);
+  color: #00264B;
+}
 .mobile-settings-row {
   margin-top: 0.75rem;
   display: flex;
@@ -878,9 +1494,9 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
 [data-theme="light"] .mobile-settings-title,
 [data-theme="light"] .mobile-settings-label { color: #00264B; }
 [data-theme="light"] .mobile-settings-action {
-  border-color: rgba(255, 255, 255, 0.32);
-  background: rgba(255, 255, 255, 0.16);
-  color: #f8fafc;
+  border-color: rgba(0, 38, 75, 0.22);
+  background: rgba(0, 38, 75, 0.08);
+  color: #00264B;
 }
 
 .toast {
@@ -901,25 +1517,90 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+@keyframes copyPopIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes copyPopOut {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+}
+.copy-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.88);
+  background: linear-gradient(135deg, rgba(6,18,48,0.97), rgba(3,10,28,0.99));
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  border-radius: 18px;
+  padding: 1.4rem 1.8rem;
+  text-align: center;
+  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  z-index: 5200;
+  pointer-events: none;
+  opacity: 0;
+  min-width: 220px;
+}
+.copy-popup.show { animation: copyPopIn 0.22s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.copy-popup.hide { animation: copyPopOut 0.2s ease forwards; }
+.copy-popup-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.copy-popup-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #86efac;
+  margin-bottom: 0.45rem;
+}
+.copy-popup-id {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  word-break: break-all;
+  font-family: ui-monospace, monospace;
+}
+[data-theme="light"] .copy-popup {
+  background: #ffffff;
+  border-color: rgba(22,163,74,0.45);
+  box-shadow: 0 20px 48px rgba(0,38,75,0.18);
+}
+[data-theme="light"] .copy-popup-title { color: #166534; }
+[data-theme="light"] .copy-popup-id { color: #64748b; }
+
 @media (max-width: 900px) {
-  .mobile-mini-nav {
-    left: max(0.5rem, env(safe-area-inset-left));
-    right: max(0.5rem, env(safe-area-inset-right));
-    bottom: 0;
-    min-height: calc(68px + env(safe-area-inset-bottom));
-    padding-bottom: calc(0.35rem + env(safe-area-inset-bottom));
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    z-index: 9500;
+  .top-head {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  .title-box {
+    padding: 1rem 1.05rem;
+  }
+  .title-box h1 {
+    font-size: 1.45rem;
+  }
+  .title-box p {
+    font-size: 0.9rem;
+  }
+  .head-actions {
+    justify-content: stretch;
+    grid-auto-columns: 1fr;
+  }
+  .head-actions .mini-btn,
+  .head-actions .btn {
+    min-height: 52px;
+    font-size: 0.85rem;
+    border-radius: 12px;
   }
   body.mobile-loading-data::after {
     content: "";
     position: fixed;
     left: max(0.5rem, env(safe-area-inset-left));
     right: max(0.5rem, env(safe-area-inset-right));
-    bottom: 0;
-    height: calc(68px + env(safe-area-inset-bottom));
-    border-radius: 18px 18px 0 0;
+    bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
+    height: 48px;
+    border-radius: 14px;
     background: rgba(0, 0, 0, 0.70);
     pointer-events: none;
     z-index: 9490;
@@ -927,15 +1608,31 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   [data-theme="light"] body.mobile-loading-data::after {
     background: rgba(255, 255, 255, 0.70);
   }
-  .page-wrap { padding-bottom: calc(env(safe-area-inset-bottom) + 6rem); }
+  .page-wrap { padding-bottom: calc(env(safe-area-inset-bottom) + 4.5rem); }
   .app-nav-fab { display: none !important; }
   .mobile-mini-nav, .mobile-settings-overlay, .mobile-settings-sheet { display: block; }
   .mobile-mini-nav { display: flex; }
   .app-sidebar-theme { display: none; }
   .info-grid { grid-template-columns: 1fr; }
+  .info-value {
+    font-size: 0.9rem;
+  }
+  .filter-panel { grid-template-columns: 1fr; }
   .filter-grid { grid-template-columns: 1fr; }
-  .filter-actions { justify-content: stretch; }
-  .mini-btn { width: 100%; }
+  .filter-actions { grid-column: 1; justify-content: stretch; margin-top: 0.7rem; }
+  .filter-actions .mini-btn { width: 100%; }
+  .result-note { grid-column: 1; }
+  .change-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .detail-copy-btn {
+    width: 32px;
+    min-width: 32px;
+    padding: 0;
+    justify-content: center;
+  }
+  .detail-copy-btn span { display: none; }
 }
 </style>
 <link rel="stylesheet" href="dashboard-theme.css">
@@ -946,7 +1643,7 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
 </head>
 <body>
 <button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+  <svg viewBox="0 0 40 41" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="9.5" x2="32" y2="9.5"></line><line x1="8" y1="20.5" x2="32" y2="20.5"></line><line x1="8" y1="31.5" x2="32" y2="31.5"></line></svg>
 </button>
 
 <nav class="mobile-mini-nav" aria-label="เมนูหลักมือถือ">
@@ -1002,8 +1699,26 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
       </span>
     </label>
   </div>
-  <div class="mobile-settings-row" id="mobileHistoryMenuRow" data-admin-history style="display:none;">
+  <div class="mobile-settings-row mobile-account-row">
+    <button class="mobile-account-btn" type="button" onclick="handleAvatarAccess(event)">
+      <span class="mobile-account-avatar" id="mobileAccountAvatar">U</span>
+      <span class="mobile-account-text">
+        <span class="mobile-account-name" id="mobileAccountName">เข้าสู่ระบบ</span>
+        <span class="mobile-account-sub" id="mobileAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
+      </span>
+    </button>
+  </div>
+  <div class="mobile-settings-row">
+    <button class="mobile-settings-action mobile-logout-btn is-hidden" id="mobileLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span>ออกจากระบบ</span>
+    </button>
+  </div>
+  <div class="mobile-settings-row" data-admin-history style="display:none;">
     <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+  </div>
+  <div class="mobile-settings-row" data-admin-notification style="display:none;">
+    <button class="mobile-settings-action" type="button" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
   </div>
 </section>
 
@@ -1033,6 +1748,13 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   </nav>
   <div class="app-sidebar-theme">
     <div class="app-sidebar-theme-label">Theme</div>
+    <button class="sidebar-account-btn" id="sidebarAccountBtn" type="button" onclick="handleAvatarAccess(event)">
+      <span class="sidebar-account-avatar" id="sidebarAccountAvatar">U</span>
+      <span class="sidebar-account-meta">
+        <span class="sidebar-account-name" id="sidebarAccountName">เข้าสู่ระบบ</span>
+        <span class="sidebar-account-sub" id="sidebarAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
+      </span>
+    </button>
     <label class="app-theme-switch" for="sidebarThemeToggle" title="สลับโหมดสว่าง/มืด">
       <input type="checkbox" id="sidebarThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
       <span class="app-theme-switch-track">
@@ -1054,18 +1776,24 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
         </span>
       </span>
     </label>
-    <button class="sidebar-settings-action" id="sidebarHistoryMenuBtn" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+    <button class="sidebar-settings-action" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+    <button class="sidebar-settings-action" data-admin-notification type="button" style="display:none;" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
+    <button class="sidebar-logout-btn is-hidden" id="sidebarLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      <span>ออกจากระบบ</span>
+    </button>
   </div>
 </aside>
 
 <main class="page-wrap">
   <section class="top-head">
     <div class="title-box">
-      <h1>ประวัติการกรอกข้อมูล (เฉพาะ ชป. ของท่าน)</h1>
+      <h1>ประวัติการกรอกข้อมูล</h1>
+      <p class="title-sub">เฉพาะ ชป. ของท่าน</p>
       <p>ท่านสามารถตรวจสอบ และแจ้งแก้ไขได้ 1 ครั้ง</p>
     </div>
     <div class="head-actions">
-      <a class="btn" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')">กลับหน้า Dashboard</a>
+      <a class="mini-btn" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')">กลับหน้า Dashboard</a>
       <button class="btn btn-primary" type="button" onclick="loadHistory()">รีเฟรช</button>
     </div>
   </section>
@@ -1144,12 +1872,31 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   </section>
 
   <section class="note">
-    กรุณารอสักครู่ หากข้อมูลใดต้องแก้ไข ให้กดปุ่ม <strong>แจ้งแอดมิน</strong> 
+    กรุณารอสักครู่ หากข้อมูลใดต้องแก้ไข ให้กดปุ่ม <strong>แจ้งลบ/แก้ไข</strong>
   </section>
 
   <section class="table-wrap">
     <div class="table-scroll">
-      <table>
+      <table class="history-table">
+        <colgroup>
+          <col class="col-no">
+          <col class="col-ts">
+          <col class="col-reporter">
+          <col class="col-email">
+          <col class="col-unit">
+          <col class="col-center">
+          <col class="col-work">
+          <col class="col-suspect">
+          <col class="col-warrant">
+          <col class="col-citizen">
+          <col class="col-charge">
+          <col class="col-datetime">
+          <col class="col-location">
+          <col class="col-type">
+          <col class="col-detail">
+          <col class="col-status">
+          <col class="col-notify">
+        </colgroup>
         <thead>
           <tr>
             <th class="nowrap">ลำดับ</th>
@@ -1167,7 +1914,8 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
             <th>สถานที่</th>
             <th class="nowrap">ประเภท</th>
             <th class="nowrap">รายละเอียดเต็ม</th>
-            <th class="nowrap">แจ้งแอดมิน</th>
+            <th class="nowrap">สถานะ</th>
+            <th class="nowrap">แจ้งลบ/แก้ไข</th>
           </tr>
         </thead>
         <tbody id="historyTbody"></tbody>
@@ -1181,20 +1929,83 @@ body.nav-open .app-nav-fab { opacity: 0; pointer-events: none; }
   <section class="detail-panel">
     <div class="detail-head">
       <div class="detail-title">รายละเอียดข้อมูลทั้งหมด</div>
-      <button class="detail-close" type="button" onclick="closeHistoryDetail()" aria-label="ปิดรายละเอียด">&times;</button>
+      <div class="detail-head-actions">
+        <button class="detail-copy-btn" id="historyDetailCopyBtn" type="button" onclick="copyHistoryDetailContent()" aria-label="คัดลอกเนื้อหา">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span id="historyDetailCopyLabel">คัดลอกเนื้อหา</span>
+        </button>
+        <button class="detail-close" type="button" onclick="closeHistoryDetail()" aria-label="ปิดรายละเอียด">&times;</button>
+      </div>
     </div>
-    <pre class="detail-content" id="historyDetailContent">-</pre>
+    <div class="detail-content" id="historyDetailContent"><div class="detail-empty">-</div></div>
+  </section>
+</div>
+
+<div class="detail-overlay" id="changeRequestOverlay" onclick="if (event.target === this) closeChangeRequestModal()">
+  <section class="detail-panel change-request-panel">
+    <div class="detail-head">
+      <div class="detail-title">ส่งคำขอแก้ไข/ลบรายการ</div>
+      <button class="detail-close" type="button" onclick="closeChangeRequestModal()" aria-label="ปิดหน้าส่งคำขอ">&times;</button>
+    </div>
+    <div class="change-request-body">
+      <div class="change-target" id="changeRequestTargetSummary">-</div>
+      <div class="change-grid">
+        <label class="change-field">
+          <span class="change-label">ประเภทคำขอ</span>
+          <select class="change-select" id="changeRequestType" onchange="syncChangeRequestType()">
+            <option value="edit">แจ้งแก้ไข</option>
+            <option value="delete">แจ้งลบรายการ</option>
+          </select>
+        </label>
+        <label class="change-field" id="changeDeleteReasonField" style="display:none;">
+          <span class="change-label">เหตุผลการลบรายการ</span>
+          <select class="change-select" id="changeDeleteReason">
+            <option value="ข้อมูลซ้ำ">ข้อมูลซ้ำ</option>
+            <option value="ข้อมูลผิดพลาด ต้องการแก้ไขใหม่เอง">ข้อมูลผิดพลาด ต้องการแก้ไขใหม่เอง</option>
+          </select>
+        </label>
+      </div>
+      <div class="change-hint" id="changeEditInfo" style="display:none;">
+        เมื่อกดส่งคำขอระบบจะเปิดฟอร์มหน้า index เดิม พร้อมข้อมูลเดิมครบถ้วน เพื่อแก้ไขได้ตรงตำแหน่ง
+      </div>
+      <label class="change-field" id="changeCorrectedDataField" style="display:none;">
+        <span class="change-label">ข้อมูลที่ต้องการแก้ไข (จำเป็นสำหรับแจ้งแก้ไข)</span>
+        <textarea class="change-textarea" id="changeCorrectedData" placeholder="ระบุคอลัมน์และค่าที่ถูกต้อง เช่น เวลา: 10.00 น., สถานที่: ..."></textarea>
+      </label>
+      <label class="change-field">
+        <span class="change-label">หมายเหตุเพิ่มเติม (ถ้ามี)</span>
+        <textarea class="change-textarea" id="changeNote" placeholder="อธิบายเพิ่มเติมเพื่อให้แอดมินตรวจสอบได้เร็วขึ้น"></textarea>
+      </label>
+      <div class="change-actions">
+        <button class="mini-btn" type="button" onclick="closeChangeRequestModal()">ยกเลิก</button>
+        <button class="mini-btn change-submit-btn" id="changeSubmitBtn" type="button" onclick="submitChangeRequestFromModal()">ส่งคำขอ</button>
+      </div>
+    </div>
   </section>
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="copy-popup" id="copyPopup">
+  <div class="copy-popup-title">คัดลอกรหัสคำร้องแล้ว</div>
+  <div class="copy-popup-id" id="copyPopupId"></div>
+</div>
 
 <script>
 const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbytUmPr668UwcPsbmwtZm9wSL3qnhDjYJG8b7DzIiqxqyo6vKLVtDgGdmdvA2hE00xX9Q/exec";
+const EDIT_REQUEST_CONTEXT_KEY = 'CSD1_EDIT_REQUEST_CONTEXT';
+const EDIT_REQUEST_CONTEXT_FALLBACK_KEY = 'CSD1_EDIT_REQUEST_CONTEXT_SESSION';
+const EDIT_REQUEST_CONTEXT_WINDOW_PREFIX = 'CSD1_EDIT_REQUEST_CONTEXT_WINDOW:';
 let appSidebarOpen = false;
 let mobileSettingsOpen = false;
 let historyRows = [];
 let profileMenuOpen = false;
+let activeHistoryDetailRow = null;
+let historyCopyStateTimer = null;
+let activeChangeRequestRow = null;
+let pendingChangeRequest = false;
 
 function showToast(message) {
   const toast = document.getElementById('toast');
@@ -1202,6 +2013,38 @@ function showToast(message) {
   toast.classList.add('show');
   clearTimeout(toast._timer);
   toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function copyRequestId(id) {
+  if (!id) return;
+  const done = () => {
+    const popup = document.getElementById('copyPopup');
+    const popupId = document.getElementById('copyPopupId');
+    if (!popup) return;
+    popupId.textContent = id;
+    clearTimeout(popup._timer);
+    popup.classList.remove('hide');
+    popup.classList.add('show');
+    popup._timer = setTimeout(() => {
+      popup.classList.remove('show');
+      popup.classList.add('hide');
+    }, 1800);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(id).then(done).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = id; el.style.position = 'fixed'; el.style.opacity = '0';
+      document.body.appendChild(el); el.select();
+      try { document.execCommand('copy'); done(); } catch (_) {}
+      document.body.removeChild(el);
+    });
+  } else {
+    const el = document.createElement('textarea');
+    el.value = id; el.style.position = 'fixed'; el.style.opacity = '0';
+    document.body.appendChild(el); el.select();
+    try { document.execCommand('copy'); done(); } catch (_) {}
+    document.body.removeChild(el);
+  }
 }
 
 function navigateInApp(evt, targetPath) {
@@ -1402,6 +2245,24 @@ function normalizeText(value) {
   return String(value == null ? '' : value).trim().toLowerCase();
 }
 
+function encodeBase64Utf8(input) {
+  const text = String(input == null ? '' : input);
+  return btoa(unescape(encodeURIComponent(text)));
+}
+
+function saveEditContextToWindowName(ctx) {
+  try {
+    const payload = {
+      ts: Date.now(),
+      context: ctx
+    };
+    window.name = EDIT_REQUEST_CONTEXT_WINDOW_PREFIX + encodeBase64Utf8(JSON.stringify(payload));
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 function getRowValue(row, key) {
   return row && Object.prototype.hasOwnProperty.call(row, key)
     ? String(row[key] == null ? '' : row[key]).trim()
@@ -1507,6 +2368,273 @@ function getCurrentFilteredRows() {
   return historyRows.filter((row) => rowMatchesFilters(row, filters));
 }
 
+const THAI_MONTH_SHORT = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+const THAI_TIME_ZONE = 'Asia/Bangkok';
+const THAI_MONTH_TO_NUM = {
+  'ม.ค.': 1, 'ม.ค': 1, 'มกราคม': 1,
+  'ก.พ.': 2, 'ก.พ': 2, 'กุมภาพันธ์': 2,
+  'มี.ค.': 3, 'มี.ค': 3, 'มีนาคม': 3,
+  'เม.ย.': 4, 'เม.ย': 4, 'เมษายน': 4,
+  'พ.ค.': 5, 'พ.ค': 5, 'พฤษภาคม': 5,
+  'มิ.ย.': 6, 'มิ.ย': 6, 'มิถุนายน': 6,
+  'ก.ค.': 7, 'ก.ค': 7, 'กรกฎาคม': 7,
+  'ส.ค.': 8, 'ส.ค': 8, 'สิงหาคม': 8,
+  'ก.ย.': 9, 'ก.ย': 9, 'กันยายน': 9,
+  'ต.ค.': 10, 'ต.ค': 10, 'ตุลาคม': 10,
+  'พ.ย.': 11, 'พ.ย': 11, 'พฤศจิกายน': 11,
+  'ธ.ค.': 12, 'ธ.ค': 12, 'ธันวาคม': 12
+};
+
+function toArabicDigits(value) {
+  const digits = { '๐': '0', '๑': '1', '๒': '2', '๓': '3', '๔': '4', '๕': '5', '๖': '6', '๗': '7', '๘': '8', '๙': '9' };
+  return String(value == null ? '' : value).replace(/[๐-๙]/g, (ch) => digits[ch] || ch);
+}
+
+function normalizeDateTimeRaw(value) {
+  return toArabicDigits(value)
+    .replace(/\(([^)]*)\)/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getBangkokDateTimeParts(value) {
+  const dt = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dt.getTime())) return null;
+  try {
+    const parts = new Intl.DateTimeFormat('en-GB-u-ca-gregory', {
+      timeZone: THAI_TIME_ZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).formatToParts(dt);
+    const map = {};
+    parts.forEach((part) => {
+      if (part && part.type) map[part.type] = part.value;
+    });
+    const year = Number(map.year);
+    const month = Number(map.month);
+    const day = Number(map.day);
+    const hh = Number(map.hour);
+    const mm = Number(map.minute);
+    if (![year, month, day, hh, mm].every(Number.isFinite)) return null;
+    return { year, month, day, hh, mm };
+  } catch (_) {
+    return {
+      year: dt.getFullYear(),
+      month: dt.getMonth() + 1,
+      day: dt.getDate(),
+      hh: dt.getHours(),
+      mm: dt.getMinutes()
+    };
+  }
+}
+
+function toGregorianYear(yearText) {
+  let year = Number(yearText || 0);
+  if (!Number.isFinite(year) || year <= 0) return null;
+  if (year > 2400) year -= 543;
+  if (year < 100) year += 2000;
+  return year;
+}
+
+function parseDateOnly(value) {
+  const raw = normalizeDateTimeRaw(value);
+  if (!raw) return null;
+
+  if (/^\d{4}-\d{1,2}-\d{1,2}T/i.test(raw)) {
+    const bangkokDate = getBangkokDateTimeParts(raw);
+    if (bangkokDate && bangkokDate.year > 1900) {
+      return new Date(bangkokDate.year, bangkokDate.month - 1, bangkokDate.day);
+    }
+  }
+
+  const thaiMatch = raw.match(/(\d{1,2})\s+([ก-๙A-Za-z.]+)\s+(\d{2,4})/);
+  if (thaiMatch) {
+    const day = Number(thaiMatch[1]);
+    const month = THAI_MONTH_TO_NUM[thaiMatch[2]] || null;
+    const year = toGregorianYear(thaiMatch[3]);
+    if (day >= 1 && day <= 31 && month && year && year > 1900) return new Date(year, month - 1, day);
+  }
+
+  const isoMatch = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (isoMatch) {
+    const year = Number(isoMatch[1]);
+    const month = Number(isoMatch[2]);
+    const day = Number(isoMatch[3]);
+    if (year > 1900 && month >= 1 && month <= 12 && day >= 1 && day <= 31) return new Date(year, month - 1, day);
+  }
+
+  const slashMatch = raw.match(/(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/);
+  if (slashMatch) {
+    const day = Number(slashMatch[1]);
+    const month = Number(slashMatch[2]);
+    const year = toGregorianYear(slashMatch[3]);
+    if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year && year > 1900) return new Date(year, month - 1, day);
+  }
+
+  const fallback = new Date(raw);
+  if (!Number.isNaN(fallback.getTime()) && fallback.getFullYear() > 1900) {
+    return new Date(fallback.getFullYear(), fallback.getMonth(), fallback.getDate());
+  }
+  return null;
+}
+
+function parseTimeOnly(value) {
+  const raw = normalizeDateTimeRaw(value);
+  if (!raw) return null;
+  if (/^\d{4}-\d{1,2}-\d{1,2}T/i.test(raw)) {
+    const bangkokDate = getBangkokDateTimeParts(raw);
+    if (bangkokDate) {
+      return { hh: bangkokDate.hh, mm: bangkokDate.mm };
+    }
+  }
+  const allMatches = raw.match(/\b\d{1,2}[:.]\d{2}(?::\d{2})?\b/g);
+  if (!allMatches || !allMatches.length) return null;
+  const last = allMatches[allMatches.length - 1];
+  const match = last.match(/(\d{1,2})[:.](\d{2})/);
+  if (!match) return null;
+  const hh = Number(match[1]);
+  const mm = Number(match[2]);
+  if (hh < 0 || hh > 23 || mm < 0 || mm > 59) return null;
+  return { hh, mm };
+}
+
+function formatThaiDateShort(value) {
+  const dt = value instanceof Date ? value : parseDateOnly(value);
+  if (!dt) return '';
+  const yearBE = dt.getFullYear() + 543;
+  return `${dt.getDate()} ${THAI_MONTH_SHORT[dt.getMonth()]} ${String(yearBE % 100).padStart(2, '0')}`;
+}
+
+function formatThaiTime(value) {
+  const tm = value && typeof value === 'object' && Number.isFinite(value.hh)
+    ? value
+    : parseTimeOnly(value);
+  if (!tm) return '';
+  return `${String(tm.hh).padStart(2, '0')}.${String(tm.mm).padStart(2, '0')} น.`;
+}
+
+function composeThaiDateTime(dateVal, timeVal) {
+  const dateText = formatThaiDateShort(dateVal);
+  const timeText = formatThaiTime(timeVal);
+  if (dateText && timeText) return `${dateText} เวลา ${timeText}`;
+  return dateText || timeText || '';
+}
+
+function formatThaiDateTimeValue(value) {
+  const dateObj = parseDateOnly(value);
+  const timeObj = parseTimeOnly(value);
+  const composed = composeThaiDateTime(dateObj, timeObj);
+  if (composed) return composed;
+  const raw = String(value || '').trim();
+  return raw || '-';
+}
+
+function formatThaiDateTimePair(dateValue, timeValue) {
+  const dateObj = parseDateOnly(dateValue);
+  const timeObj = parseTimeOnly(timeValue) || parseTimeOnly(dateValue);
+  const composed = composeThaiDateTime(dateObj, timeObj);
+  if (composed) return composed;
+  const rawDate = String(dateValue || '').trim();
+  const rawTime = String(timeValue || '').trim();
+  return [rawDate, rawTime].filter(Boolean).join(' ').trim() || '-';
+}
+
+function normalizeDateTimeKey(key) {
+  return String(key || '').trim().replace(/\s*#\d+\s*$/, '').trim();
+}
+
+function isDateTimeColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'ประทับเวลา' || normalized === 'วันที่/เวลา' || normalized === 'เวลาแจ้ง') return true;
+  return /(requestedat|createdat|updatedat|timestamp|datetime)/.test(compact);
+}
+
+function isDateOnlyColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'วันที่' || normalized.indexOf('วันเดือนปี') === 0) return true;
+  return /(targetdate|warrantdate|issueddate|^date$)/.test(compact);
+}
+
+function isTimeOnlyColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'เวลา') return true;
+  return /(targettime|^time$)/.test(compact);
+}
+
+function formatHistoryValueByKey(key, value) {
+  const rawValue = String(value || '').trim();
+  if (!rawValue) return '-';
+  if (isDateTimeColumnKey(key)) return formatThaiDateTimeValue(rawValue);
+  if (isDateOnlyColumnKey(key)) return formatThaiDateShort(rawValue) || rawValue;
+  if (isTimeOnlyColumnKey(key)) return formatThaiTime(rawValue) || rawValue;
+  return rawValue;
+}
+
+const HISTORY_COLUMN_AUTOFIT = [
+  { colClass: 'col-no', header: 'ลำดับ', min: 68, max: 94, cap: 6, pick: (row) => getRowValue(row, 'ลำดับ') || '-' },
+  { colClass: 'col-ts', header: 'ประทับเวลา', min: 162, max: 240, cap: 30, pick: (row) => formatThaiDateTimeValue(getRowValue(row, 'ประทับเวลา')) },
+  { colClass: 'col-reporter', header: 'ผู้รายงาน', min: 128, max: 236, cap: 30, pick: (row) => getRowValue(row, 'ผู้รายงาน') || '-' },
+  { colClass: 'col-email', header: 'อีเมลผู้รายงาน', min: 184, max: 292, cap: 34, pick: (row) => getRowValue(row, 'อีเมล') || '-' },
+  { colClass: 'col-unit', header: 'ชป.', min: 96, max: 152, cap: 12, pick: (row) => getRowValue(row, 'ชุดปฏิบัติการ') || '-' },
+  { colClass: 'col-center', header: 'หน้างานศูนย์', min: 150, max: 248, cap: 34, pick: (row) => getRowValue(row, 'หน้างานศูนย์') || '-' },
+  { colClass: 'col-work', header: 'สรุปหน้างาน', min: 152, max: 248, cap: 34, pick: (row) => getWorkTag(row) || '-' },
+  { colClass: 'col-suspect', header: 'ชื่อ-สกุล ผู้ต้องหา', min: 198, max: 320, cap: 42, pick: (row) => getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-' },
+  { colClass: 'col-warrant', header: 'เลขหมายจับ/หมายค้น', min: 130, max: 200, cap: 24, pick: (row) => getWarrantNo(row) || '-' },
+  { colClass: 'col-citizen', header: 'เลขบัตรประชาชน', min: 130, max: 190, cap: 18, pick: (row) => getCitizenId(row) || '-' },
+  { colClass: 'col-charge', header: 'ข้อหา', min: 198, max: 418, cap: 62, pick: (row) => getRowValue(row, 'ข้อหา (ฐานความผิด)') || '-' },
+  { colClass: 'col-datetime', header: 'วันที่/เวลา', min: 168, max: 258, cap: 30, pick: (row) => formatThaiDateTimePair(getRowValue(row, 'วันที่'), getRowValue(row, 'เวลา')) },
+  { colClass: 'col-location', header: 'สถานที่', min: 230, max: 430, cap: 68, pick: (row) => getRowValue(row, 'สถานที่ (จับกุม/หรือตรวจสอบ)') || '-' },
+  { colClass: 'col-type', header: 'ประเภท', min: 112, max: 184, cap: 18, pick: (row) => getRowValue(row, 'การจับกุม ตรวจสอบ') || '-' },
+  { colClass: 'col-detail', header: 'รายละเอียด', min: 112, max: 138, cap: 14, pick: () => 'ดูทั้งหมด' },
+  { colClass: 'col-status', header: 'สถานะ', min: 100, max: 140, cap: 14, pick: (row) => {
+    const requestId = getRowValue(row, 'changeRequestId');
+    const status = normalizeText(getRowValue(row, 'changeRequestStatus') || '');
+    if (!requestId) return '-';
+    if (status === 'rejected') return 'ไม่อนุมัติ';
+    if (status === 'done') return 'อนุมัติแล้ว';
+    if (status === 'processing') return 'กำลังดำเนินการ';
+    return 'รอดำเนินการ';
+  } },
+  { colClass: 'col-notify', header: 'แจ้งลบ/แก้ไข', min: 120, max: 156, cap: 16, pick: () => 'แจ้งลบ/แก้ไข' }
+];
+
+function estimateHistoryColWidth(rows, cfg) {
+  const items = Array.isArray(rows) ? rows : [];
+  const sampleCount = Math.min(items.length, 240);
+  let maxLen = String(cfg.header || '').trim().length || 4;
+  for (let i = 0; i < sampleCount; i++) {
+    let text = '';
+    try {
+      text = String(cfg.pick(items[i]) || '');
+    } catch (_) {
+      text = '';
+    }
+    const normalized = text.replace(/\s+/g, ' ').trim();
+    if (!normalized) continue;
+    const len = Math.min(normalized.length, Number(cfg.cap || 50));
+    if (len > maxLen) maxLen = len;
+  }
+  const width = Math.round((maxLen * 7.5) + 28);
+  return Math.min(Number(cfg.max || 360), Math.max(Number(cfg.min || 90), width));
+}
+
+function autoFitHistoryColumns(rows) {
+  const table = document.querySelector('.history-table');
+  if (!table) return;
+  HISTORY_COLUMN_AUTOFIT.forEach((cfg) => {
+    const col = table.querySelector(`col.${cfg.colClass}`);
+    if (!col) return;
+    col.style.width = `${estimateHistoryColWidth(rows, cfg)}px`;
+  });
+}
+
 function renderFilteredRows(rows) {
   const tbody = document.getElementById('historyTbody');
   const emptyEl = document.getElementById('historyEmpty');
@@ -1514,12 +2642,14 @@ function renderFilteredRows(rows) {
   tbody.innerHTML = '';
 
   if (!historyRows.length) {
+    autoFitHistoryColumns([]);
     emptyEl.textContent = 'ยังไม่มีข้อมูลในชุดปฏิบัติการของท่าน';
     emptyEl.style.display = 'block';
     return;
   }
 
   if (!filteredRows.length) {
+    autoFitHistoryColumns(historyRows);
     emptyEl.textContent = 'ไม่พบข้อมูลที่ตรงกับเงื่อนไขฟิลเตอร์';
     emptyEl.style.display = 'block';
     return;
@@ -1528,7 +2658,7 @@ function renderFilteredRows(rows) {
   emptyEl.style.display = 'none';
   tbody.innerHTML = filteredRows.map((row, idx) => {
     const no = getRowValue(row, 'ลำดับ') || '-';
-    const ts = getRowValue(row, 'ประทับเวลา') || '-';
+    const ts = formatThaiDateTimeValue(getRowValue(row, 'ประทับเวลา'));
     const reporter = getRowValue(row, 'ผู้รายงาน') || '-';
     const reporterEmail = getRowValue(row, 'อีเมล') || '-';
     const unit = getRowValue(row, 'ชุดปฏิบัติการ') || '-';
@@ -1538,9 +2668,34 @@ function renderFilteredRows(rows) {
     const warrant = getWarrantNo(row) || '-';
     const citizenId = getCitizenId(row) || '-';
     const charge = getRowValue(row, 'ข้อหา (ฐานความผิด)') || '-';
-    const dateTime = `${getRowValue(row, 'วันที่') || '-'} ${getRowValue(row, 'เวลา') || ''}`.trim();
+    const dateTime = formatThaiDateTimePair(getRowValue(row, 'วันที่'), getRowValue(row, 'เวลา'));
     const location = getRowValue(row, 'สถานที่ (จับกุม/หรือตรวจสอบ)') || '-';
     const actionType = getRowValue(row, 'การจับกุม ตรวจสอบ') || '-';
+    const changeRequestId = getRowValue(row, 'changeRequestId');
+    const changeRequestStatus = normalizeText(getRowValue(row, 'changeRequestStatus') || '');
+    const hasSubmitted = !!changeRequestId;
+    let notifyLabel = 'แจ้งลบ/แก้ไข';
+    let statusBadge = '<span class="status-tag none">-</span>';
+    if (hasSubmitted) {
+      const safeId = escapeHtml(changeRequestId);
+      if (changeRequestStatus === 'rejected') {
+        notifyLabel = 'แจ้งลบ/แก้ไข';
+        statusBadge = `<button class="status-tag rejected" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">ไม่อนุมัติ</button>`;
+      } else if (changeRequestStatus === 'done') {
+        notifyLabel = 'แจ้งลบ/แก้ไข';
+        statusBadge = `<button class="status-tag done" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">อนุมัติแล้ว</button>`;
+      } else if (changeRequestStatus === 'processing') {
+        statusBadge = `<button class="status-tag processing" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">กำลังดำเนินการ</button>`;
+      } else {
+        statusBadge = `<button class="status-tag new" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">รอดำเนินการ</button>`;
+      }
+    }
+    const notifyDisabledAttr = hasSubmitted && changeRequestStatus !== 'rejected' && changeRequestStatus !== 'done' ? ' disabled aria-disabled="true"' : '';
+    const notifyClass = hasSubmitted
+      ? ((changeRequestStatus !== 'rejected' && changeRequestStatus !== 'done')
+        ? 'notify-btn is-submitted is-locked'
+        : 'notify-btn is-submitted')
+      : 'notify-btn';
     return `
       <tr>
         <td class="nowrap">${escapeHtml(no)}</td>
@@ -1558,10 +2713,12 @@ function renderFilteredRows(rows) {
         <td>${escapeHtml(location)}</td>
         <td class="nowrap">${escapeHtml(actionType)}</td>
         <td class="nowrap"><button class="mini-btn" type="button" onclick="openHistoryDetail(${idx})">ดูทั้งหมด</button></td>
-        <td class="nowrap"><button class="notify-btn" type="button" onclick="notifyAdminByRow(${idx})">แจ้งแอดมิน</button></td>
+        <td class="nowrap">${statusBadge}</td>
+        <td class="nowrap"><button class="${notifyClass}" type="button" onclick="notifyAdminByRow(${idx})"${notifyDisabledAttr}>${escapeHtml(notifyLabel)}</button></td>
       </tr>
     `;
   }).join('');
+  autoFitHistoryColumns(filteredRows);
 }
 
 function applyHistoryFilters() {
@@ -1587,7 +2744,12 @@ function bindFilterInputs() {
   });
 }
 
-function buildHistoryDetailText(row) {
+function shouldHideHistoryDetailValue(value) {
+  const text = String(value == null ? '' : value).trim();
+  return !text || /^[-–—]+$/.test(text);
+}
+
+function getHistoryDetailEntries(row) {
   const source = row && typeof row === 'object' ? row : {};
   const allKeys = Object.keys(source);
   const hasAlias = {};
@@ -1603,53 +2765,342 @@ function buildHistoryDetailText(row) {
   });
 
   return keysToShow.map((key) => {
-    const label = key.replace(/\s#(\d+)$/, ' (ช่อง $1)');
-    const value = getRowValue(source, key) || '-';
-    return `${label}: ${value}`;
-  }).join('\n');
+    const label = key.replace(/\s#\d+$/, '').trim();
+    const value = formatHistoryValueByKey(key, getRowValue(source, key));
+    if (shouldHideHistoryDetailValue(value)) return null;
+    return { label, value };
+  }).filter(Boolean);
+}
+
+function buildHistoryDetailHtml(row) {
+  const entries = getHistoryDetailEntries(row);
+  return entries.map((entry) =>
+    `<div class="detail-row"><span class="detail-key">${escapeHtml(entry.label)}:</span><span class="detail-value">${escapeHtml(entry.value)}</span></div>`
+  ).join('');
+}
+
+function buildHistoryDetailText(row) {
+  const entries = getHistoryDetailEntries(row);
+  return entries.map((entry) => `${entry.label}: ${entry.value}`).join('\n');
+}
+
+function fallbackCopyText(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  el.setAttribute('readonly', '');
+  el.style.position = 'fixed';
+  el.style.opacity = '0';
+  el.style.pointerEvents = 'none';
+  document.body.appendChild(el);
+  el.focus();
+  el.select();
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch (_) {
+    copied = false;
+  }
+  document.body.removeChild(el);
+  return copied;
+}
+
+function setHistoryCopyButtonState(copied) {
+  const btn = document.getElementById('historyDetailCopyBtn');
+  const label = document.getElementById('historyDetailCopyLabel');
+  if (!btn || !label) return;
+  const isCopied = !!copied;
+  btn.classList.toggle('is-copied', isCopied);
+  label.textContent = isCopied ? 'คัดลอกเนื้อหาแล้ว' : 'คัดลอกเนื้อหา';
+  btn.setAttribute('aria-label', isCopied ? 'คัดลอกเนื้อหาแล้ว' : 'คัดลอกเนื้อหา');
+}
+
+async function copyHistoryDetailContent() {
+  const row = activeHistoryDetailRow;
+  if (!row) {
+    showToast('ไม่พบข้อมูลสำหรับคัดลอก');
+    return;
+  }
+  const text = buildHistoryDetailText(row).trim();
+  if (!text) {
+    showToast('ไม่มีเนื้อหาให้คัดลอก');
+    return;
+  }
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      await navigator.clipboard.writeText(text);
+      setHistoryCopyButtonState(true);
+      if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+      historyCopyStateTimer = setTimeout(() => setHistoryCopyButtonState(false), 2500);
+      showToast('คัดลอกเนื้อหาแล้ว');
+      return;
+    }
+  } catch (_) {}
+  if (fallbackCopyText(text)) {
+    setHistoryCopyButtonState(true);
+    if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+    historyCopyStateTimer = setTimeout(() => setHistoryCopyButtonState(false), 2500);
+    showToast('คัดลอกเนื้อหาแล้ว');
+    return;
+  }
+  showToast('ไม่สามารถคัดลอกได้');
 }
 
 function openHistoryDetail(index) {
   const rows = getCurrentFilteredRows();
   const row = rows[index];
   if (!row) return;
+  if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+  setHistoryCopyButtonState(false);
+  activeHistoryDetailRow = row;
   const overlay = document.getElementById('historyDetailOverlay');
   const content = document.getElementById('historyDetailContent');
-  if (content) content.textContent = buildHistoryDetailText(row);
+  if (content) {
+    const detailHtml = buildHistoryDetailHtml(row);
+    content.innerHTML = detailHtml || '<div class="detail-empty">-</div>';
+  }
   if (overlay) overlay.classList.add('show');
 }
 
 function closeHistoryDetail() {
   document.getElementById('historyDetailOverlay')?.classList.remove('show');
+  if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+  setHistoryCopyButtonState(false);
+  activeHistoryDetailRow = null;
+}
+
+function syncChangeRequestType() {
+  const type = normalizeText(document.getElementById('changeRequestType')?.value || 'edit');
+  const deleteField = document.getElementById('changeDeleteReasonField');
+  const correctedField = document.getElementById('changeCorrectedDataField');
+  const editInfo = document.getElementById('changeEditInfo');
+  const editInfoText = type === 'delete'
+    ? 'คำขอลบจะถูกส่งตรงถึงแอดมินทันที เมื่อแอดมินอนุมัติ ระบบจะย้ายข้อมูลไป Recycle Bin และปรับสีแถวนั้นเป็นสีเทา'
+    : 'เมื่อกดส่งคำขอ ระบบจะเปิดฟอร์มหน้า index เดิมพร้อมข้อมูลเดิมครบถ้วน เพื่อแก้ไขได้ตรงตำแหน่ง';
+  if (deleteField) deleteField.style.display = type === 'delete' ? '' : 'none';
+  if (correctedField) correctedField.style.display = 'none';
+  if (editInfo) {
+    editInfo.style.display = '';
+    editInfo.textContent = editInfoText;
+  }
+}
+
+function getChangeRequestStatusLabel(row) {
+  const status = normalizeText(getRowValue(row, 'changeRequestStatus') || '');
+  if (status === 'rejected') return 'คำขอนี้ถูกไม่อนุมัติแล้ว';
+  if (status === 'done') return 'คำขอนี้อนุมัติแล้ว';
+  return 'รายการนี้ส่งคำขอแล้ว';
+}
+
+function buildChangeRequestSummary(row) {
+  return [
+    'ลำดับ: ' + (getRowValue(row, 'ลำดับ') || '-'),
+    'ผู้ต้องหา: ' + (getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-'),
+    'เลขบัตรประชาชน: ' + (getCitizenId(row) || '-'),
+    'หมายจับ/ค้น: ' + (getWarrantNo(row) || '-')
+  ].join('\n');
+}
+
+function parseChangedFieldsFromText(row, rawText) {
+  const sourceRow = row && typeof row === 'object' ? row : {};
+  const text = String(rawText || '').trim();
+  if (!text) return {};
+
+  const candidateKeys = Object.keys(sourceRow).filter((key) => {
+    const k = String(key || '').trim();
+    if (!k) return false;
+    return !/^changeRequest/i.test(k);
+  });
+  const byNormalized = {};
+  candidateKeys.forEach((key) => {
+    byNormalized[normalizeText(key)] = key;
+  });
+
+  const changed = {};
+  text.split(/\r?\n/).forEach((line) => {
+    const rawLine = String(line || '').trim();
+    if (!rawLine) return;
+    const match = rawLine.match(/^([^:：]+)\s*[:：]\s*(.*)$/);
+    if (!match) return;
+    const rawKey = String(match[1] || '').trim();
+    const value = String(match[2] || '').trim();
+    if (!rawKey) return;
+    const resolvedKey = byNormalized[normalizeText(rawKey)] || rawKey;
+    if (candidateKeys.indexOf(resolvedKey) === -1) return;
+    changed[resolvedKey] = value;
+  });
+  return changed;
+}
+
+function openChangeRequestModal(row) {
+  if (!row || typeof row !== 'object') return;
+  activeChangeRequestRow = row;
+  const summaryEl = document.getElementById('changeRequestTargetSummary');
+  const typeEl = document.getElementById('changeRequestType');
+  const deleteReasonEl = document.getElementById('changeDeleteReason');
+  const correctedEl = document.getElementById('changeCorrectedData');
+  const noteEl = document.getElementById('changeNote');
+  if (summaryEl) summaryEl.textContent = buildChangeRequestSummary(row);
+  if (typeEl) typeEl.value = 'edit';
+  if (deleteReasonEl) deleteReasonEl.value = 'ข้อมูลซ้ำ';
+  if (correctedEl) correctedEl.value = '';
+  if (noteEl) noteEl.value = '';
+  syncChangeRequestType();
+  document.getElementById('changeRequestOverlay')?.classList.add('show');
+}
+
+function closeChangeRequestModal(forceClose) {
+  if (pendingChangeRequest && !forceClose) return;
+  document.getElementById('changeRequestOverlay')?.classList.remove('show');
+  activeChangeRequestRow = null;
+}
+
+function buildEditContextSourceRow(row) {
+  const source = row && typeof row === 'object' ? row : {};
+  const keepKeys = [
+    'ลำดับ', 'ประทับเวลา', 'ผู้รายงาน', 'อีเมล', 'ชุดปฏิบัติการ', 'หัวหน้าชุด', 'หมายเลขโทรศัพท์',
+    'วันที่', 'เวลา', 'สถานที่ (จับกุม/หรือตรวจสอบ)', 'พิกัด Google Maps', 'การจับกุม ตรวจสอบ',
+    'ศาลที่ออกหมายจับ', 'เลขที่หมายจับ', 'วันเดือนปีที่ออกหมาย', 'ประเภทหมายจับ',
+    'ชื่อ-สกุล ผู้ต้องหา', 'อายุ (ปี) #1', 'เลขประจำตัวประชาชน (13 หลัก) #1', 'ที่อยู่ (ตามบัตร) #1',
+    'ข้อหา (ฐานความผิด)', 'พร้อมของกลาง (ถ้ามี)', 'นำส่งพนักงานสอบสวน',
+    'ชื่อ-สกุล เจ้าของสถานที่ / พยาน นำตรวจ', 'อายุ (ปี)', 'เลขประจำตัวประชาชน (13 หลัก)', 'ที่อยู่ (ตามบัตร)',
+    'ผลการตรวจสอบ', 'ตรวจค้น จับกุมโดย', 'ศาลที่ออกหมายค้น', 'เลขที่หมายค้น', 'วันเดือนปีที่ออกหมายค้น',
+    'หน้างานต่างด้าว', 'หน้างานห้วงระดม', 'หน้างานศูนย์', 'งานออกสื่อ'
+  ];
+  const out = {};
+  keepKeys.forEach((key) => {
+    out[key] = getRowValue(source, key);
+  });
+  return out;
+}
+
+function openIndexEditRequestForm(row, options) {
+  const sourceRow = row && typeof row === 'object' ? row : null;
+  if (!sourceRow) return false;
+  const opts = options && typeof options === 'object' ? options : {};
+  const note = String(opts.note || '').trim();
+  const compactSourceRow = buildEditContextSourceRow(sourceRow);
+  const ctx = {
+    sourcePage: 'history.html',
+    targetNo: getRowValue(sourceRow, 'ลำดับ'),
+    targetTimestamp: getRowValue(sourceRow, 'ประทับเวลา'),
+    sourceRow: compactSourceRow,
+    requestType: 'edit',
+    deleteReason: '',
+    note: note
+  };
+  let stored = false;
+  try {
+    localStorage.setItem(EDIT_REQUEST_CONTEXT_KEY, JSON.stringify(ctx));
+    stored = true;
+  } catch (_) {}
+  try {
+    sessionStorage.setItem(EDIT_REQUEST_CONTEXT_FALLBACK_KEY, JSON.stringify(ctx));
+    stored = true;
+  } catch (_) {}
+  if (saveEditContextToWindowName(ctx)) {
+    stored = true;
+  }
+  if (!stored) {
+    showToast('ไม่สามารถเปิดฟอร์มแก้ไขได้: พื้นที่เก็บข้อมูลเต็ม');
+    return false;
+  }
+  closeChangeRequestModal(true);
+  showToast('กำลังเปิดฟอร์มแก้ไขแบบหน้า index...');
+  const params = new URLSearchParams({ editRequest: '1', requestType: 'edit' });
+  if (ctx.targetNo) params.set('targetNo', String(ctx.targetNo));
+  if (ctx.targetTimestamp) params.set('targetTs', String(ctx.targetTimestamp));
+  return navigateInApp(null, 'index.html?' + params.toString());
+}
+
+async function submitDeleteRequestDirect(row, opts) {
+  const url = getSheetUrl();
+  if (!url) { showToast('ไม่พบ URL ระบบ กรุณาตั้งค่าใหม่'); return; }
+  const user = getStoredUserSafe();
+  const sessionToken = getSessionToken(user);
+  if (!user.email || !sessionToken) { showToast('ไม่พบเซสชัน กรุณาเข้าสู่ระบบใหม่'); return; }
+
+  const deleteReason = String((opts && opts.deleteReason) || '').trim();
+  const note = String((opts && opts.note) || '').trim();
+  const targetNo = String(getRowValue(row, 'ลำดับ') || '').trim();
+  const targetTimestamp = String(getRowValue(row, 'ประทับเวลา') || '').trim();
+
+  closeChangeRequestModal(true);
+  pendingChangeRequest = true;
+  showToast('กำลังส่งคำขอลบ...');
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'submitChangeRequest',
+        email: user.email,
+        sessionToken: sessionToken,
+        requestType: 'delete',
+        target: { no: targetNo, timestamp: targetTimestamp },
+        deleteReason: deleteReason,
+        note: note,
+        changedFields: {},
+        correctedData: ''
+      })
+    });
+    const result = await response.json();
+    if (result.status !== 'success') throw new Error(result.message || 'ส่งคำขอไม่สำเร็จ');
+
+    // อัปเดต local row เพื่อล็อคปุ่มแจ้งทันที
+    const requestId = String(result.requestId || '').trim();
+    if (requestId) {
+      row['changeRequestId'] = requestId;
+      row['changeRequestStatus'] = 'new';
+    }
+    showToast('ส่งคำขอลบรายการแล้ว');
+    renderFilteredRows(getCurrentFilteredRows());
+  } catch (err) {
+    showToast('ส่งคำขอไม่สำเร็จ: ' + (err.message || err));
+  } finally {
+    pendingChangeRequest = false;
+  }
 }
 
 function notifyAdminByRow(index) {
   const currentRows = getCurrentFilteredRows();
   const row = currentRows[index];
   if (!row) return;
-
-  const message = [
-    'แจ้งแอดมิน: ขอแก้ไขข้อมูลรายงาน',
-    'ลำดับ: ' + (getRowValue(row, 'ลำดับ') || '-'),
-    'ประทับเวลา: ' + (getRowValue(row, 'ประทับเวลา') || '-'),
-    'ผู้รายงาน: ' + (getRowValue(row, 'ผู้รายงาน') || '-'),
-    'ชุดปฏิบัติการ: ' + (getRowValue(row, 'ชุดปฏิบัติการ') || '-'),
-    'วันที่/เวลา: ' + ((getRowValue(row, 'วันที่') || '-') + ' ' + (getRowValue(row, 'เวลา') || '')),
-    'สถานที่: ' + (getRowValue(row, 'สถานที่ (จับกุม/หรือตรวจสอบ)') || '-'),
-    'ชื่อผู้ต้องหา: ' + (getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-'),
-    'เลขหมายจับ/ค้น: ' + (getWarrantNo(row) || '-'),
-    'เลขบัตรประชาชน: ' + (getCitizenId(row) || '-'),
-    'ข้อหา: ' + (getRowValue(row, 'ข้อหา (ฐานความผิด)') || '-'),
-    '',
-    'หมายเหตุการแก้ไข: (กรอกรายละเอียดที่ต้องแก้)'
-  ].join('\n');
-
-  const lineUrl = 'https://line.me/R/msg/text/?' + encodeURIComponent(message);
-  window.open(lineUrl, '_blank', 'noopener,noreferrer');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(message).catch(() => {});
+  if (getRowValue(row, 'changeRequestId')) {
+    showToast(getChangeRequestStatusLabel(row));
+    return;
   }
-  showToast('สร้างข้อความแจ้งแอดมินแล้ว');
+  openChangeRequestModal(row);
+}
+
+function submitChangeRequestFromModal() {
+  const row = activeChangeRequestRow;
+  if (!row) {
+    showToast('ไม่พบรายการที่ต้องการส่งคำขอ');
+    return;
+  }
+
+  const type = normalizeText(document.getElementById('changeRequestType')?.value || 'edit');
+  if (type !== 'edit' && type !== 'delete') {
+    showToast('ประเภทคำขอไม่ถูกต้อง');
+    return;
+  }
+  const deleteReason = String(document.getElementById('changeDeleteReason')?.value || '').trim();
+  const note = String(document.getElementById('changeNote')?.value || '').trim();
+
+  if (type === 'delete' && !deleteReason) {
+    showToast('กรุณาเลือกเหตุผลการลบรายการ');
+    return;
+  }
+  if (type === 'delete') {
+    submitDeleteRequestDirect(row, { deleteReason: deleteReason, note: note });
+    return;
+  }
+  openIndexEditRequestForm(row, {
+    requestType: type,
+    deleteReason: deleteReason,
+    note: note
+  });
 }
 
 function setMobileDataLoading(isLoading) {
@@ -1723,6 +3174,7 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     closeProfileMenu();
     closeHistoryDetail();
+    closeChangeRequestModal();
     closeAppSidebar();
     closeMobileSettings();
   }
@@ -1746,5 +3198,6 @@ applyTheme(getPreferredTheme());
 syncAdminHistoryMenus(getStoredUserSafe());
 loadHistory();
 </script>
+<script src="sidebar-account.js"></script>
 </body>
 </html>

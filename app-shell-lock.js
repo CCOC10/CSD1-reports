@@ -3,6 +3,18 @@
 
   var VIEWPORT_CONTENT = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
 
+  function isTouchDevice() {
+    try {
+      if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return true;
+    } catch (_) {}
+    return !!('ontouchstart' in window || (window.navigator && window.navigator.maxTouchPoints > 0));
+  }
+
+  function isIOS() {
+    var ua = window.navigator && window.navigator.userAgent ? window.navigator.userAgent : '';
+    return /iPad|iPhone|iPod/.test(ua) || (ua.indexOf('Macintosh') !== -1 && window.navigator.maxTouchPoints > 1);
+  }
+
   function ensureMeta(name, content) {
     var node = document.querySelector('meta[name="' + name + '"]');
     if (!node) {
@@ -15,6 +27,10 @@
   }
 
   function enforceMobileMeta() {
+    if (!isTouchDevice()) {
+      ensureMeta('viewport', 'width=device-width, initial-scale=1.0, viewport-fit=cover');
+      return;
+    }
     ensureMeta('viewport', VIEWPORT_CONTENT);
     ensureMeta('apple-mobile-web-app-capable', 'yes');
     ensureMeta('apple-mobile-web-app-status-bar-style', 'black-translucent');
@@ -40,44 +56,17 @@
     if (document.body) document.body.classList.toggle('is-standalone-app', standalone);
   }
 
-  function lockZoomGestures() {
-    var block = function (e) {
-      e.preventDefault();
-    };
+  function lockZoomOnly() {
+    if (!isTouchDevice()) return;
 
-    ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (type) {
-      document.addEventListener(type, block, { passive: false });
-    });
-
-    document.addEventListener(
-      'wheel',
-      function (e) {
-        if (e.ctrlKey) e.preventDefault();
-      },
-      { passive: false }
-    );
-
-    document.addEventListener(
-      'touchmove',
-      function (e) {
-        if (e.touches && e.touches.length > 1) e.preventDefault();
-      },
-      { passive: false }
-    );
-
-    var lastTouchEnd = 0;
-    document.addEventListener(
-      'touchend',
-      function (e) {
-        var now = Date.now();
-        if (now - lastTouchEnd <= 300) e.preventDefault();
-        lastTouchEnd = now;
-      },
-      { passive: false }
-    );
-
-    document.documentElement.style.touchAction = 'manipulation';
-    document.documentElement.style.overscrollBehavior = 'none';
+    // iOS Safari pinch-zoom gestures; does not block normal page scroll.
+    if (isIOS()) {
+      ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (type) {
+        document.addEventListener(type, function (e) {
+          e.preventDefault();
+        }, { passive: false });
+      });
+    }
   }
 
   function bindDisplayModeChange() {
@@ -93,7 +82,7 @@
   }
 
   enforceMobileMeta();
-  lockZoomGestures();
+  lockZoomOnly();
   bindDisplayModeChange();
 
   if (document.readyState === 'loading') {

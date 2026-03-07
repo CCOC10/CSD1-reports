@@ -77,6 +77,7 @@ const SESSION_TTL_SECONDS = 60 * 60 * 12; // 12 hours
 const CHANGE_REQUEST_SHEET_NAME = "คำขอแก้ไขรายการ";
 const RECYCLE_BIN_SHEET_NAME = "Recycle Bin";
 const RECYCLED_ROW_COLOR = "#242928";
+const EDIT_CHANGED_CELL_COLOR = "#03FF00";
 const CHANGE_REQUEST_HEADERS = [
   "requestId",
   "createdAt",
@@ -106,6 +107,22 @@ const ALLOWED_GOOGLE_CLIENT_IDS = [
   "108806756839-iv4nrrfk4355ogcl2p2ehkh5f6a1u90b.apps.googleusercontent.com"
 ];
 const ALLOW_LOCAL_TOKEN_FALLBACK = true; // ใช้ fallback ชั่วคราวเมื่อ tokeninfo endpoint ขัดข้อง
+
+function formatThaiDateTimeStandard(value) {
+  const dt = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dt.getTime())) return "";
+  const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
+    "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+  const tz = "Asia/Bangkok";
+  const day = Number(Utilities.formatDate(dt, tz, "d"));
+  const month = Number(Utilities.formatDate(dt, tz, "M"));
+  const year = Number(Utilities.formatDate(dt, tz, "yyyy"));
+  const hh = Utilities.formatDate(dt, tz, "HH");
+  const mm = Utilities.formatDate(dt, tz, "mm");
+  if (!day || !month || month < 1 || month > 12 || !year) return Utilities.formatDate(dt, tz, "dd/MM/yyyy HH:mm");
+  const yearBE = year + 543;
+  return day + " " + months[month - 1] + " " + String(yearBE % 100).padStart(2, "0") + " เวลา " + hh + "." + mm + " น.";
+}
 
 /**
  * สร้างหัวตารางและชีทผู้ใช้
@@ -651,6 +668,14 @@ function normalizeUnitKey(value) {
   return String(value || "").trim().toLowerCase().replace(/\s+/g, "");
 }
 
+function normalizeCourtValue(value) {
+  const courtText = String(value || "").replace(/\s+/g, " ").trim();
+  if (!courtText) return "";
+  if (/^ศาล\s*$/u.test(courtText)) return "";
+  if (/^ศาลที่ออกหมาย(?:จับ|ค้น)?\s*$/u.test(courtText)) return "";
+  return courtText;
+}
+
 function makeChangeRequestTargetKey(targetNo, targetTimestamp, targetReporterEmail, targetUnit) {
   return [
     String(targetNo || "").trim(),
@@ -687,7 +712,11 @@ function normalizeChangedFieldsPayload(input) {
   Object.keys(input).forEach(function(rawKey) {
     const key = String(rawKey || "").trim();
     if (!key) return;
-    out[key] = String(input[rawKey] == null ? "" : input[rawKey]).trim();
+    let value = String(input[rawKey] == null ? "" : input[rawKey]).trim();
+    if (key === "ศาลที่ออกหมายจับ" || key === "ศาลที่ออกหมายค้น") {
+      value = normalizeCourtValue(value);
+    }
+    out[key] = value;
   });
   return out;
 }
@@ -856,7 +885,7 @@ function handleSubmitReport(data) {
 
   const row = [
     nextNumber,
-    data.timestamp || new Date().toLocaleString('th-TH'),
+    data.timestamp || formatThaiDateTimeStandard(new Date()),
     authUser.name || data.reporter || "",
     authUser.email || "",
     data.unit || "",
@@ -867,7 +896,7 @@ function handleSubmitReport(data) {
     data.location || "",
     data.coordinates || "",
     data.actionType || "",
-    data.arrestCourt || "",
+    normalizeCourtValue(data.arrestCourt || ""),
     data.arrestNo || "",
     data.warrantDate || "",
     data.warrantType || "",
@@ -884,7 +913,7 @@ function handleSubmitReport(data) {
     data.ownerAddress || "",
     data.inspectionResult || "",
     data.searchBy || "",
-    data.searchCourt || "",
+    normalizeCourtValue(data.searchCourt || ""),
     data.searchNo || "",
     data.searchDate || "",
     data.searchWarrantType || "",
@@ -1283,7 +1312,9 @@ function handleApproveChangeRequest(data) {
     }
 
     updatedColumns.forEach(function(item) {
-      reportSheet.getRange(reportRowIndex, item.colIndex).setValue(item.value);
+      const cell = reportSheet.getRange(reportRowIndex, item.colIndex);
+      cell.setValue(item.value);
+      cell.setBackground(EDIT_CHANGED_CELL_COLOR);
     });
   } else if (requestType === "delete") {
     const recycleSheet = getRecycleBinSheet(true);
