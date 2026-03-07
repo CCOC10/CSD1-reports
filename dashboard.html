@@ -58,8 +58,8 @@
 }
 
 [data-theme="light"] {
-  --primary: #ffffff;
-  --primary-deep: #ffffff;
+  --primary: #f8fafc;
+  --primary-deep: #e2e8f0;
   --primary-surface: #ffffff;
   --accent: #d4a800;
   --accent-dim: #a38200;
@@ -78,7 +78,7 @@
   --card-bg-solid: #ffffff;
   --input-bg: rgba(0,0,0,0.04);
   --input-bg-focus: rgba(0,0,0,0.06);
-  --body-bg: #ffffff;
+  --body-bg: linear-gradient(160deg, #e8ecf2 0%, #f0f3f7 40%, #e2e8f0 100%);
   --header-bg: linear-gradient(135deg, #00264B 0%, #001a33 100%);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
   --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
@@ -88,7 +88,7 @@
 }
 
 /* ==================== RESET ==================== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'IBM Plex Sans Thai', sans-serif; }
 
 html {
   background-color: var(--primary-deep);
@@ -145,9 +145,10 @@ body {
   z-index: 100;
 }
 .dash-header-logo {
-  width: 80px; height: 80px;
+  width: 82px; height: 82px;
   object-fit: contain;
   margin-bottom: -5px;
+  margin-left: 10px; /* shift right */
   filter: drop-shadow(0 0 12px var(--accent-glow));
   transition: filter 0.3s;
 }
@@ -155,7 +156,7 @@ body {
   font-size: 2rem;
   margin-top: 0;
   font-weight: 800;
-  color: #FFD400;
+  color: var(--accent);
   letter-spacing: 0.03em;
 }
 .dash-header p {
@@ -349,7 +350,7 @@ body.nav-open .app-nav-fab {
   height: 100dvh;
   width: min(320px, 86vw);
   padding: calc(env(safe-area-inset-top) + 1rem) 0.9rem calc(env(safe-area-inset-bottom) + 1rem);
-  background: rgba(0, 38, 75, 0.5);
+  background: rgba(6, 11, 29, 0.4);
   border-right: 1px solid rgba(255, 212, 0, 0.48);
   box-shadow: 0 24px 56px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(26px) saturate(150%);
@@ -508,8 +509,8 @@ body.nav-open .app-nav-fab {
   position: fixed;
   left: max(0.5rem, env(safe-area-inset-left));
   right: max(0.5rem, env(safe-area-inset-right));
-  bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
-  height: 48px;
+  bottom: calc(env(safe-area-inset-bottom) + 0.35rem - 2px);
+  height: 65px;
   padding: 0.25rem;
   border-radius: 14px;
   border: 1px solid rgba(148, 163, 184, 0.36);
@@ -530,7 +531,7 @@ body.nav-open .app-nav-fab {
   border-radius: 14px;
   background: transparent;
   color: #f8fafc;
-  font-size: 0.58rem;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.01em;
   text-decoration: none;
@@ -543,8 +544,8 @@ body.nav-open .app-nav-fab {
 }
 .mobile-mini-link svg,
 .mobile-mini-settings svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
   stroke-width: 2.2;
 }
@@ -663,7 +664,7 @@ body.nav-open .app-nav-fab {
 .sidebar-settings-action {
   margin-top: 0.65rem;
   width: 100%;
-  padding: 0.55rem 0.62rem;
+  padding: 0.7rem 0.62rem;
   border-radius: 10px;
   border: 1px solid rgba(255, 212, 0, 0.36);
   background: rgba(255, 212, 0, 0.16);
@@ -724,7 +725,7 @@ body.nav-open .app-nav-fab {
 [data-theme="light"] .sidebar-settings-action {
   border-color: rgba(255, 255, 255, 0.34);
   background: rgba(255, 255, 255, 0.18);
-  color: #f8fafc;
+  color: #00264B;
 }
 [data-theme="light"] .sidebar-settings-action:hover {
   background: rgba(255, 255, 255, 0.26);
@@ -1220,7 +1221,7 @@ body.nav-open .app-nav-fab {
   font-size: 2.5rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #FFD400;
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1295,7 +1296,7 @@ body.nav-open .app-nav-fab {
   border-radius: 20px;
   margin-top: 0.35rem;
   background: var(--accent-glow-soft);
-  color: #FFD400;
+  color: var(--accent);
 }
 
 /* Color variants */
@@ -1349,8 +1350,14 @@ body.nav-open .app-nav-fab {
   background: linear-gradient(135deg, var(--card-bg) 0%, rgba(34,197,94,0.12) 100%);
   box-shadow: var(--shadow-sm), 0 0 20px rgba(34,197,94,0.08);
 }
+/* make hero values large from the start */
 .stat-hero .stat-value {
-  font-size: 3.2rem;
+  font-size: 70px;
+}
+
+/* keep done rule in case it's needed for transition but matching size */
+.stat-hero .stat-value.done {
+  font-size: 70px;
 }
 
 /* Hero pill badges */
@@ -2232,10 +2239,8 @@ body.exporting-dashboard [class*="stat-"] {
   .stat-hero .stat-value { font-size: 2.4rem; }
 }
 </style>
-<link rel="stylesheet" href="theme-sync-dashboard.css">
 <link rel="stylesheet" href="sidebar-account.css">
 <link rel="stylesheet" href="buttons-legacy.css">
-<link rel="stylesheet" href="luxury-2026.css">
 </head>
 <body>
 
@@ -2259,63 +2264,11 @@ body.exporting-dashboard [class*="stat-"] {
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
     <span>HOF</span>
   </a>
-  <button class="mobile-mini-settings" type="button" onclick="openMobileSettings(event)" aria-label="หน้าตั้งค่า" title="หน้าตั้งค่า">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34a1.7 1.7 0 0 0-1.04 1.55V22a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.55a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87a1.7 1.7 0 0 0-1.55-1.04H2a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.04a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.04a1.7 1.7 0 0 0 1-1.54V2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.55a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.04a1.7 1.7 0 0 0 1.54 1H22a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.04z"></path></svg>
-    <span>ตั้งค่า</span>
+  <button class="mobile-mini-settings" type="button" onclick="handleAvatarAccess(event)" aria-label="เพิ่มเติม" title="เพิ่มเติม">
+    <svg fill="currentColor" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M244 416q-35 0-59.5 24.5T160 500t24.5 59.5T244 584t59.5-24.5T328 500t-24.5-59.5T244 416zm256 0q-35 0-59.5 24.5T416 500t24.5 59.5 59 24.5 59.5-24.5 25-59.5-25-59.5-60-24.5h1zm256 0q-35 0-59.5 24.5T672 500t24.5 59.5T756 584t59.5-24.5T840 500t-24.5-59.5T756 416z"></path></svg>
+    <span>เพิ่มเติม</span>
   </button>
 </nav>
-<div class="mobile-settings-overlay" id="mobileSettingsOverlay" onclick="closeMobileSettings()"></div>
-<section class="mobile-settings-sheet" id="mobileSettingsSheet" aria-label="หน้าตั้งค่า">
-  <div class="mobile-settings-head">
-    <div class="mobile-settings-title">หน้าตั้งค่า</div>
-    <button class="mobile-settings-close" type="button" onclick="closeMobileSettings()" aria-label="ปิดหน้าตั้งค่า">&times;</button>
-  </div>
-  <div class="mobile-settings-row">
-    <div class="mobile-settings-label">โหมดธีม</div>
-    <label class="app-theme-switch" for="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
-      <input type="checkbox" id="mobileThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
-      <span class="app-theme-switch-track">
-        <span class="app-theme-switch-thumb">
-          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.2"></circle>
-            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
-            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
-            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
-            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
-            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
-            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
-            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
-            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
-          </svg>
-          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
-          </svg>
-        </span>
-      </span>
-    </label>
-  </div>
-  <div class="mobile-settings-row mobile-account-row">
-    <button class="mobile-account-btn" type="button" onclick="handleAvatarAccess(event)">
-      <span class="mobile-account-avatar" id="mobileAccountAvatar">U</span>
-      <span class="mobile-account-text">
-        <span class="mobile-account-name" id="mobileAccountName">เข้าสู่ระบบ</span>
-        <span class="mobile-account-sub" id="mobileAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
-      </span>
-    </button>
-  </div>
-  <div class="mobile-settings-row">
-    <button class="mobile-settings-action mobile-logout-btn is-hidden" id="mobileLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-      <span>ออกจากระบบ</span>
-    </button>
-  </div>
-  <div class="mobile-settings-row" id="mobileHistoryMenuRow" data-admin-history style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
-  </div>
-  <div class="mobile-settings-row" id="mobileNotificationMenuRow" data-admin-notification style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
-  </div>
-</section>
 <div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
 <aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
   <div class="app-sidebar-head">
@@ -2382,32 +2335,6 @@ body.exporting-dashboard [class*="stat-"] {
 <!-- ==================== LOADING OVERLAY ==================== -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="duck-race" aria-hidden="true">
-    <span class="duck-lane">
-      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
-        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
-        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
-        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
-      </svg>
-    </span>
-    <span class="duck-lane">
-      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
-        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
-        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
-        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
-      </svg>
-    </span>
-    <span class="duck-lane">
-      <svg class="duck-icon" viewBox="0 0 49 49" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <path fill="#FFD400" d="M37.19 26.375c-.999-1.983-2.486-3.818-4.687-5.119-.231-.136-.295-.436-.123-.641 1.116-1.332 4.669-5.868 4.669-9.615 0-6.075-4.925-11-11-11s-11 4.925-11 11c0 6 5.008 9.048 5.873 9.88.086.082.13.186.128.305-.012 1.015-.342 5.794-5.532 3.985-1.398-.487-2.64-1.341-3.686-2.387L5.888 16.84c-.469-.469-1.239-.409-1.634.125C2.92 18.768.431 23.017 1.048 29c0 0 .366 16.187 11.604 19.514 1.209.358 2.474.486 3.734.486h6.858c2.854 0 5.645-.829 8.027-2.402.083-.055.166-.11.25-.166 6.564-4.415 9.229-12.993 5.669-20.057Z"/>
-        <path fill="#D77328" d="M47.538 10h-8.206h-2.335c.03.33.05.662.05 1 0 2.351-1.398 5.011-2.716 6.997V18h5.871c.926 0 1.854-.218 2.632-.721 2.568-1.658 4.434-5.064 5.161-6.554.166-.336-.083-.725-.457-.725Z"/>
-        <circle cx="28.048" cy="9" r="4" fill="#FFFFFF"/>
-        <circle cx="30.048" cy="10" r="2" fill="#2C2F38"/>
-      </svg>
-    </span>
-  </div>
   <div class="loading-text">กำลังโหลดข้อมูล...</div>
 </div>
 
@@ -2486,6 +2413,8 @@ body.exporting-dashboard [class*="stat-"] {
         Reset
       </button>
     </div>
+
+
 
     <!-- Stats Grid -->
     <div id="statsGrid"></div>

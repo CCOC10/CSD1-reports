@@ -94,7 +94,7 @@
 }
 
 /* ==================== RESET ==================== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'IBM Plex Sans Thai', sans-serif; }
 
 html {
   background-color: var(--primary-deep);
@@ -778,7 +778,8 @@ body.nav-open .app-nav-fab {
   height: 100dvh;
   width: min(320px, 86vw);
   padding: calc(env(safe-area-inset-top) + 1rem) 0.9rem calc(env(safe-area-inset-bottom) + 1rem);
-  background: rgba(0, 38, 75, 0.5);
+  /* darker glass background when open */
+  background: rgba(6, 11, 29, 0.4);
   border-right: 1px solid rgba(255, 212, 0, 0.48);
   box-shadow: 0 24px 56px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(26px) saturate(150%);
@@ -937,8 +938,8 @@ body.nav-open .app-nav-fab {
   position: fixed;
   left: max(0.5rem, env(safe-area-inset-left));
   right: max(0.5rem, env(safe-area-inset-right));
-  bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
-  height: 48px;
+  bottom: calc(env(safe-area-inset-bottom) + 0.35rem - 2px);
+  height: 65px;
   padding: 0.25rem;
   border-radius: 14px;
   border: 1px solid rgba(148, 163, 184, 0.36);
@@ -959,7 +960,7 @@ body.nav-open .app-nav-fab {
   border-radius: 14px;
   background: transparent;
   color: #f8fafc;
-  font-size: 0.58rem;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.01em;
   text-decoration: none;
@@ -972,8 +973,8 @@ body.nav-open .app-nav-fab {
 }
 .mobile-mini-link svg,
 .mobile-mini-settings svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
   stroke-width: 2.2;
 }
@@ -1092,7 +1093,7 @@ body.nav-open .app-nav-fab {
 .sidebar-settings-action {
   margin-top: 0.65rem;
   width: 100%;
-  padding: 0.55rem 0.62rem;
+  padding: 0.7rem 0.62rem;
   border-radius: 10px;
   border: 1px solid rgba(255, 212, 0, 0.36);
   background: rgba(255, 212, 0, 0.16);
@@ -1153,7 +1154,7 @@ body.nav-open .app-nav-fab {
 [data-theme="light"] .sidebar-settings-action {
   border-color: rgba(255, 255, 255, 0.34);
   background: rgba(255, 255, 255, 0.18);
-  color: #f8fafc;
+  color: #00264B;
 }
 [data-theme="light"] .sidebar-settings-action:hover {
   background: rgba(255, 255, 255, 0.26);
@@ -2033,9 +2034,9 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 .feature-announcement-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.72);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(2, 6, 23, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2043,7 +2044,7 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
   padding: 1rem;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.28s ease;
+  transition: opacity 0.32s ease;
   isolation: isolate;
 }
 
@@ -2055,13 +2056,17 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 .feature-announcement-card {
   width: min(760px, 96vw);
   border-radius: 24px;
-  border: 1px solid rgba(255, 212, 0, 0.28);
+  border: 1px solid rgba(255, 212, 0, 0.46);
   background: linear-gradient(180deg, #00264B 0%, #001a33 43%, #020717 43%, #020717 100%);
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(255, 212, 0, 0.12),
+    0 28px 70px rgba(0, 0, 0, 0.65),
+    0 0 60px rgba(255, 212, 0, 0.08);
   overflow: hidden;
-  transform: translateY(16px) scale(0.96);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(24px) scale(0.93);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  animation: cardBorderGlow 3.2s ease-in-out infinite;
 }
 
 .feature-announcement-card::after {
@@ -2094,16 +2099,32 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
   position: absolute;
   right: 0.9rem;
   top: 0.9rem;
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
+  width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(2, 7, 23, 0.45);
   color: #f8fafc;
-  font-size: 1.35rem;
+  font-size: 1.2rem;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   cursor: pointer;
   z-index: 1;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.feature-announcement-close:hover {
+  transform: rotate(8deg) scale(1.1);
+  background: rgba(220, 38, 38, 0.28);
+  border-color: rgba(220, 38, 38, 0.6);
+  color: #fca5a5;
 }
 
 .feature-announcement-hero {
@@ -2117,17 +2138,28 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 .feature-announcement-badge {
   display: inline-flex;
   align-items: center;
+  gap: 0.28rem;
   width: fit-content;
+  height: 50px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 212, 0, 0.42);
-  background: rgba(255, 212, 0, 0.14);
+  border: 1px solid rgba(255, 212, 0, 0.56);
+  background: rgba(255, 212, 0, 0.18);
   color: #FFD400;
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.22rem 0.56rem;
   margin-bottom: 0.6rem;
+  animation: badgePulse 2.6s ease-in-out infinite;
+  position: relative;
+}
+
+.feature-announcement-badge::before {
+  content: "✦";
+  display: inline-block;
+  animation: starSpin 2s linear infinite;
+  font-size: 0.6rem;
 }
 
 .feature-announcement-title {
@@ -2136,6 +2168,7 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
   color: #FFD400;
   font-weight: 800;
   margin-bottom: 0.42rem;
+  text-shadow: 0 0 18px rgba(255, 212, 0, 0.35);
 }
 
 .feature-announcement-subtitle {
@@ -2146,14 +2179,46 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 
 .feature-announcement-graphic {
   justify-self: center;
+  margin-right: 8px;
   width: min(220px, 100%);
   aspect-ratio: 4 / 3;
   border-radius: 16px;
-  border: 1px solid rgba(255, 212, 0, 0.24);
-  background: radial-gradient(circle at 20% 20%, rgba(255,212,0,0.22), rgba(255,212,0,0) 55%), rgba(0,0,0,0.18);
+  border: 1px solid rgba(255, 212, 0, 0.38);
+  background: radial-gradient(circle at 50% 60%, rgba(255,212,0,0.26), rgba(255,212,0,0) 68%), rgba(0,0,0,0.22);
   display: grid;
   place-items: center;
   cursor: pointer;
+  position: relative;
+  overflow: visible;
+  animation: graphicGlow 2.8s ease-in-out infinite;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-announcement-graphic:hover {
+  border-color: rgba(255, 212, 0, 0.7);
+  box-shadow: 0 0 28px rgba(255, 212, 0, 0.28), inset 0 0 20px rgba(255, 212, 0, 0.06);
+}
+
+.feature-announcement-graphic::before,
+.feature-announcement-graphic::after {
+  content: "✦";
+  position: absolute;
+  color: #FFD400;
+  font-size: 0.9rem;
+  pointer-events: none;
+  animation: sparklePop 2.6s ease-in-out infinite, starSpin 3s linear infinite;
+}
+
+.feature-announcement-graphic::before {
+  top: 10%;
+  right: 10%;
+  animation-delay: 0s, 0s;
+}
+
+.feature-announcement-graphic::after {
+  bottom: 10%;
+  left: 10%;
+  animation-delay: 1.3s, 1.3s;
 }
 
 .feature-announcement-graphic.is-bounce-exhausted {
@@ -2165,6 +2230,10 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
   height: auto;
   display: block;
   transform-origin: 50% 72%;
+  animation: duckFloat 3.4s ease-in-out infinite;
+  filter: drop-shadow(0 10px 18px rgba(255, 212, 0, 0.28));
+  position: relative;
+  z-index: 1;
 }
 
 .feature-announcement-graphic svg.duck-bounce {
@@ -2211,25 +2280,55 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 }
 
 .feature-announcement-btn {
-  border: 1px solid rgba(255, 212, 0, 0.35);
-  background: rgba(255, 212, 0, 0.12);
-  color: #FFD400;
+  border: 1px solid rgba(255, 212, 0, 0.6);
+  background: linear-gradient(135deg, #FFD400 0%, #e6a800 100%);
+  color: #001a33;
   border-radius: 999px;
   font-family: inherit;
   font-size: 0.84rem;
   font-weight: 800;
-  padding: 0.48rem 1rem;
+  padding: 0.52rem 1.3rem;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 18px rgba(255, 212, 0, 0.35);
+}
+
+.feature-announcement-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.5) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+
+.feature-announcement-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255, 212, 0, 0.5);
+}
+
+.feature-announcement-btn:hover::before {
+  transform: translateX(100%);
 }
 
 [data-theme="light"] .feature-announcement-overlay {
-  background: rgba(0, 38, 75, 0.26);
+  background: rgba(0, 38, 75, 0.38);
 }
 
 [data-theme="light"] .feature-announcement-card {
-  border-color: rgba(0, 38, 75, 0.22);
+  border-color: rgba(255, 212, 0, 0.46);
   background: linear-gradient(180deg, #00264B 0%, #001a33 43%, #ffffff 43%, #ffffff 100%);
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(255, 212, 0, 0.12),
+    0 26px 60px rgba(0, 0, 0, 0.22),
+    0 0 60px rgba(255, 212, 0, 0.06);
 }
 
 [data-theme="light"] .feature-announcement-close {
@@ -2247,6 +2346,65 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 
 [data-theme="light"] .feature-announcement-footnote {
   color: #1d4ed8;
+}
+
+@keyframes cardBorderGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 212, 0, 0.12),
+      0 28px 70px rgba(0, 0, 0, 0.65),
+      0 0 60px rgba(255, 212, 0, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 212, 0, 0.22),
+      0 28px 70px rgba(0, 0, 0, 0.65),
+      0 0 90px rgba(255, 212, 0, 0.18),
+      0 0 30px rgba(255, 212, 0, 0.12);
+  }
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    background: rgba(255, 212, 0, 0.18);
+    border-color: rgba(255, 212, 0, 0.56);
+    box-shadow: none;
+  }
+  50% {
+    background: rgba(255, 212, 0, 0.28);
+    border-color: rgba(255, 212, 0, 0.9);
+    box-shadow: 0 0 12px rgba(255, 212, 0, 0.3);
+  }
+}
+
+@keyframes starSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes duckFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    filter: drop-shadow(0 10px 18px rgba(255, 212, 0, 0.28));
+  }
+  50% {
+    transform: translateY(-11px) rotate(1.8deg);
+    filter: drop-shadow(0 18px 26px rgba(255, 212, 0, 0.46));
+  }
+}
+
+@keyframes graphicGlow {
+  0%, 100% {
+    background: radial-gradient(circle at 50% 60%, rgba(255,212,0,0.18), rgba(255,212,0,0) 68%), rgba(0,0,0,0.22);
+  }
+  50% {
+    background: radial-gradient(circle at 50% 60%, rgba(255,212,0,0.36), rgba(255,212,0,0) 72%), rgba(0,0,0,0.22);
+  }
+}
+
+@keyframes sparklePop {
+  0%, 100% { opacity: 0.12; transform: scale(0.7); }
+  50% { opacity: 0.9; transform: scale(1.2); }
 }
 
 @keyframes featureAnnouncementFlash {
@@ -2430,11 +2588,21 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
   margin-top: 0.4rem;
   line-height: 1.3;
 }
+
+/* GLOBAL_BUTTON_HEIGHT_49PX */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.btn {
+  height: 49px !important;
+  min-height: 49px !important;
+  max-height: 49px !important;
+  box-sizing: border-box;
+}
 </style>
-<link rel="stylesheet" href="theme-sync-dashboard.css">
 <link rel="stylesheet" href="sidebar-account.css">
 <link rel="stylesheet" href="buttons-legacy.css">
-<link rel="stylesheet" href="luxury-2026.css">
 </head>
 <body>
 
@@ -2505,63 +2673,11 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
     <span>HOF</span>
   </a>
-  <button class="mobile-mini-settings" type="button" onclick="openMobileSettings(event)" aria-label="หน้าตั้งค่า" title="หน้าตั้งค่า">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34a1.7 1.7 0 0 0-1.04 1.55V22a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.55a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87a1.7 1.7 0 0 0-1.55-1.04H2a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.04a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.04a1.7 1.7 0 0 0 1-1.54V2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.55a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.04a1.7 1.7 0 0 0 1.54 1H22a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.04z"></path></svg>
-    <span>ตั้งค่า</span>
+  <button class="mobile-mini-settings" type="button" onclick="handleAvatarAccess(event)" aria-label="เพิ่มเติม" title="เพิ่มเติม">
+    <svg fill="currentColor" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M244 416q-35 0-59.5 24.5T160 500t24.5 59.5T244 584t59.5-24.5T328 500t-24.5-59.5T244 416zm256 0q-35 0-59.5 24.5T416 500t24.5 59.5 59 24.5 59.5-24.5 25-59.5-25-59.5-60-24.5h1zm256 0q-35 0-59.5 24.5T672 500t24.5 59.5T756 584t59.5-24.5T840 500t-24.5-59.5T756 416z"></path></svg>
+    <span>เพิ่มเติม</span>
   </button>
 </nav>
-<div class="mobile-settings-overlay" id="mobileSettingsOverlay" onclick="closeMobileSettings()"></div>
-<section class="mobile-settings-sheet" id="mobileSettingsSheet" aria-label="หน้าตั้งค่า">
-  <div class="mobile-settings-head">
-    <div class="mobile-settings-title">หน้าตั้งค่า</div>
-    <button class="mobile-settings-close" type="button" onclick="closeMobileSettings()" aria-label="ปิดหน้าตั้งค่า">&times;</button>
-  </div>
-  <div class="mobile-settings-row">
-    <div class="mobile-settings-label">โหมดธีม</div>
-    <label class="app-theme-switch" for="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
-      <input type="checkbox" id="mobileThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
-      <span class="app-theme-switch-track">
-        <span class="app-theme-switch-thumb">
-          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.2"></circle>
-            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
-            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
-            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
-            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
-            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
-            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
-            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
-            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
-          </svg>
-          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
-          </svg>
-        </span>
-      </span>
-    </label>
-  </div>
-  <div class="mobile-settings-row mobile-account-row">
-    <button class="mobile-account-btn" type="button" onclick="handleAvatarAccess(event)">
-      <span class="mobile-account-avatar" id="mobileAccountAvatar">U</span>
-      <span class="mobile-account-text">
-        <span class="mobile-account-name" id="mobileAccountName">เข้าสู่ระบบ</span>
-        <span class="mobile-account-sub" id="mobileAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
-      </span>
-    </button>
-  </div>
-  <div class="mobile-settings-row">
-    <button class="mobile-settings-action mobile-logout-btn is-hidden" id="mobileLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-      <span>ออกจากระบบ</span>
-    </button>
-  </div>
-  <div class="mobile-settings-row" id="mobileHistoryMenuRow" data-admin-history style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
-  </div>
-  <div class="mobile-settings-row" id="mobileNotificationMenuRow" data-admin-notification style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
-  </div>
-</section>
 <div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
 <aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
   <div class="app-sidebar-head">
@@ -3107,20 +3223,28 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
         </p>
       </div>
       <div class="feature-announcement-graphic" aria-hidden="true" onclick="triggerDuckBounce(event)">
-        <svg id="featureAnnouncementDuck" viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="188" cy="34" r="8" fill="#FFD400" fill-opacity="0.85"/>
-          <circle cx="165" cy="22" r="4" fill="#FFE66A" fill-opacity="0.9"/>
-          <ellipse cx="108" cy="114" rx="72" ry="42" fill="#FFD400"/>
-          <circle cx="74" cy="88" r="30" fill="#FFD400"/>
-          <ellipse cx="58" cy="91" rx="12" ry="8" fill="#FF8A00"/>
-          <circle cx="82" cy="84" r="4.8" fill="#1E293B"/>
-          <path d="M92 111C100.5 104.5 115 104.5 124 111" stroke="#EAB308" stroke-width="6" stroke-linecap="round"/>
-          <path d="M90 128L68 145" stroke="#FFB703" stroke-width="7" stroke-linecap="round"/>
-          <path d="M128 130L150 146" stroke="#FFB703" stroke-width="7" stroke-linecap="round"/>
-          <path d="M150 96C161.2 92.8 172.9 97.9 178 108.2C183 118.5 180.2 131 171.5 138.2" stroke="#FFC300" stroke-width="10" stroke-linecap="round"/>
-          <rect x="150" y="28" width="62" height="48" rx="12" fill="#0EA5E9" fill-opacity="0.18" stroke="#38BDF8" stroke-width="2"/>
-          <path d="M166 46H196M166 56H186" stroke="#7DD3FC" stroke-width="4" stroke-linecap="round"/>
-          <path d="M180 16L184 22L191 23L186 28L187 35L180 31L173 35L174 28L169 23L176 22L180 16Z" fill="#FFD400"/>
+        <svg id="featureAnnouncementDuck" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 429.609 429.609" xml:space="preserve" fill="#000000">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <g>
+              <g>
+                <path style="fill:#FFC843;" d="M386.525,123.52c-1.114-4.68-5.175-4.069-6.471-0.114c-8.601,26.231-33.267,45.178-62.375,45.178 h-50.2c-61.284,0-63.605-31.648-63.605-55.605c0-47.103-38.184-85.288-85.289-85.288c-47.101,0-85.287,38.185-85.287,85.288 c0,22.778,8.946,43.454,23.498,58.751l-0.025,0.007c6.273,6.273,15.044,24.314,20.653,45.148l0.004-0.001 c14.699,72.968,79.157,127.92,156.456,127.92c88.149,0,159.607-71.459,159.607-159.608 C393.491,168.928,391.053,142.532,386.525,123.52z"></path>
+                <path style="opacity:0.1;fill:#222222;" d="M81.971,234.256c20.699,64.143,80.883,110.548,151.913,110.548 c71.032,0,131.214-46.405,151.913-110.548H81.971z"></path>
+                <circle style="fill:#333E48;" cx="96.401" cy="89.31" r="8.86"></circle>
+                <g>
+                  <path style="fill:#FF7F3F;" d="M63.422,107.216c-10.552,0-14.429-18.736-22.182-18.736c-13.137,0-9.261,18.736-31.871,18.736 c-5.176,0-9.369,4.194-9.369,9.368c0,5.174,4.193,9.368,9.369,9.368h63.422v-9.368C72.791,111.41,68.597,107.216,63.422,107.216z "></path>
+                  <path style="fill:#D66B35;" d="M9.369,125.951c-5.176,0-9.369,4.195-9.369,9.368c0,5.174,4.193,9.368,9.369,9.368 c0,0,24.361,0,30.021,0c5.658,0,33.401,3.322,33.401-18.736H9.369z"></path>
+                </g>
+                <path style="opacity:0.2;fill:#222222;" d="M256.327,206.039c-27.588,0-50.844-14.116-55.624-18.732 c-5.447-5.286-13.319-8.286-22.073-8.286c-16.44,0-29.77,10.577-29.77,27.018c0,0.514,0.013,1.025,0.039,1.532 c0.822,47.828,39.821,86.352,87.845,86.352c48.537,0,87.885-39.347,87.885-87.883H256.327z"></path>
+                <path style="fill:#FEDD3D;" d="M264.588,198.286c-27.588,0-50.844-14.115-55.624-18.732c-5.446-5.286-13.319-8.285-22.073-8.285 c-16.44,0-29.77,10.577-29.77,27.018c0,0.514,0.014,1.025,0.039,1.532c0.822,47.827,39.822,86.351,87.845,86.351 c48.537,0,87.885-39.347,87.885-87.884H264.588z"></path>
+              </g>
+              <g>
+                <path style="fill:#229CD2;" d="M415.088,314.79c8.02,0,14.522,6.501,14.522,14.522c0,8.02-6.502,14.521-14.522,14.521h-39.272 c-8.021,0-14.521,6.503-14.521,14.522s6.5,14.521,14.521,14.521h17.65c8.018,0,14.521,6.501,14.521,14.522 c0,8.02-6.502,14.522-14.521,14.522H52.682c-8.022,0-14.522-6.502-14.522-14.522c0-8.02,6.5-14.522,14.522-14.522h33.393 c8.021,0,14.521-6.501,14.521-14.521s-6.5-14.522-14.521-14.522H67.203c-8.02,0-14.521-6.501-14.521-14.521 c0-8.021,6.502-14.522,14.521-14.522H415.088z"></path>
+                <path style="opacity:0.1;fill:#222222;" d="M393.465,372.876h-17.65c-8.021,0-14.521-6.501-14.521-14.521H100.596 c0,8.02-6.5,14.521-14.521,14.521H52.682c-8.022,0-14.522,6.501-14.522,14.522c0,8.02,6.5,14.522,14.522,14.522h340.783 c8.018,0,14.521-6.502,14.521-14.522C407.985,379.378,401.483,372.876,393.465,372.876z"></path>
+              </g>
+            </g>
+          </g>
         </svg>
       </div>
     </div>
@@ -3273,18 +3397,11 @@ function openNotificationPage(evt) {
   return navigateInApp(evt, 'notification.html');
 }
 
-const DUCK_BOUNCE_MAX = 3;
-let duckBounceClicks = 0;
-
 function showFeatureAnnouncement() {
   const overlay = document.getElementById('featureAnnouncementOverlay');
   if (!overlay) return;
   overlay.classList.add('show');
   document.body.classList.add('feature-announcement-open');
-  duckBounceClicks = 0;
-
-  const duckWrap = overlay.querySelector('.feature-announcement-graphic');
-  if (duckWrap) duckWrap.classList.remove('is-bounce-exhausted');
 
   const duck = document.getElementById('featureAnnouncementDuck');
   if (duck) duck.classList.remove('duck-bounce');
@@ -3305,20 +3422,15 @@ function closeFeatureAnnouncement() {
 
 function triggerDuckBounce(event) {
   if (event) event.stopPropagation();
-  if (duckBounceClicks >= DUCK_BOUNCE_MAX) return;
 
   const duck = document.getElementById('featureAnnouncementDuck');
   if (!duck) return;
 
-  duckBounceClicks += 1;
   duck.classList.remove('duck-bounce');
   void duck.offsetWidth;
   duck.classList.add('duck-bounce');
 
-  if (duckBounceClicks >= DUCK_BOUNCE_MAX) {
-    const duckWrap = document.querySelector('.feature-announcement-graphic');
-    if (duckWrap) duckWrap.classList.add('is-bounce-exhausted');
-  }
+  if (navigator.vibrate) navigator.vibrate(80);
 }
 
 function maybeShowFeatureAnnouncement(user) {

@@ -47,7 +47,7 @@
   --shadow-md: 0 10px 24px rgba(2,6,23,0.1);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'IBM Plex Sans Thai', sans-serif; }
 
 @keyframes pageIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -1356,7 +1356,7 @@ body.nav-open .app-nav-fab {
 .sidebar-settings-action {
   margin-top: 0.6rem;
   width: 100%;
-  padding: 0.54rem 0.62rem;
+  padding: 0.7rem 0.62rem;
   border-radius: 10px;
   border: 1px solid rgba(255,212,0,0.36);
   background: rgba(255,212,0,0.16);
@@ -1377,13 +1377,15 @@ body.nav-open .app-nav-fab {
   position: fixed;
   left: max(0.5rem, env(safe-area-inset-left));
   right: max(0.5rem, env(safe-area-inset-right));
-  bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
-  height: 48px;
+  bottom: calc(env(safe-area-inset-bottom) + 0.35rem - 2px);
+  height: 65px;
   padding: 0.25rem;
   border-radius: 14px;
   border: 1px solid rgba(148, 163, 184, 0.36);
   background: rgba(2, 6, 23, 0.94);
   box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
   z-index: 4307;
   display: none;
   gap: 0.15rem;
@@ -1398,19 +1400,34 @@ body.nav-open .app-nav-fab {
   border-radius: 14px;
   background: transparent;
   color: #f8fafc;
-  font-size: 0.58rem;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.01em;
   text-decoration: none;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.1rem;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 .mobile-mini-link svg,
-.mobile-mini-settings svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.2; }
-.mobile-mini-settings { cursor: pointer; font-family: inherit; }
-[data-theme="light"] .mobile-mini-nav { background: rgba(0, 38, 75, 0.6); border-color: rgba(0, 38, 75, 0.36); }
+.mobile-mini-settings svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.2; }
+[data-theme="dark"] .mobile-mini-link.active {
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.42) inset, 0 0 14px rgba(255, 212, 0, 0.46);
+  text-shadow: 0 0 10px rgba(255, 212, 0, 0.45);
+}
+[data-theme="dark"] .mobile-mini-link.active svg {
+  filter: drop-shadow(0 0 6px rgba(255, 212, 0, 0.75));
+}
+.mobile-mini-settings { cursor: pointer; font-family: inherit; color: #f8fafc; }
+.mobile-mini-link:active,
+.mobile-mini-settings:active {
+  transform: scale(0.96);
+}
+[data-theme="light"] .mobile-mini-nav { background: rgba(0, 38, 75, 0.6); border-color: rgba(0, 38, 75, 0.36); box-shadow: 0 12px 24px rgba(0, 38, 75, 0.18); }
 [data-theme="light"] .mobile-mini-link,
 [data-theme="light"] .mobile-mini-settings { color: #f8fafc; }
 [data-theme="light"] .mobile-mini-link.active { background: rgba(0, 38, 75, 0.32); color: #fff; }
@@ -1636,10 +1653,8 @@ body.nav-open .app-nav-fab {
 }
 </style>
 <link rel="stylesheet" href="dashboard-theme.css">
-<link rel="stylesheet" href="theme-sync-dashboard.css">
 <link rel="stylesheet" href="sidebar-account.css">
 <link rel="stylesheet" href="buttons-legacy.css">
-<link rel="stylesheet" href="luxury-2026.css">
 </head>
 <body>
 <button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
@@ -1663,64 +1678,12 @@ body.nav-open .app-nav-fab {
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
     <span>HOF</span>
   </a>
-  <button class="mobile-mini-settings" type="button" onclick="openMobileSettings(event)" aria-label="หน้าตั้งค่า" title="หน้าตั้งค่า">
-    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34a1.7 1.7 0 0 0-1.04 1.55V22a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.55a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87a1.7 1.7 0 0 0-1.55-1.04H2a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.04a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.04a1.7 1.7 0 0 0 1-1.54V2a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.55a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.04a1.7 1.7 0 0 0 1.54 1H22a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1.04z"></path></svg>
-    <span>ตั้งค่า</span>
+  <button class="mobile-mini-settings" type="button" onclick="handleAvatarAccess(event)" aria-label="เพิ่มเติม" title="เพิ่มเติม">
+    <svg fill="currentColor" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M244 416q-35 0-59.5 24.5T160 500t24.5 59.5T244 584t59.5-24.5T328 500t-24.5-59.5T244 416zm256 0q-35 0-59.5 24.5T416 500t24.5 59.5 59 24.5 59.5-24.5 25-59.5-25-59.5-60-24.5h1zm256 0q-35 0-59.5 24.5T672 500t24.5 59.5T756 584t59.5-24.5T840 500t-24.5-59.5T756 416z"></path></svg>
+    <span>เพิ่มเติม</span>
   </button>
 </nav>
 
-<div class="mobile-settings-overlay" id="mobileSettingsOverlay" onclick="closeMobileSettings()"></div>
-<section class="mobile-settings-sheet" id="mobileSettingsSheet" aria-label="หน้าตั้งค่า">
-  <div class="mobile-settings-head">
-    <div class="mobile-settings-title">หน้าตั้งค่า</div>
-    <button class="mobile-settings-close" type="button" onclick="closeMobileSettings()" aria-label="ปิดหน้าตั้งค่า">&times;</button>
-  </div>
-  <div class="mobile-settings-row">
-    <div class="mobile-settings-label">โหมดธีม</div>
-    <label class="app-theme-switch" for="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
-      <input type="checkbox" id="mobileThemeToggle" onchange="toggleThemeSwitch(event)" aria-label="สลับโหมดมืด">
-      <span class="app-theme-switch-track">
-        <span class="app-theme-switch-thumb">
-          <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.2"></circle>
-            <line x1="12" y1="2.8" x2="12" y2="5.2"></line>
-            <line x1="12" y1="18.8" x2="12" y2="21.2"></line>
-            <line x1="2.8" y1="12" x2="5.2" y2="12"></line>
-            <line x1="18.8" y1="12" x2="21.2" y2="12"></line>
-            <line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line>
-            <line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line>
-            <line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line>
-            <line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line>
-          </svg>
-          <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path>
-          </svg>
-        </span>
-      </span>
-    </label>
-  </div>
-  <div class="mobile-settings-row mobile-account-row">
-    <button class="mobile-account-btn" type="button" onclick="handleAvatarAccess(event)">
-      <span class="mobile-account-avatar" id="mobileAccountAvatar">U</span>
-      <span class="mobile-account-text">
-        <span class="mobile-account-name" id="mobileAccountName">เข้าสู่ระบบ</span>
-        <span class="mobile-account-sub" id="mobileAccountSub">แตะเพื่อเข้าสู่ระบบ</span>
-      </span>
-    </button>
-  </div>
-  <div class="mobile-settings-row">
-    <button class="mobile-settings-action mobile-logout-btn is-hidden" id="mobileLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-      <span>ออกจากระบบ</span>
-    </button>
-  </div>
-  <div class="mobile-settings-row" data-admin-history style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
-  </div>
-  <div class="mobile-settings-row" data-admin-notification style="display:none;">
-    <button class="mobile-settings-action" type="button" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
-  </div>
-</section>
 
 <div class="app-sidebar-overlay" id="appSidebarOverlay" onclick="closeAppSidebar()"></div>
 <aside class="app-sidebar" id="appSidebar" aria-label="เมนูหลัก">
