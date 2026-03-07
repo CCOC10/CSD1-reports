@@ -752,6 +752,31 @@ body.nav-open .app-nav-fab {
   }
 }
 
+/* ── Mobile bottom fade veil (covers safe-area + blends content under nav) ── */
+.mobile-nav-fade {
+  display: none;
+}
+@media (max-width: 900px) {
+  .mobile-nav-fade {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(env(safe-area-inset-bottom) + 90px);
+    background: linear-gradient(to top, rgba(2, 6, 23, 0.5) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 4306;
+    transition: opacity 0.22s ease;
+  }
+  [data-theme="light"] .mobile-nav-fade {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+  }
+  body.mobile-loading-data .mobile-nav-fade {
+    opacity: 0;
+  }
+}
+
 /* ==================== CONTAINER ==================== */
 .dash-container {
   max-width: 1200px;
@@ -2435,6 +2460,7 @@ body.exporting-dashboard [class*="stat-"] {
 <button class="app-nav-fab" id="appNavFab" onclick="toggleAppSidebar(event)" aria-label="เปิดเมนูนำทาง">
   <svg viewBox="0 0 40 41" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="9.5" x2="32" y2="9.5"></line><line x1="8" y1="20.5" x2="32" y2="20.5"></line><line x1="8" y1="31.5" x2="32" y2="31.5"></line></svg>
 </button>
+<div class="mobile-nav-fade" aria-hidden="true"></div>
 <nav class="mobile-mini-nav" aria-label="เมนูหลักมือถือ">
   <a class="mobile-mini-link" href="index.html" onclick="return navigateInApp(event, 'index.html')" title="หน้ากรอกแบบฟอร์ม" aria-label="หน้ากรอกแบบฟอร์ม">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
@@ -2483,7 +2509,7 @@ body.exporting-dashboard [class*="stat-"] {
   </nav>
   <div class="app-sidebar-theme">
     <div class="app-sidebar-theme-label">Theme</div>
-    <button class="sidebar-account-btn" id="sidebarAccountBtn" type="button" onclick="handleAvatarAccess(event)">
+    <button class="sidebar-account-btn" id="sidebarAccountBtn" type="button">
       <span class="sidebar-account-avatar" id="sidebarAccountAvatar">U</span>
       <span class="sidebar-account-meta">
         <span class="sidebar-account-name" id="sidebarAccountName">เข้าสู่ระบบ</span>
@@ -2511,7 +2537,7 @@ body.exporting-dashboard [class*="stat-"] {
         </span>
       </span>
     </label>
-    <button class="sidebar-settings-action" id="sidebarHistoryMenuBtn" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ประวัติการกรอกข้อมูล</button>
+    <button class="sidebar-settings-action" id="sidebarHistoryMenuBtn" data-admin-history type="button" style="display:none;" onclick="openHistoryPage(event)">ตรวจสอบ แก้ไขข้อมูล</button>
     <button class="sidebar-settings-action" id="sidebarNotificationMenuBtn" data-admin-notification type="button" style="display:none;" onclick="openNotificationPage(event)">แจ้งเตือนคำขอแก้ไข</button>
     <button class="sidebar-logout-btn is-hidden" id="sidebarLogoutBtn" type="button" onclick="handleSidebarLogout(event)">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>

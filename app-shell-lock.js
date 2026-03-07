@@ -81,9 +81,96 @@
     } catch (_) {}
   }
 
+  function isEditableField(el) {
+    if (!el || typeof el !== 'object') return false;
+    var tag = (el.tagName || '').toLowerCase();
+    if (!tag) return false;
+    if (el.disabled || el.readOnly) return false;
+    if (tag === 'textarea') return true;
+    if (tag === 'input') {
+      var type = (el.type || 'text').toLowerCase();
+      return ['text', 'search', 'email', 'number', 'password', 'tel', 'url', 'date', 'datetime-local', 'time', 'month', 'week'].indexOf(type) !== -1;
+    }
+    return !!el.isContentEditable;
+  }
+
+  function ensureKeyboardNavStyle() {
+    if (document.getElementById('keyboardNavHideStyle')) return;
+    var style = document.createElement('style');
+    style.id = 'keyboardNavHideStyle';
+    style.textContent = [
+      'body.keyboard-open .mobile-mini-nav {',
+      '  display: none !important;',
+      '  opacity: 0 !important;',
+      '  pointer-events: none !important;',
+      '  transform: translateY(120%) !important;',
+      '}',
+      'body.keyboard-open .mobile-nav-fade {',
+      '  opacity: 0 !important;',
+      '  pointer-events: none !important;',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
+  function bindKeyboardAwareMobileNav() {
+    if (!isTouchDevice()) return;
+    ensureKeyboardNavStyle();
+
+    var keyboardOpen = false;
+    var baseHeight = window.innerHeight || 0;
+
+    function setKeyboardOpen(open) {
+      var value = !!open;
+      if (value === keyboardOpen) return;
+      keyboardOpen = value;
+      if (document.body) document.body.classList.toggle('keyboard-open', value);
+    }
+
+    function refreshBaseHeight() {
+      var current = window.innerHeight || 0;
+      if (current > baseHeight) baseHeight = current;
+    }
+
+    function refreshKeyboardState() {
+      refreshBaseHeight();
+      var activeEditable = isEditableField(document.activeElement);
+      var viewportOpen = false;
+      if (window.visualViewport && activeEditable) {
+        var vvHeight = window.visualViewport.height || 0;
+        var diff = (baseHeight || window.innerHeight || 0) - vvHeight;
+        viewportOpen = diff > 120;
+      }
+      setKeyboardOpen(activeEditable || viewportOpen);
+    }
+
+    document.addEventListener('focusin', function () {
+      refreshKeyboardState();
+    }, true);
+    document.addEventListener('focusout', function () {
+      setTimeout(refreshKeyboardState, 40);
+    }, true);
+    window.addEventListener('orientationchange', function () {
+      setTimeout(function () {
+        baseHeight = window.innerHeight || baseHeight;
+        refreshKeyboardState();
+      }, 120);
+    }, { passive: true });
+    if (window.visualViewport && typeof window.visualViewport.addEventListener === 'function') {
+      window.visualViewport.addEventListener('resize', refreshKeyboardState, { passive: true });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', refreshKeyboardState, { once: true });
+    } else {
+      refreshKeyboardState();
+    }
+  }
+
   enforceMobileMeta();
   lockZoomOnly();
   bindDisplayModeChange();
+  bindKeyboardAwareMobileNav();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', applyStandaloneClass, { once: true });
