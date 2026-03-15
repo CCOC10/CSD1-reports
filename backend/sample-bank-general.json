@@ -1,0 +1,16 @@
+{
+  "unit": "ชป.15",
+  "bank_code": "SCB",
+  "doc_number": "542",
+  "issue_date": "2026-03-13",
+  "case_detail": "ความผิดฐานฉ้อโกง",
+  "bank_request_mode": "fullaccount",
+  "bank_accounts": [
+    {
+      "account_no": "727278272",
+      "account_name": "782727272727"
+    }
+  ],
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-13"
+}

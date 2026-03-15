@@ -1,0 +1,3682 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<script src="page-transition.js"></script>
+<script src="csd1-cache.js"></script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
+<title>ตรวจสอบ แก้ไขข้อมูล | CSD1</title>
+<link rel="manifest" href="manifest.webmanifest">
+<script src="app-shell-lock.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(() => {
+  try {
+    const t = localStorage.getItem('CSD1_THEME');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch(_) {}
+})();
+</script>
+<style>
+:root {
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --primary: #0f172a;
+  --primary-deep: #020617;
+  --primary-surface: #172036;
+  --accent: #ffd400;
+  --accent-dim: #c79d00;
+  --accent-soft: rgba(255, 212, 0, 0.14);
+  --info: #38bdf8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 212, 0, 0.22);
+  --border-accent: rgba(255, 212, 0, 0.38);
+  --card-bg: rgba(15, 23, 42, 0.72);
+  --card-bg-strong: rgba(17, 24, 39, 0.9);
+  --body-bg: radial-gradient(circle at top left, rgba(0, 38, 75, 0.55), transparent 32%), linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] {
+  --primary: #ffffff;
+  --primary-deep: #edf3fb;
+  --primary-surface: #ffffff;
+  --accent: #0f766e;
+  --accent-dim: #115e59;
+  --accent-soft: rgba(15, 118, 110, 0.08);
+  --info: #0284c7;
+  --success: #15803d;
+  --danger: #dc2626;
+  --text: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(15, 118, 110, 0.22);
+  --border-accent: rgba(15, 118, 110, 0.38);
+  --card-bg: rgba(255, 255, 255, 0.86);
+  --card-bg-strong: rgba(255, 255, 255, 0.98);
+  --body-bg: radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 30%), linear-gradient(160deg, #eef5fb 0%, #f8fbff 56%, #e2ecf7 100%);
+  --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+html {
+  background-color: var(--primary-deep);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--body-bg);
+  color: var(--text);
+  min-height: 100dvh;
+  line-height: 1.55;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 18px);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 18px 16px 40px;
+  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.back-link,
+.ghost-btn {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 12px 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.back-link:hover,
+.ghost-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.back-link svg,
+.ghost-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.hero-card,
+.panel {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  padding: 24px;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.88), rgba(10, 24, 46, 0.92));
+}
+
+[data-theme="light"] .hero-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(241, 248, 255, 0.98));
+}
+
+.hero-card::before,
+.panel::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-card::before {
+  inset: -24% auto auto -18%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.14), transparent 72%);
+}
+
+.panel {
+  position: relative;
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.panel::before {
+  top: -84px;
+  right: -52px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12), transparent 72%);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  margin-top: 16px;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.hero-desc {
+  margin-top: 12px;
+  max-width: 760px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+
+.legend-list {
+  display: grid;
+  gap: 8px;
+}
+
+.legend-item {
+  position: relative;
+  z-index: 1;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.legend-copy {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.legend-copy strong {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.tips-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 212, 0, 0.15);
+  background: rgba(255, 212, 0, 0.06);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.tips-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.7;
+}
+.tips-text strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.content-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.table-panel {
+  overflow: hidden;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 0.56rem 1rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary {
+  border-color: rgba(255, 212, 0, 0.5);
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+}
+.btn-primary:hover {
+  background: rgba(255, 212, 0, 0.24);
+  border-color: rgba(255, 212, 0, 0.7);
+}
+[data-theme="light"] .btn-primary {
+  border-color: rgba(15, 118, 110, 0.4);
+  background: rgba(15, 118, 110, 0.12);
+  color: var(--accent);
+}
+
+.user-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.9rem;
+  padding: 0.62rem 0.78rem;
+  border-radius: 18px;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .user-bar {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.user-profile-wrap {
+  position: relative;
+}
+
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.user-profile-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  text-align: right;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="light"] .user-name {
+  color: #f1f5f9;
+}
+
+.user-role-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.user-role-badge.admin {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.25));
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+.user-role-badge.user {
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.2));
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.2);
+}
+
+.user-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  margin: 2px 0;
+}
+
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #f59e0b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  border: 2px solid rgba(15,23,42,0.8);
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: scale(0.85) translateY(-6px);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 5000;
+  min-width: 160px;
+}
+
+.profile-menu.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.profile-menu-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.profile-menu-option.logout {
+  color: #f87171;
+}
+
+.profile-menu-option.logout:hover {
+  background: rgba(239,68,68,0.12);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.info-card {
+  border-radius: 18px;
+  padding: 14px 14px 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.035);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.info-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.info-value {
+  margin-top: 8px;
+  font-size: clamp(22px, 2.1vw, 28px);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+[data-theme="light"] .info-card {
+  border-color: rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+}
+[data-theme="light"] .info-value { color: #0f172a; }
+
+.note {
+  max-width: 820px;
+  margin: 0 auto 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  padding: 14px 20px;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--text-secondary);
+  font-size: 0.97rem;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .note {
+  border-color: var(--border-strong);
+  background: var(--card-bg);
+  color: var(--text-secondary);
+}
+
+.note strong {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+[data-theme="light"] .note strong {
+  color: var(--accent);
+}
+
+.filter-panel {
+  margin-bottom: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+[data-theme="light"] .filter-panel {
+  background: transparent;
+}
+
+.filter-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+}
+
+.filter-grid {
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.filter-actions {
+  grid-column: 2;
+  align-self: end;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.result-note {
+  grid-column: 1 / -1;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.filter-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+}
+
+.filter-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+
+.filter-input {
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(2, 6, 23, 0.48);
+  color: var(--text);
+  padding: 0 1rem;
+  font-family: inherit;
+  font-size: 0.94rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.filter-input:focus {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.1);
+}
+
+[data-theme="light"] .filter-input {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+[data-theme="light"] .filter-input:focus {
+  border-color: rgba(15, 118, 110, 0.28);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+}
+
+[data-theme="light"] .table-wrap {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="light"] thead th {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--accent);
+  border-bottom-color: rgba(15, 118, 110, 0.16);
+  backdrop-filter: none;
+}
+
+[data-theme="light"] tbody tr:hover td {
+  background: rgba(15, 118, 110, 0.04);
+}
+
+.mini-btn {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  padding: 0.36rem 0.72rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+[data-theme="light"] .mini-btn {
+  background: rgba(15, 118, 110, 0.06);
+}
+
+.filter-actions .mini-btn {
+  min-height: 48px;
+  border-radius: 14px;
+  padding: 0 1.25rem;
+  font-size: 0.88rem;
+  gap: 0.4rem;
+  white-space: nowrap;
+  border-color: rgba(239, 68, 68, 0.24);
+  color: #fda4af;
+  background: rgba(239, 68, 68, 0.1);
+}
+.filter-actions .mini-btn:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.44);
+  color: #fecdd3;
+}
+[data-theme="light"] .filter-actions .mini-btn {
+  border-color: rgba(220, 38, 38, 0.18);
+  color: #b91c1c;
+  background: rgba(220, 38, 38, 0.06);
+}
+[data-theme="light"] .filter-actions .mini-btn:hover {
+  background: rgba(220, 38, 38, 0.12);
+}
+
+.result-note {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 4600;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.detail-overlay.show {
+  display: flex;
+}
+
+.detail-panel {
+  width: min(960px, 96vw);
+  max-height: 88vh;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--card-bg-strong);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+[data-theme="dark"] .detail-panel {
+  background: linear-gradient(160deg, rgba(17, 24, 39, 0.98), rgba(13, 23, 42, 0.98));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+}
+[data-theme="light"] .detail-panel {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.99), rgba(245, 249, 255, 0.99));
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+}
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .detail-head {
+  background: transparent;
+}
+
+.detail-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.detail-head-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.46rem;
+}
+
+.detail-copy-btn {
+  border: 1px solid rgba(255, 212, 0, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+  min-height: 32px;
+  padding: 0.28rem 0.58rem;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+}
+
+.detail-copy-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.detail-copy-btn span {
+  white-space: nowrap;
+}
+
+.detail-copy-btn:hover {
+  background: rgba(255, 212, 0, 0.26);
+  border-color: rgba(255, 212, 0, 0.54);
+}
+
+.detail-copy-btn.is-copied {
+  background: rgba(179, 142, 0, 0.42);
+  border-color: rgba(255, 212, 0, 0.72);
+  color: #fff3bf;
+}
+
+.detail-copy-btn.is-copied:hover {
+  background: rgba(179, 142, 0, 0.56);
+}
+
+[data-theme="light"] .detail-copy-btn.is-copied {
+  background: rgba(146, 112, 0, 0.82);
+  border-color: rgba(146, 112, 0, 0.92);
+  color: #fff8db;
+}
+
+.detail-close {
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: #f1f5f9;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-close:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.32);
+}
+
+.detail-content {
+  margin: 0;
+  padding: 0.7rem 1.1rem 1.2rem;
+  overflow: auto;
+  white-space: normal;
+  font-size: 0.78rem;
+  line-height: 1.72;
+  font-family: 'IBM Plex Sans Thai', ui-monospace, monospace;
+  background: rgba(1, 5, 14, 0.5);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,212,0,0.25) transparent;
+}
+
+/* ----- detail section groups ----- */
+.detail-section {
+  margin-top: 0.65rem;
+}
+.detail-section:first-child {
+  margin-top: 0;
+}
+.detail-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--accent, #FFD400);
+  text-transform: uppercase;
+}
+.detail-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,212,0,0.32), transparent 80%);
+}
+[data-theme="light"] .detail-section-title::after {
+  background: linear-gradient(90deg, rgba(179,142,0,0.28), transparent 80%);
+}
+.detail-section-body {
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.028);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+[data-theme="light"] .detail-section-body {
+  background: rgba(0,0,0,0.022);
+  border-color: rgba(0,0,0,0.06);
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.42rem;
+}
+
+.detail-row + .detail-row {
+  margin-top: 0.18rem;
+}
+
+.detail-key {
+  color: #FFD400;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.detail-value {
+  color: #c8d5e6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-empty {
+  color: #64748b;
+}
+
+.detail-content::-webkit-scrollbar { width: 5px; }
+.detail-content::-webkit-scrollbar-track { background: transparent; }
+.detail-content::-webkit-scrollbar-thumb { background: rgba(255,212,0,0.25); border-radius: 99px; }
+
+[data-theme="light"] .detail-content {
+  background: #f1f5f9;
+  scrollbar-color: rgba(0, 38, 75, 0.2) transparent;
+}
+[data-theme="light"] .detail-content::-webkit-scrollbar-thumb { background: rgba(0, 38, 75, 0.2); }
+
+[data-theme="light"] .detail-key {
+  color: #b38e00;
+}
+
+[data-theme="light"] .detail-value {
+  color: #334155;
+}
+
+[data-theme="light"] .detail-empty {
+  color: #64748b;
+}
+
+.change-request-panel {
+  width: min(840px, 96vw);
+}
+
+.change-request-body {
+  padding: 0.75rem 0.8rem 0.9rem;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.68rem;
+}
+
+.change-target {
+  border: 2px dashed var(--border-accent);
+  border-radius: 12px;
+  background: rgba(255,212,0,0.08);
+  padding: 1rem 1.2rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.change-target-id {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.3px;
+}
+
+[data-theme="light"] .change-target {
+  background: rgba(255,212,0,0.06);
+}
+
+.change-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.change-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.change-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.change-input,
+.change-select,
+.change-textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.24);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  padding: 0.55rem 0.62rem;
+}
+
+[data-theme="light"] .change-input,
+[data-theme="light"] .change-select,
+[data-theme="light"] .change-textarea {
+  background: #ffffff;
+  border-color: rgba(0, 38, 75, 0.2);
+  color: #0f172a;
+}
+
+.change-textarea {
+  min-height: 94px;
+  resize: vertical;
+}
+
+.change-hint {
+  border: 1px dashed rgba(34, 197, 94, 0.46);
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: #86efac;
+  background: rgba(22, 163, 74, 0.12);
+}
+
+[data-theme="light"] .change-hint {
+  border-color: rgba(22, 163, 74, 0.38);
+  color: #166534;
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.change-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.change-submit-btn {
+  border: 1px solid rgba(255,212,0,0.52);
+  background: rgba(255,212,0,0.16);
+  color: #FFD400;
+}
+
+[data-theme="light"] .change-submit-btn {
+  border-color: rgba(0,38,75,0.4);
+  background: rgba(0,38,75,0.12);
+  color: #00264B;
+}
+
+.change-submit-btn[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.table-wrap {
+  position: relative;
+  z-index: 1;
+  border-radius: 20px;
+  background: rgba(2, 6, 23, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+[data-theme="light"] .table-wrap {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.table-scroll {
+  overflow: auto;
+  max-height: 68vh;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.history-table {
+  width: max-content;
+  min-width: 100%;
+  table-layout: fixed;
+}
+
+.history-table col.col-no { width: 64px; }
+.history-table col.col-rec-date { width: 110px; }
+.history-table col.col-rec-time { width: 96px; }
+.history-table col.col-reporter { width: 150px; }
+.history-table col.col-email { width: 200px; }
+.history-table col.col-unit { width: 90px; }
+.history-table col.col-center { width: 150px; }
+.history-table col.col-work { width: 150px; }
+.history-table col.col-suspect { width: 200px; }
+.history-table col.col-warrant { width: 200px; }
+.history-table col.col-citizen { width: 180px; }
+.history-table col.col-charge { width: 220px; }
+.history-table col.col-datetime { width: 170px; }
+.history-table col.col-location { width: 220px; }
+.history-table col.col-type { width: 120px; }
+.history-table col.col-detail { width: 100px; }
+.history-table col.col-status { width: 110px; }
+.history-table col.col-notify { width: 120px; }
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.16rem 0.52rem;
+  font-size: 0.67rem;
+  font-weight: 800;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+}
+.status-tag.none { border-color: transparent; background: transparent; color: var(--text-muted); }
+.status-tag.new { border-color: rgba(250, 204, 21, 0.52); background: rgba(250, 204, 21, 0.16); color: #fde68a; }
+.status-tag.processing { border-color: rgba(59, 130, 246, 0.5); background: rgba(59, 130, 246, 0.14); color: #bfdbfe; }
+.status-tag.done { border-color: rgba(34, 197, 94, 0.52); background: rgba(34, 197, 94, 0.16); color: #bbf7d0; }
+.status-tag.rejected { border-color: rgba(244, 63, 94, 0.52); background: rgba(244, 63, 94, 0.15); color: #fda4af; }
+button.status-tag {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  transition: opacity 0.18s ease, transform 0.15s ease;
+}
+button.status-tag:hover {
+  opacity: 0.8;
+  transform: scale(1.06);
+}
+[data-theme="light"] .status-tag { border-color: rgba(100, 116, 139, 0.36); background: rgba(100, 116, 139, 0.12); color: #475569; }
+[data-theme="light"] .status-tag.none { border-color: transparent; background: transparent; color: var(--text-muted); }
+[data-theme="light"] .status-tag.new { border-color: rgba(202, 138, 4, 0.46); background: rgba(202, 138, 4, 0.14); color: #854d0e; }
+[data-theme="light"] .status-tag.processing { border-color: rgba(37, 99, 235, 0.42); background: rgba(37, 99, 235, 0.11); color: #1d4ed8; }
+[data-theme="light"] .status-tag.done { border-color: rgba(22, 163, 74, 0.44); background: rgba(22, 163, 74, 0.12); color: #166534; }
+[data-theme="light"] .status-tag.rejected { border-color: rgba(220, 38, 38, 0.44); background: rgba(220, 38, 38, 0.12); color: #b91c1c; }
+
+.history-table th,
+.history-table td {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(6, 15, 38, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.88rem 0.95rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.065em;
+  color: var(--text-muted);
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.16);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
+thead th[data-sort-key] {
+  cursor: pointer;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding-right: 1.6rem;
+}
+thead th[data-sort-key]::after {
+  content: '⇅';
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.72rem;
+  opacity: 0.3;
+  transition: opacity 0.18s ease;
+}
+thead th[data-sort-key]:hover::after {
+  opacity: 0.6;
+}
+thead th[data-sort-key].sort-asc::after {
+  content: '▲';
+  opacity: 0.85;
+  color: var(--accent);
+}
+thead th[data-sort-key].sort-desc::after {
+  content: '▼';
+  opacity: 0.85;
+  color: var(--accent);
+}
+
+[data-theme="light"] thead th {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--accent);
+  border-bottom-color: rgba(15, 118, 110, 0.16);
+  backdrop-filter: none;
+}
+
+tbody td {
+  padding: 0.72rem 0.8rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  line-height: 1.52;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+tbody td.clamp-4 > span {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="light"] tbody tr:nth-child(even) td {
+  background: rgba(15, 118, 110, 0.02);
+}
+
+tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] tbody tr:hover td {
+  background: rgba(15, 118, 110, 0.04);
+}
+
+.history-table th,
+.history-table td {
+  border-right: 1px solid var(--border);
+}
+.history-table th:last-child,
+.history-table td:last-child {
+  border-right: none;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.notify-btn {
+  border: 1px solid rgba(255,212,0,0.3);
+  background: rgba(255,212,0,0.1);
+  color: #FFD400;
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  transition: var(--transition);
+}
+
+.notify-btn:hover {
+  background: rgba(255,212,0,0.18);
+  border-color: rgba(255,212,0,0.5);
+}
+
+.notify-btn.is-submitted,
+.notify-btn[disabled],
+.notify-btn.is-locked {
+  border-color: rgba(148,163,184,0.58);
+  background: #334155;
+  color: #e2e8f0;
+  cursor: not-allowed;
+}
+
+[data-theme="light"] .notify-btn {
+  border-color: rgba(15, 118, 110, 0.3);
+  background: rgba(15, 118, 110, 0.08);
+  color: var(--accent);
+}
+
+[data-theme="light"] .notify-btn:active {
+  border-color: rgba(15, 118, 110, 0.5);
+  background: rgba(15, 118, 110, 0.15);
+}
+
+[data-theme="light"] .notify-btn.is-submitted,
+[data-theme="light"] .notify-btn[disabled],
+[data-theme="light"] .notify-btn.is-locked {
+  border-color: rgba(71, 85, 105, 0.75);
+  background: #334155;
+  color: #f1f5f9;
+}
+
+.history-table .mini-btn,
+.history-table .notify-btn {
+  height: 30px;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state {
+  padding: 1.2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.app-nav-fab {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 0.85rem);
+  left: 1rem;
+  width: 40px;
+  height: 41px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  color: #FFD400;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  z-index: 4305;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  padding: 0;
+}
+.app-nav-fab:hover {
+  transform: translateY(-1px);
+}
+.app-nav-fab:active {
+  transform: translateY(0);
+}
+.app-nav-fab svg {
+  width: 40px;
+  height: 41px;
+  stroke: currentColor;
+  stroke-width: 4.2;
+  filter: drop-shadow(0 0 4px rgba(255, 212, 0, 0.22));
+}
+.app-nav-fab svg line {
+  vector-effect: non-scaling-stroke;
+}
+body.nav-open .app-nav-fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+}
+
+.app-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 4200;
+}
+.app-sidebar-overlay.show { opacity: 0; pointer-events: none; }
+
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(320px, 86vw);
+  height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 1rem) 0.9rem calc(env(safe-area-inset-bottom) + 1rem);
+  background: rgba(0, 38, 75, 0.55);
+  border-right: 1px solid rgba(255, 212, 0, 0.42);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.34);
+  transform: translateX(-105%);
+  transition: transform 0.28s ease;
+  z-index: 4301;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.app-sidebar.show { transform: translateX(0); }
+[data-theme="light"] .app-sidebar {
+  background: rgba(255, 255, 255, 0.92);
+  border-right-color: rgba(0, 38, 75, 0.3);
+}
+
+.app-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.3rem 0.5rem;
+  border-bottom: 1px solid rgba(255,212,0,0.34);
+}
+[data-theme="light"] .app-sidebar-head { border-bottom-color: rgba(0,38,75,0.26); }
+.app-sidebar-title { font-size: 0.92rem; font-weight: 800; color: #FFD400; }
+[data-theme="light"] .app-sidebar-title { color: #00264B; }
+.app-sidebar-close {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(255,212,0,0.42);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.2);
+  color: #fff;
+  font-size: 1.18rem;
+  cursor: pointer;
+}
+[data-theme="light"] .app-sidebar-close {
+  border-color: rgba(0,38,75,0.32);
+  background: rgba(255,255,255,0.52);
+  color: #00264B;
+}
+
+.app-sidebar-nav { display: flex; flex-direction: column; gap: 0.35rem; }
+.app-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.62rem 0.68rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.26);
+  background: rgba(255,255,255,0.08);
+  color: #f8fafc;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+[data-theme="light"] .app-sidebar-link {
+  border-color: rgba(0,38,75,0.24);
+  background: rgba(0,38,75,0.1);
+  color: #00264B;
+}
+.app-sidebar-link svg { width: 16px; height: 16px; stroke: currentColor; }
+
+.app-sidebar-theme {
+  margin-top: 0.8rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.app-sidebar-theme-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+  color: var(--text-muted);
+}
+
+.app-theme-switch {
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid #bcc1ca;
+  background: #d8dce1;
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+[data-theme="dark"] .app-theme-switch { background: #252c36; border-color: #3d4654; }
+.app-theme-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.app-theme-switch-track { display: block; width: 100%; height: 100%; border-radius: inherit; position: relative; }
+.app-theme-switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+[data-theme="dark"] .app-theme-switch-thumb { transform: translate(24px, -50%); background: #05070b; color: #f8fafc; }
+.app-theme-switch-sun,.app-theme-switch-moon { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.4; }
+.app-theme-switch-moon { display: none; }
+[data-theme="dark"] .app-theme-switch-sun { display: none; }
+[data-theme="dark"] .app-theme-switch-moon { display: block; }
+
+.sidebar-settings-action {
+  margin-top: 0.6rem;
+  width: 100%;
+  padding: 0.7rem 0.62rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,212,0,0.36);
+  background: rgba(255,212,0,0.16);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+[data-theme="light"] .sidebar-settings-action {
+  border-color: rgba(0,38,75,0.25);
+  background: rgba(0,38,75,0.09);
+  color: #00264B;
+}
+
+.mobile-mini-nav {
+  display: none;
+  position: fixed;
+  left: max(0.5rem, env(safe-area-inset-left));
+  right: max(0.5rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
+  height: 56px;
+  z-index: 4310;
+  background: rgba(6,14,35,0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 0.5rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+[data-theme="light"] .mobile-mini-nav {
+  background: rgba(255,255,255,0.97);
+  border-color: rgba(15, 23, 42, 0.15);
+}
+
+.mobile-mini-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1;
+  padding: 0.3rem 0;
+  border-radius: 10px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.6rem;
+  font-weight: 600;
+  transition: color 0.2s;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+.mobile-mini-link:hover { color: #FFD400; }
+.mobile-mini-link.active { color: #FFD400; }
+.mobile-mini-link svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mobile-mini-settings {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  transition: color 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+.mobile-mini-settings svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; }
+.mobile-mini-link:active,
+.mobile-mini-settings:active {
+  transform: scale(0.96);
+}
+
+.mobile-settings-overlay,
+.mobile-settings-sheet { display: none; }
+.mobile-settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.52);
+  z-index: 4308;
+  opacity: 0;
+  pointer-events: none;
+}
+.mobile-settings-sheet {
+  position: fixed;
+  left: max(0.7rem, env(safe-area-inset-left));
+  right: max(0.7rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 5rem);
+  background: rgba(0, 38, 75, 0.86);
+  border: 1px solid rgba(255, 212, 0, 0.42);
+  border-radius: 16px;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.34);
+  z-index: 4309;
+  padding: 0.75rem 0.85rem 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.mobile-settings-overlay.show { opacity: 1; pointer-events: auto; }
+.mobile-settings-sheet.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.mobile-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.3);
+}
+.mobile-settings-title { font-size: 0.94rem; font-weight: 800; color: #FFD400; }
+.mobile-settings-close {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 212, 0, 0.36);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+[data-theme="light"] .mobile-settings-close {
+  border-color: rgba(0, 38, 75, 0.28);
+  background: rgba(0, 38, 75, 0.07);
+  color: #00264B;
+}
+.mobile-settings-row {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.mobile-settings-label { font-size: 0.86rem; font-weight: 700; color: #f8fafc; }
+.mobile-settings-action {
+  width: 100%;
+  padding: 0.58rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.34);
+  background: rgba(255, 212, 0, 0.14);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+[data-theme="light"] .mobile-settings-sheet {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 38, 75, 0.38);
+}
+[data-theme="light"] .mobile-settings-head { border-bottom-color: rgba(0, 38, 75, 0.26); }
+[data-theme="light"] .mobile-settings-title,
+[data-theme="light"] .mobile-settings-label { color: #00264B; }
+[data-theme="light"] .mobile-settings-action {
+  border-color: rgba(0, 38, 75, 0.22);
+  background: rgba(0, 38, 75, 0.08);
+  color: #00264B;
+}
+
+.toast {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 1.5rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1e293b;
+  color: #f1f5f9;
+  padding: 0.65rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.12);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok  { border-color: rgba(34,197,94,0.4); color: #86efac; }
+.toast.err { border-color: rgba(239,68,68,0.4);  color: #f87171; }
+
+@keyframes copyPopIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes copyPopOut {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+}
+.copy-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.88);
+  background: linear-gradient(135deg, rgba(6,18,48,0.97), rgba(3,10,28,0.99));
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  border-radius: 18px;
+  padding: 1.4rem 1.8rem;
+  text-align: center;
+  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  z-index: 5200;
+  pointer-events: none;
+  opacity: 0;
+  min-width: 220px;
+}
+.copy-popup.show { animation: copyPopIn 0.22s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.copy-popup.hide { animation: copyPopOut 0.2s ease forwards; }
+.copy-popup-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.copy-popup-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #86efac;
+  margin-bottom: 0.45rem;
+}
+.copy-popup-id {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  word-break: break-all;
+  font-family: ui-monospace, monospace;
+}
+[data-theme="light"] .copy-popup {
+  background: #ffffff;
+  border-color: rgba(22,163,74,0.45);
+  box-shadow: 0 20px 48px rgba(0,38,75,0.18);
+}
+[data-theme="light"] .copy-popup-title { color: #166534; }
+[data-theme="light"] .copy-popup-id { color: #64748b; }
+
+.request-submit-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.88);
+  background: linear-gradient(135deg, rgba(6,18,48,0.97), rgba(3,10,28,0.99));
+  border: 1px solid rgba(16, 185, 129, 0.52);
+  border-radius: 18px;
+  padding: 1.15rem 1.2rem;
+  text-align: center;
+  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  z-index: 5220;
+  pointer-events: none;
+  opacity: 0;
+  width: min(90vw, 340px);
+}
+.request-submit-popup.show {
+  animation: copyPopIn 0.22s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  pointer-events: auto;
+}
+.request-submit-popup.hide { animation: copyPopOut 0.2s ease forwards; }
+.request-submit-icon {
+  font-size: 1.7rem;
+  line-height: 1;
+  margin-bottom: 0.32rem;
+  color: #34d399;
+}
+.request-submit-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #86efac;
+}
+.request-submit-text {
+  margin-top: 0.42rem;
+  font-size: 0.84rem;
+  color: rgba(255,255,255,0.86);
+  line-height: 1.5;
+}
+.request-submit-id {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(148, 163, 184, 0.96);
+  font-family: ui-monospace, monospace;
+  word-break: break-all;
+}
+.request-submit-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: center;
+}
+[data-theme="light"] .request-submit-popup {
+  background: #ffffff;
+  border-color: rgba(16, 185, 129, 0.48);
+  box-shadow: 0 20px 48px rgba(0,38,75,0.18);
+}
+[data-theme="light"] .request-submit-title { color: #166534; }
+[data-theme="light"] .request-submit-text { color: #1e293b; }
+[data-theme="light"] .request-submit-id { color: #64748b; }
+
+@media (max-width: 900px) {
+  .page-shell { padding-bottom: calc(env(safe-area-inset-bottom) + 89px); }
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .back-link,
+  .ghost-btn {
+    width: 100%;
+  }
+  .hero-card,
+  .panel {
+    padding: 20px;
+  }
+  .hero-title { font-size: 1.9rem; }
+  body.mobile-loading-data::after {
+    content: "";
+    position: fixed;
+    left: max(0.5rem, env(safe-area-inset-left));
+    right: max(0.5rem, env(safe-area-inset-right));
+    bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.70);
+    pointer-events: none;
+    z-index: 9490;
+  }
+  [data-theme="light"] body.mobile-loading-data::after {
+    background: rgba(255, 255, 255, 0.70);
+  }
+  .app-nav-fab { display: none !important; }
+  .mobile-mini-nav, .mobile-settings-overlay, .mobile-settings-sheet { display: block; }
+  .mobile-mini-nav {
+    display: flex;
+    position: fixed !important;
+    left: max(0.5rem, env(safe-area-inset-left)) !important;
+    right: max(0.5rem, env(safe-area-inset-right)) !important;
+    bottom: calc(env(safe-area-inset-bottom) + 0.35rem) !important;
+    top: auto !important;
+    margin: 0 !important;
+    transform: none !important;
+    z-index: 9500 !important;
+  }
+  body {
+    transform: none !important;
+    animation: none !important;
+    will-change: auto !important;
+  }
+  .app-sidebar-theme { display: none; }
+  .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-panel { grid-template-columns: 1fr; }
+  .filter-grid { grid-template-columns: 1fr 1fr; }
+  .filter-actions { grid-column: 1; justify-content: stretch; margin-top: 0.6rem; }
+  .filter-actions .mini-btn { flex: 1; }
+  .result-note { grid-column: 1; }
+  .change-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .page-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .hero-title { font-size: 1.65rem; }
+  .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile bottom fade veil (covers safe-area + blends content under nav) ── */
+.mobile-nav-fade {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .mobile-nav-fade {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(env(safe-area-inset-bottom) + 90px);
+    background: linear-gradient(to top, rgba(2, 6, 23, 0.5) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 4306;
+    transition: opacity 0.22s ease;
+  }
+  [data-theme="light"] .mobile-nav-fade {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+  }
+  body.mobile-loading-data .mobile-nav-fade {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .detail-copy-btn {
+    width: 32px;
+    min-width: 32px;
+    padding: 0;
+    justify-content: center;
+  }
+  .detail-copy-btn span { display: none; }
+}
+
+/* ── Status bar veil (top frosted glass for iOS standalone mode) ── */
+.status-bar-veil {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: calc(env(safe-area-inset-top) + 14px);
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  z-index: 99990;
+  pointer-events: none;
+}
+[data-theme="light"] .status-bar-veil {
+  background: rgba(241, 245, 249, 0.3);
+}
+/* ── Bottom bar veil (bottom frosted glass for home indicator area) ── */
+.bottom-bar-veil {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: calc(env(safe-area-inset-bottom) + 20px);
+  background: rgba(2, 6, 23, 0.3);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  z-index: 4295;
+  pointer-events: none;
+}
+[data-theme="light"] .bottom-bar-veil {
+  background: rgba(241, 245, 249, 0.38);
+}
+</style>
+<link rel="stylesheet" href="sidebar-account.css">
+</head>
+<body>
+<div class="status-bar-veil" aria-hidden="true"></div>
+
+<div class="page-shell">
+  <div class="topbar">
+    <a class="back-link" href="index.html" onclick="return navigateInApp(event, 'index.html')">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+      <span>กลับหน้าหลัก</span>
+    </a>
+    <a class="ghost-btn" href="actionreport.html" onclick="return navigateInApp(event, 'actionreport.html')">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+      <span>รายงานใหม่</span>
+    </a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">ตรวจสอบ แก้ไข</div>
+      <h1 class="hero-title">ตรวจสอบ แก้ไขข้อมูล</h1>
+      <p class="hero-desc">ท่านสามารถตรวจสอบ และแจ้งแก้ไขได้ 1 ครั้ง</p>
+      <div class="info-grid" id="statGrid">
+        <div class="info-card"><div class="info-label">สถานะสิทธิ์</div><div class="info-value" id="historyRoleLabel">-</div></div>
+        <div class="info-card"><div class="info-label">ชุดปฏิบัติการ</div><div class="info-value" id="historyUnitLabel">-</div></div>
+        <div class="info-card"><div class="info-label">จำนวนรายการ</div><div class="info-value" id="historyCountLabel">0</div></div>
+        <div class="info-card"><div class="info-label">ผลลัพธ์หลังกรอง</div><div class="info-value" id="historyFilteredCountLabel">0</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="content-stack">
+    <div class="panel">
+      <div class="filter-panel">
+        <div class="filter-head">
+          <span class="filter-title">กรองข้อมูล</span>
+        </div>
+        <div class="filter-grid">
+          <label class="filter-field">
+            <span class="filter-label">คำค้นหา</span>
+            <input class="filter-input" id="filterKeyword" type="text" placeholder="ชื่อผู้ต้องหา, เลขบัตร, หมายจับ, ข้อหา">
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">ชุดปฏิบัติการ</span>
+            <select class="filter-input" id="filterUnit">
+              <option value="">ทั้งหมด</option>
+            </select>
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">วันที่เริ่มต้น</span>
+            <input class="filter-input" id="filterDateStart" type="date">
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">ถึงวันที่</span>
+            <input class="filter-input" id="filterDateEnd" type="date">
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">ห้วงเวลา</span>
+            <select class="filter-input" id="filterTimePeriod">
+              <option value="">ทั้งหมด</option>
+              <option value="thisMonth">เดือนนี้</option>
+              <option value="lastMonth">เดือนที่ผ่านมา</option>
+              <option value="thisQuarter">ไตรมาสนี้</option>
+            </select>
+          </label>
+        </div>
+        <div class="filter-actions">
+          <button class="mini-btn" type="button" onclick="clearHistoryFilters()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg><span>ล้างตัวกรอง</span></button>
+        </div>
+        <div class="result-note" id="historyFilterSummary">แสดงทั้งหมด 0 รายการ</div>
+      </div>
+    </div>
+
+    <div class="tips-bar">
+      <svg class="tips-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+      <div class="tips-text">
+        <strong>คำแนะนำ</strong>
+        ใช้ตัวกรองด้านบนเพื่อค้นหาข้อมูล เมื่อพบรายการที่ต้องการแก้ไข ให้กดปุ่ม <strong>แจ้งลบ/แก้ไข</strong> ในแถวนั้น — ท่านแจ้งแก้ไขได้ 1 ครั้งต่อรายการ
+      </div>
+    </div>
+
+    <div class="panel table-panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">รายการข้อมูล</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table class="history-table">
+            <colgroup>
+              <col class="col-no">
+              <col class="col-rec-date">
+              <col class="col-rec-time">
+              <col class="col-reporter">
+              <col class="col-email">
+              <col class="col-unit">
+              <col class="col-center">
+              <col class="col-work">
+              <col class="col-suspect">
+              <col class="col-warrant">
+              <col class="col-citizen">
+              <col class="col-charge">
+              <col class="col-datetime">
+              <col class="col-location">
+              <col class="col-type">
+              <col class="col-detail">
+              <col class="col-status">
+              <col class="col-notify">
+            </colgroup>
+            <thead>
+              <tr>
+                <th class="nowrap" data-sort-key="no" onclick="handleSort('no')">ลำดับ</th>
+                <th class="nowrap" data-sort-key="recDate" onclick="handleSort('recDate')">วันที่บันทึก</th>
+                <th class="nowrap" data-sort-key="recTime" onclick="handleSort('recTime')">เวลาบันทึก</th>
+                <th data-sort-key="reporter" onclick="handleSort('reporter')">ผู้รายงาน</th>
+                <th class="nowrap">อีเมลผู้รายงาน</th>
+                <th data-sort-key="unit" onclick="handleSort('unit')">ชุดปฏิบัติการ</th>
+                <th data-sort-key="center" onclick="handleSort('center')">หน้างานศูนย์</th>
+                <th>สรุปหน้างาน</th>
+                <th data-sort-key="suspect" onclick="handleSort('suspect')">ชื่อ-สกุล ผู้ต้องหา</th>
+                <th class="nowrap" data-sort-key="warrant" onclick="handleSort('warrant')">เลขหมายจับ/หมายค้น</th>
+                <th class="nowrap" data-sort-key="citizenId" onclick="handleSort('citizenId')">เลขบัตรประชาชน</th>
+                <th data-sort-key="charge" onclick="handleSort('charge')">ข้อหา</th>
+                <th class="nowrap">วันที่/เวลา</th>
+                <th>สถานที่</th>
+                <th class="nowrap" data-sort-key="type" onclick="handleSort('type')">ประเภท</th>
+                <th class="nowrap">รายละเอียดเต็ม</th>
+                <th class="nowrap" data-sort-key="status" onclick="handleSort('status')">สถานะ</th>
+                <th class="nowrap">แจ้งลบ/แก้ไข</th>
+              </tr>
+            </thead>
+            <tbody id="historyTbody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="historyEmpty">กำลังโหลดข้อมูล...</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="detail-overlay" id="historyDetailOverlay" onclick="if (event.target === this) closeHistoryDetail()">
+  <section class="detail-panel">
+    <div class="detail-head">
+      <div class="detail-title">รายละเอียดข้อมูลทั้งหมด</div>
+      <div class="detail-head-actions">
+        <button class="detail-copy-btn" id="historyDetailCopyBtn" type="button" onclick="copyHistoryDetailContent()" aria-label="คัดลอกเนื้อหา">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span id="historyDetailCopyLabel">คัดลอกเนื้อหา</span>
+        </button>
+        <button class="detail-close" type="button" onclick="closeHistoryDetail()" aria-label="ปิดรายละเอียด">&times;</button>
+      </div>
+    </div>
+    <div class="detail-content" id="historyDetailContent"><div class="detail-empty">-</div></div>
+  </section>
+</div>
+
+<div class="detail-overlay" id="changeRequestOverlay" onclick="if (event.target === this) closeChangeRequestModal()">
+  <section class="detail-panel change-request-panel">
+    <div class="detail-head">
+      <div class="detail-title">ส่งคำขอแก้ไข/ลบรายการ</div>
+      <button class="detail-close" type="button" onclick="closeChangeRequestModal()" aria-label="ปิดหน้าส่งคำขอ">&times;</button>
+    </div>
+    <div class="change-request-body">
+      <div class="change-target" id="changeRequestTargetSummary">-</div>
+      <div class="change-grid">
+        <label class="change-field">
+          <span class="change-label">ประเภทคำขอ</span>
+          <select class="change-select" id="changeRequestType" onchange="syncChangeRequestType()">
+            <option value="edit">แจ้งแก้ไข</option>
+            <option value="delete">แจ้งลบรายการ</option>
+          </select>
+        </label>
+        <label class="change-field" id="changeDeleteReasonField" style="display:none;">
+          <span class="change-label">เหตุผลการลบรายการ</span>
+          <select class="change-select" id="changeDeleteReason">
+            <option value="ข้อมูลซ้ำ">ข้อมูลซ้ำ</option>
+            <option value="ข้อมูลผิดพลาด ต้องการแก้ไขใหม่เอง">ข้อมูลผิดพลาด ต้องการแก้ไขใหม่เอง</option>
+          </select>
+        </label>
+      </div>
+      <div class="change-hint" id="changeEditInfo" style="display:none;">
+        <div>แบบฟอร์มนี้แสดงผลข้อมูลเดิมที่ท่านเคยกรอกข้อมูล</div>
+        <div>เมื่อแก้ไขแล้ว จะแสดงไฮไลต์สีเขียวในส่วนที่แก้ไข ขอให้ตรวจสอบโดยละเอียด</div>
+      </div>
+      <label class="change-field" id="changeCorrectedDataField" style="display:none;">
+        <span class="change-label">ข้อมูลที่ต้องการแก้ไข (จำเป็นสำหรับแจ้งแก้ไข)</span>
+        <textarea class="change-textarea" id="changeCorrectedData" placeholder="ระบุคอลัมน์และค่าที่ถูกต้อง เช่น เวลา: 10.00 น., สถานที่: ..."></textarea>
+      </label>
+      <label class="change-field">
+        <span class="change-label">หมายเหตุเพิ่มเติม (ถ้ามี)</span>
+        <textarea class="change-textarea" id="changeNote" placeholder="อธิบายเพิ่มเติมเพื่อให้แอดมินตรวจสอบได้เร็วขึ้น"></textarea>
+      </label>
+      <div class="change-actions">
+        <button class="mini-btn" type="button" onclick="closeChangeRequestModal()">ยกเลิก</button>
+        <button class="mini-btn change-submit-btn" id="changeSubmitBtn" type="button" onclick="submitChangeRequestFromModal()">ส่งคำขอ</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="copy-popup" id="copyPopup">
+  <div class="copy-popup-title">คัดลอกรหัสคำร้องแล้ว</div>
+  <div class="copy-popup-id" id="copyPopupId"></div>
+</div>
+<div class="request-submit-popup" id="requestSubmitPopup" role="status" aria-live="polite" aria-atomic="true">
+  <div class="request-submit-icon">✓</div>
+  <div class="request-submit-title">ยื่นคำร้องแล้ว</div>
+  <div class="request-submit-text" id="requestSubmitPopupText">ระบบได้รับคำร้องของท่านเรียบร้อย</div>
+  <div class="request-submit-id" id="requestSubmitPopupId"></div>
+  <div class="request-submit-actions">
+    <button class="mini-btn" type="button" onclick="hideRequestSubmittedPopup()">รับทราบ</button>
+  </div>
+</div>
+
+<script>
+const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbzRTP16rrmz3tUN7FqDQse7f1fDOzXx6pMuBDd6R3r5s_cnoELkVAy5opLWmwj2Unyypg/exec";
+const EDIT_REQUEST_CONTEXT_KEY = 'CSD1_EDIT_REQUEST_CONTEXT';
+const EDIT_REQUEST_CONTEXT_FALLBACK_KEY = 'CSD1_EDIT_REQUEST_CONTEXT_SESSION';
+const EDIT_REQUEST_CONTEXT_WINDOW_PREFIX = 'CSD1_EDIT_REQUEST_CONTEXT_WINDOW:';
+const CHANGE_REQUEST_POPUP_KEY = 'CSD1_PENDING_CHANGE_REQUEST_POPUP';
+let appSidebarOpen = false;
+let mobileSettingsOpen = false;
+let historyRows = [];
+let profileMenuOpen = false;
+let activeHistoryDetailRow = null;
+let historyCopyStateTimer = null;
+let activeChangeRequestRow = null;
+let pendingChangeRequest = false;
+let requestSubmitPopupTimer = null;
+let currentSortKey = null;
+let currentSortDir = 'asc';
+let lastRenderedRows = [];
+
+const SORT_KEY_MAP = {
+  'no': 'ลำดับ',
+  'recDate': 'วันที่บันทึก',
+  'recTime': 'เวลาบันทึก',
+  'reporter': 'ผู้รายงาน',
+  'unit': 'ชุดปฏิบัติการ',
+  'center': 'หน้างานศูนย์',
+  'suspect': 'ชื่อ-สกุล ผู้ต้องหา',
+  'warrant': null,
+  'citizenId': null,
+  'charge': 'ข้อหา (ฐานความผิด)',
+  'type': 'การจับกุม ตรวจสอบ',
+  'status': 'changeRequestStatus'
+};
+
+function getSortValue(row, key) {
+  if (key === 'warrant') return getWarrantNo(row) || '';
+  if (key === 'citizenId') return getCitizenId(row) || '';
+  const mapped = SORT_KEY_MAP[key];
+  if (mapped) return getRowValue(row, mapped);
+  return '';
+}
+
+function sortRows(rows, key, dir) {
+  if (!key) return rows;
+  const sorted = rows.slice();
+  const isNum = key === 'no';
+  sorted.sort((a, b) => {
+    let va = getSortValue(a, key);
+    let vb = getSortValue(b, key);
+    if (isNum) {
+      va = parseFloat(va) || 0;
+      vb = parseFloat(vb) || 0;
+    } else {
+      va = va.toLowerCase();
+      vb = vb.toLowerCase();
+    }
+    if (va < vb) return dir === 'asc' ? -1 : 1;
+    if (va > vb) return dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return sorted;
+}
+
+function handleSort(key) {
+  if (currentSortKey === key) {
+    currentSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    currentSortKey = key;
+    currentSortDir = 'asc';
+  }
+  document.querySelectorAll('thead th[data-sort-key]').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (th.getAttribute('data-sort-key') === key) {
+      th.classList.add(currentSortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    }
+  });
+  applyHistoryFilters();
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function hideRequestSubmittedPopup(immediate) {
+  const popup = document.getElementById('requestSubmitPopup');
+  if (!popup) return;
+  if (requestSubmitPopupTimer) {
+    clearTimeout(requestSubmitPopupTimer);
+    requestSubmitPopupTimer = null;
+  }
+  if (immediate) {
+    popup.classList.remove('show', 'hide');
+    return;
+  }
+  popup.classList.remove('show');
+  popup.classList.add('hide');
+  setTimeout(() => popup.classList.remove('hide'), 220);
+}
+
+function showRequestSubmittedPopup(message, requestId) {
+  const popup = document.getElementById('requestSubmitPopup');
+  if (!popup) return;
+  const textEl = document.getElementById('requestSubmitPopupText');
+  const idEl = document.getElementById('requestSubmitPopupId');
+  if (textEl) textEl.textContent = String(message || 'ระบบได้รับคำร้องของท่านเรียบร้อย');
+  if (idEl) idEl.textContent = requestId ? ('รหัสคำร้อง: ' + requestId) : '';
+  popup.classList.remove('hide');
+  popup.classList.add('show');
+  if (requestSubmitPopupTimer) clearTimeout(requestSubmitPopupTimer);
+  requestSubmitPopupTimer = setTimeout(() => hideRequestSubmittedPopup(false), 2600);
+}
+
+function consumePendingChangeRequestPopup() {
+  try {
+    const raw = localStorage.getItem(CHANGE_REQUEST_POPUP_KEY);
+    if (!raw) return null;
+    localStorage.removeItem(CHANGE_REQUEST_POPUP_KEY);
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    return {
+      message: String(parsed.message || 'ยื่นคำร้องแล้ว รอแอดมินตรวจสอบต่อไป'),
+      requestId: String(parsed.requestId || '').trim()
+    };
+  } catch (_) {
+    try { localStorage.removeItem(CHANGE_REQUEST_POPUP_KEY); } catch (__){ }
+    return null;
+  }
+}
+
+function copyRequestId(id) {
+  if (!id) return;
+  const done = () => {
+    const popup = document.getElementById('copyPopup');
+    const popupId = document.getElementById('copyPopupId');
+    if (!popup) return;
+    popupId.textContent = id;
+    clearTimeout(popup._timer);
+    popup.classList.remove('hide');
+    popup.classList.add('show');
+    popup._timer = setTimeout(() => {
+      popup.classList.remove('show');
+      popup.classList.add('hide');
+    }, 1800);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(id).then(done).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = id; el.style.position = 'fixed'; el.style.opacity = '0';
+      document.body.appendChild(el); el.select();
+      try { document.execCommand('copy'); done(); } catch (_) {}
+      document.body.removeChild(el);
+    });
+  } else {
+    const el = document.createElement('textarea');
+    el.value = id; el.style.position = 'fixed'; el.style.opacity = '0';
+    document.body.appendChild(el); el.select();
+    try { document.execCommand('copy'); done(); } catch (_) {}
+    document.body.removeChild(el);
+  }
+}
+
+function navigateInApp(evt, targetPath) {
+  if (evt) evt.preventDefault();
+  const nextUrl = new URL(targetPath, window.location.href);
+  const standaloneMode =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (standaloneMode && nextUrl.origin === window.location.origin) {
+    window.location.assign(nextUrl.pathname + nextUrl.search + nextUrl.hash);
+    return false;
+  }
+  window.location.assign(nextUrl.href);
+  return false;
+}
+
+function openAppSidebar() {
+  closeMobileSettings();
+  appSidebarOpen = true;
+  document.body.classList.add('nav-open');
+  document.getElementById('appSidebar')?.classList.add('show');
+  document.getElementById('appSidebarOverlay')?.classList.add('show');
+}
+
+function closeAppSidebar() {
+  appSidebarOpen = false;
+  document.body.classList.remove('nav-open');
+  document.getElementById('appSidebar')?.classList.remove('show');
+  document.getElementById('appSidebarOverlay')?.classList.remove('show');
+}
+
+function toggleAppSidebar(evt) {
+  if (evt) evt.stopPropagation();
+  if (appSidebarOpen) closeAppSidebar();
+  else openAppSidebar();
+}
+
+function openMobileSettings(evt) {
+  if (evt) evt.stopPropagation();
+  closeAppSidebar();
+  mobileSettingsOpen = true;
+  document.body.classList.add('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.add('show');
+  document.getElementById('mobileSettingsSheet')?.classList.add('show');
+}
+
+function closeMobileSettings() {
+  mobileSettingsOpen = false;
+  document.body.classList.remove('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.remove('show');
+  document.getElementById('mobileSettingsSheet')?.classList.remove('show');
+}
+
+function navigateViaSidebar(evt, targetPath) {
+  closeAppSidebar();
+  return navigateInApp(evt, targetPath);
+}
+
+function getPreferredTheme() {
+  const stored = localStorage.getItem('CSD1_THEME') || 'dark';
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function syncThemeSwitch(mode) {
+  const isDark = mode === 'dark';
+  const sidebarToggleEl = document.getElementById('sidebarThemeToggle');
+  if (sidebarToggleEl) sidebarToggleEl.checked = isDark;
+  const mobileToggleEl = document.getElementById('mobileThemeToggle');
+  if (mobileToggleEl) mobileToggleEl.checked = isDark;
+}
+
+function applyTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', normalized);
+  syncThemeSwitch(normalized);
+  const themeColor = normalized === 'dark' ? '#020617' : '#e8ecf2';
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.setAttribute('content', themeColor);
+}
+
+function setTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  localStorage.setItem('CSD1_THEME', normalized);
+  applyTheme(normalized);
+}
+
+function toggleThemeSwitch(evt) {
+  const isDark = !!evt?.target?.checked;
+  setTheme(isDark ? 'dark' : 'light');
+}
+
+function getSheetUrl() {
+  return localStorage.getItem('CSD1_SHEET_URL') || DEFAULT_SHEET_URL;
+}
+
+function getStoredUserSafe() {
+  try {
+    return JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  } catch (_) {
+    return {};
+  }
+}
+
+function getSessionToken(user) {
+  if (!user || typeof user !== 'object') return '';
+  return String(
+    user.sessionToken ||
+    user.session_token ||
+    (user.session && user.session.token) ||
+    user.token ||
+    user.accessToken ||
+    ''
+  ).trim();
+}
+
+function isAdminRole(user) {
+  return !!(user && user.isReportAdmin);
+}
+
+function isUserRole(user) {
+  return !!(user && user.canReport);
+}
+
+function hasAuthSession(user) {
+  return !!(user && user.email && getSessionToken(user));
+}
+
+function syncAdminHistoryMenus(user) {
+  const visible = isUserRole(user) && hasAuthSession(user);
+  document.querySelectorAll('[data-admin-history]').forEach((el) => {
+    el.style.display = visible ? '' : 'none';
+  });
+}
+
+function openHistoryPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'history.html');
+}
+
+function toggleProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  profileMenuOpen = !profileMenuOpen;
+  menu.classList.toggle('show', profileMenuOpen);
+}
+
+function closeProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  profileMenuOpen = false;
+  menu.classList.remove('show');
+}
+
+function renderUserProfile(user) {
+  const normalized = user && typeof user === 'object' ? user : {};
+  const displayName = String(normalized.name || normalized.email || 'ผู้ใช้').trim();
+  const roleBadge = document.getElementById('userRoleBadge');
+  const displayNameEl = document.getElementById('userDisplayName');
+  const avatarEl = document.getElementById('userAvatar');
+  if (displayNameEl) displayNameEl.textContent = displayName || '-';
+  if (roleBadge) {
+    roleBadge.textContent = normalized.unit || '-';
+    roleBadge.className = 'user-role-badge ' + (isAdminRole(normalized) ? 'admin' : 'user');
+  }
+  if (avatarEl) {
+    const photoUrl = String(normalized.avatarUrl || normalized.googlePhoto || '').trim();
+    const initial = (displayName || '-').charAt(0).toUpperCase();
+    if (photoUrl) {
+      avatarEl.innerHTML = `<img src="${photoUrl}" alt="${displayName}" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${initial}'">`;
+    } else {
+      avatarEl.textContent = initial;
+    }
+  }
+}
+
+function handleLogout() {
+  localStorage.removeItem('CSD1_USER');
+  closeProfileMenu();
+  showToast('ออกจากระบบแล้ว');
+  setTimeout(() => {
+    navigateInApp(null, 'index.html');
+  }, 220);
+}
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function normalizeText(value) {
+  return String(value == null ? '' : value).trim().toLowerCase();
+}
+
+function encodeBase64Utf8(input) {
+  const text = String(input == null ? '' : input);
+  return btoa(unescape(encodeURIComponent(text)));
+}
+
+function saveEditContextToWindowName(ctx) {
+  try {
+    const payload = {
+      ts: Date.now(),
+      context: ctx
+    };
+    window.name = EDIT_REQUEST_CONTEXT_WINDOW_PREFIX + encodeBase64Utf8(JSON.stringify(payload));
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function getRowValue(row, key) {
+  return row && Object.prototype.hasOwnProperty.call(row, key)
+    ? String(row[key] == null ? '' : row[key]).trim()
+    : '';
+}
+
+function getFirstValue(row, keys) {
+  for (let i = 0; i < keys.length; i++) {
+    const v = getRowValue(row, keys[i]);
+    if (v) return v;
+  }
+  return '';
+}
+
+function getHeaderValues(row, baseHeader) {
+  const values = [];
+  const base = getRowValue(row, baseHeader);
+  if (base) values.push(base);
+  Object.keys(row || {}).forEach((key) => {
+    if (key.indexOf(baseHeader + ' #') === 0) {
+      const v = getRowValue(row, key);
+      if (v && values.indexOf(v) === -1) values.push(v);
+    }
+  });
+  return values;
+}
+
+function getCitizenId(row) {
+  const values = getHeaderValues(row, 'เลขประจำตัวประชาชน (13 หลัก)');
+  return values.length ? values[0] : '';
+}
+
+function getWarrantNo(row) {
+  return getFirstValue(row, ['เลขที่หมายจับ', 'เลขที่หมายค้น']);
+}
+
+function getWorkTag(row) {
+  const tags = [];
+  const center = getRowValue(row, 'หน้างานศูนย์');
+  const migrant = getRowValue(row, 'หน้างานต่างด้าว');
+  const mobilize = getRowValue(row, 'หน้างานห้วงระดม');
+  const media = getRowValue(row, 'งานออกสื่อ');
+  if (center) tags.push('ศูนย์: ' + center);
+  if (migrant) tags.push('ต่างด้าว: ' + migrant);
+  if (mobilize) tags.push('ห้วงระดม: ' + mobilize);
+  if (media) tags.push('ออกสื่อ: ' + media);
+  return tags.join(' | ');
+}
+
+function getTimePeriodRange(period) {
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  if (period === 'thisMonth') return { start: new Date(y, m, 1), end: new Date(y, m + 1, 0, 23, 59, 59) };
+  if (period === 'lastMonth') return { start: new Date(y, m - 1, 1), end: new Date(y, m, 0, 23, 59, 59) };
+  if (period === 'thisQuarter') {
+    const q = Math.floor(m / 3) * 3;
+    return { start: new Date(y, q, 1), end: new Date(y, q + 3, 0, 23, 59, 59) };
+  }
+  return null;
+}
+
+function getHistoryFilters() {
+  return {
+    keyword: normalizeText(document.getElementById('filterKeyword')?.value || ''),
+    unit: document.getElementById('filterUnit')?.value || '',
+    dateStart: document.getElementById('filterDateStart')?.value || '',
+    dateEnd: document.getElementById('filterDateEnd')?.value || '',
+    timePeriod: document.getElementById('filterTimePeriod')?.value || ''
+  };
+}
+
+function rowMatchesFilters(row, filters) {
+  if (!filters) return true;
+  const allText = normalizeText(Object.keys(row || {}).map((key) => row[key]).join(' '));
+  if (filters.keyword && allText.indexOf(filters.keyword) === -1) return false;
+
+  if (filters.unit) {
+    const rowUnit = normalizeText(getRowValue(row, 'ชุดปฏิบัติการ'));
+    if (rowUnit !== normalizeText(filters.unit)) return false;
+  }
+
+  const rowDate = parseDateOnly(getRowValue(row, 'วันที่บันทึก'));
+
+  if (filters.dateStart || filters.dateEnd) {
+    if (!rowDate) return false;
+    if (filters.dateStart) {
+      const start = new Date(filters.dateStart + 'T00:00:00');
+      if (!isNaN(start.getTime()) && rowDate < start) return false;
+    }
+    if (filters.dateEnd) {
+      const end = new Date(filters.dateEnd + 'T23:59:59');
+      if (!isNaN(end.getTime()) && rowDate > end) return false;
+    }
+  } else if (filters.timePeriod) {
+    const range = getTimePeriodRange(filters.timePeriod);
+    if (range) {
+      if (!rowDate || rowDate < range.start || rowDate > range.end) return false;
+    }
+  }
+
+  return true;
+}
+
+function updateFilterSummary(total, filtered) {
+  const summaryEl = document.getElementById('historyFilterSummary');
+  const filteredCountLabel = document.getElementById('historyFilteredCountLabel');
+  if (filteredCountLabel) filteredCountLabel.textContent = String(filtered);
+  if (summaryEl) {
+    summaryEl.textContent = filtered === total
+      ? `แสดงทั้งหมด ${filtered} รายการ`
+      : `พบ ${filtered} จากทั้งหมด ${total} รายการ`;
+  }
+}
+
+function getCurrentFilteredRows() {
+  const filters = getHistoryFilters();
+  return historyRows.filter((row) => rowMatchesFilters(row, filters));
+}
+
+const THAI_MONTH_SHORT = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+const THAI_TIME_ZONE = 'Asia/Bangkok';
+const THAI_MONTH_TO_NUM = {
+  'ม.ค.': 1, 'ม.ค': 1, 'มกราคม': 1,
+  'ก.พ.': 2, 'ก.พ': 2, 'กุมภาพันธ์': 2,
+  'มี.ค.': 3, 'มี.ค': 3, 'มีนาคม': 3,
+  'เม.ย.': 4, 'เม.ย': 4, 'เมษายน': 4,
+  'พ.ค.': 5, 'พ.ค': 5, 'พฤษภาคม': 5,
+  'มิ.ย.': 6, 'มิ.ย': 6, 'มิถุนายน': 6,
+  'ก.ค.': 7, 'ก.ค': 7, 'กรกฎาคม': 7,
+  'ส.ค.': 8, 'ส.ค': 8, 'สิงหาคม': 8,
+  'ก.ย.': 9, 'ก.ย': 9, 'กันยายน': 9,
+  'ต.ค.': 10, 'ต.ค': 10, 'ตุลาคม': 10,
+  'พ.ย.': 11, 'พ.ย': 11, 'พฤศจิกายน': 11,
+  'ธ.ค.': 12, 'ธ.ค': 12, 'ธันวาคม': 12
+};
+
+function toArabicDigits(value) {
+  const digits = { '๐': '0', '๑': '1', '๒': '2', '๓': '3', '๔': '4', '๕': '5', '๖': '6', '๗': '7', '๘': '8', '๙': '9' };
+  return String(value == null ? '' : value).replace(/[๐-๙]/g, (ch) => digits[ch] || ch);
+}
+
+function normalizeDateTimeRaw(value) {
+  return toArabicDigits(value)
+    .replace(/\(([^)]*)\)/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getBangkokDateTimeParts(value) {
+  const dt = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dt.getTime())) return null;
+  try {
+    const parts = new Intl.DateTimeFormat('en-GB-u-ca-gregory', {
+      timeZone: THAI_TIME_ZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).formatToParts(dt);
+    const map = {};
+    parts.forEach((part) => {
+      if (part && part.type) map[part.type] = part.value;
+    });
+    const year = Number(map.year);
+    const month = Number(map.month);
+    const day = Number(map.day);
+    const hh = Number(map.hour);
+    const mm = Number(map.minute);
+    if (![year, month, day, hh, mm].every(Number.isFinite)) return null;
+    return { year, month, day, hh, mm };
+  } catch (_) {
+    return {
+      year: dt.getFullYear(),
+      month: dt.getMonth() + 1,
+      day: dt.getDate(),
+      hh: dt.getHours(),
+      mm: dt.getMinutes()
+    };
+  }
+}
+
+function toGregorianYear(yearText) {
+  let year = Number(yearText || 0);
+  if (!Number.isFinite(year) || year <= 0) return null;
+  while (year > 2400) year -= 543;
+  if (year < 100) year += 2000;
+  return year;
+}
+
+function parseDateOnly(value) {
+  const raw = normalizeDateTimeRaw(value);
+  if (!raw) return null;
+
+  if (/^\d{4}-\d{1,2}-\d{1,2}T/i.test(raw)) {
+    const bangkokDate = getBangkokDateTimeParts(raw);
+    if (bangkokDate && bangkokDate.year > 1900) {
+      return new Date(bangkokDate.year, bangkokDate.month - 1, bangkokDate.day);
+    }
+  }
+
+  const thaiMatch = raw.match(/(\d{1,2})\s+([ก-๙A-Za-z.]+)\s+(\d{2,4})/);
+  if (thaiMatch) {
+    const day = Number(thaiMatch[1]);
+    const month = THAI_MONTH_TO_NUM[thaiMatch[2]] || null;
+    const year = toGregorianYear(thaiMatch[3]);
+    if (day >= 1 && day <= 31 && month && year && year > 1900) return new Date(year, month - 1, day);
+  }
+
+  const isoMatch = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (isoMatch) {
+    const year = toGregorianYear(isoMatch[1]);
+    const month = Number(isoMatch[2]);
+    const day = Number(isoMatch[3]);
+    if (year > 1900 && month >= 1 && month <= 12 && day >= 1 && day <= 31) return new Date(year, month - 1, day);
+  }
+
+  const slashMatch = raw.match(/(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/);
+  if (slashMatch) {
+    const day = Number(slashMatch[1]);
+    const month = Number(slashMatch[2]);
+    const year = toGregorianYear(slashMatch[3]);
+    if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year && year > 1900) return new Date(year, month - 1, day);
+  }
+
+  const fallback = new Date(raw);
+  if (!Number.isNaN(fallback.getTime()) && fallback.getFullYear() > 1900) {
+    return new Date(fallback.getFullYear(), fallback.getMonth(), fallback.getDate());
+  }
+  return null;
+}
+
+function parseTimeOnly(value) {
+  const raw = normalizeDateTimeRaw(value);
+  if (!raw) return null;
+  if (/^\d{4}-\d{1,2}-\d{1,2}T/i.test(raw)) {
+    const bangkokDate = getBangkokDateTimeParts(raw);
+    if (bangkokDate) {
+      return { hh: bangkokDate.hh, mm: bangkokDate.mm };
+    }
+  }
+  const allMatches = raw.match(/\b\d{1,2}[:.]\d{2}(?::\d{2})?\b/g);
+  if (!allMatches || !allMatches.length) return null;
+  const last = allMatches[allMatches.length - 1];
+  const match = last.match(/(\d{1,2})[:.](\d{2})/);
+  if (!match) return null;
+  const hh = Number(match[1]);
+  const mm = Number(match[2]);
+  if (hh < 0 || hh > 23 || mm < 0 || mm > 59) return null;
+  return { hh, mm };
+}
+
+function formatThaiDateShort(value) {
+  const dt = value instanceof Date ? value : parseDateOnly(value);
+  if (!dt) return '';
+  const yearBE = dt.getFullYear() + 543;
+  return `${dt.getDate()} ${THAI_MONTH_SHORT[dt.getMonth()]} ${String(yearBE % 100).padStart(2, '0')}`;
+}
+
+function formatThaiTime(value) {
+  const tm = value && typeof value === 'object' && Number.isFinite(value.hh)
+    ? value
+    : parseTimeOnly(value);
+  if (!tm) return '';
+  return `${String(tm.hh).padStart(2, '0')}.${String(tm.mm).padStart(2, '0')} น.`;
+}
+
+function composeThaiDateTime(dateVal, timeVal) {
+  const dateText = formatThaiDateShort(dateVal);
+  const timeText = formatThaiTime(timeVal);
+  if (dateText && timeText) return `${dateText} เวลา ${timeText}`;
+  return dateText || timeText || '';
+}
+
+function formatThaiDateTimeValue(value) {
+  const dateObj = parseDateOnly(value);
+  const timeObj = parseTimeOnly(value);
+  const composed = composeThaiDateTime(dateObj, timeObj);
+  if (composed) return composed;
+  const raw = String(value || '').trim();
+  return raw || '-';
+}
+
+function formatThaiDateTimePair(dateValue, timeValue) {
+  const dateObj = parseDateOnly(dateValue);
+  const timeObj = parseTimeOnly(timeValue) || parseTimeOnly(dateValue);
+  const composed = composeThaiDateTime(dateObj, timeObj);
+  if (composed) return composed;
+  const rawDate = String(dateValue || '').trim();
+  const rawTime = String(timeValue || '').trim();
+  return [rawDate, rawTime].filter(Boolean).join(' ').trim() || '-';
+}
+
+function normalizeDateTimeKey(key) {
+  return String(key || '').trim().replace(/\s*#\d+\s*$/, '').trim();
+}
+
+function isDateTimeColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'ประทับเวลา' || normalized === 'วันที่/เวลา' || normalized === 'เวลาแจ้ง') return true;
+  return /(requestedat|createdat|updatedat|timestamp|datetime)/.test(compact);
+}
+
+function isDateOnlyColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'วันที่' || normalized === 'วันที่บันทึก' || normalized.indexOf('วันเดือนปี') === 0) return true;
+  return /(targetdate|warrantdate|issueddate|^date$)/.test(compact);
+}
+
+function isTimeOnlyColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'เวลา' || normalized === 'เวลาบันทึก') return true;
+  return /(targettime|^time$)/.test(compact);
+}
+
+function formatHistoryValueByKey(key, value) {
+  const rawValue = String(value || '').trim();
+  if (!rawValue) return '-';
+  if (isDateTimeColumnKey(key)) return formatThaiDateTimeValue(rawValue);
+  if (isDateOnlyColumnKey(key)) return formatThaiDateShort(rawValue) || rawValue;
+  if (isTimeOnlyColumnKey(key)) return formatThaiTime(rawValue) || rawValue;
+  return rawValue;
+}
+
+const HISTORY_COLUMN_AUTOFIT = [
+  { colClass: 'col-no', header: 'ลำดับ', min: 58, max: 80, cap: 6, pick: (row) => getRowValue(row, 'ลำดับ') || '-' },
+  { colClass: 'col-rec-date', header: 'วันที่บันทึก', min: 96, max: 140, cap: 16, pick: (row) => formatThaiDateShort(getRowValue(row, 'วันที่บันทึก')) || getRowValue(row, 'วันที่บันทึก') || '-' },
+  { colClass: 'col-rec-time', header: 'เวลาบันทึก', min: 82, max: 120, cap: 12, pick: (row) => formatThaiTime(getRowValue(row, 'เวลาบันทึก')) || getRowValue(row, 'เวลาบันทึก') || '-' },
+  { colClass: 'col-reporter', header: 'ผู้รายงาน', min: 120, max: 200, cap: 26, pick: (row) => getRowValue(row, 'ผู้รายงาน') || '-' },
+  { colClass: 'col-email', header: 'อีเมลผู้รายงาน', min: 170, max: 200, cap: 30, pick: (row) => getRowValue(row, 'อีเมล') || '-' },
+  { colClass: 'col-unit', header: 'ชป.', min: 72, max: 120, cap: 10, pick: (row) => getRowValue(row, 'ชุดปฏิบัติการ') || '-' },
+  { colClass: 'col-center', header: 'หน้างานศูนย์', min: 120, max: 200, cap: 28, pick: (row) => getRowValue(row, 'หน้างานศูนย์') || '-' },
+  { colClass: 'col-work', header: 'สรุปหน้างาน', min: 120, max: 200, cap: 28, pick: (row) => getWorkTag(row) || '-' },
+  { colClass: 'col-suspect', header: 'ชื่อ-สกุล ผู้ต้องหา', min: 160, max: 200, cap: 30, pick: (row) => getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-' },
+  { colClass: 'col-warrant', header: 'เลขหมายจับ/หมายค้น', min: 120, max: 200, cap: 22, pick: (row) => getWarrantNo(row) || '-' },
+  { colClass: 'col-citizen', header: 'เลขบัตรประชาชน', min: 120, max: 190, cap: 18, pick: (row) => getCitizenId(row) || '-' },
+  { colClass: 'col-charge', header: 'ข้อหา', min: 160, max: 200, cap: 30, pick: (row) => getRowValue(row, 'ข้อหา (ฐานความผิด)') || '-' },
+  { colClass: 'col-datetime', header: 'วันที่/เวลา', min: 140, max: 200, cap: 24, pick: (row) => formatThaiDateTimePair(getRowValue(row, 'วันที่'), getRowValue(row, 'เวลา')) },
+  { colClass: 'col-location', header: 'สถานที่', min: 160, max: 200, cap: 30, pick: (row) => getRowValue(row, 'สถานที่ (จับกุม/หรือตรวจสอบ)') || '-' },
+  { colClass: 'col-type', header: 'ประเภท', min: 100, max: 160, cap: 16, pick: (row) => getRowValue(row, 'การจับกุม ตรวจสอบ') || '-' },
+  { colClass: 'col-detail', header: 'รายละเอียด', min: 90, max: 120, cap: 12, pick: () => 'ดูทั้งหมด' },
+  { colClass: 'col-status', header: 'สถานะ', min: 90, max: 130, cap: 14, pick: (row) => {
+    const requestId = getRowValue(row, 'changeRequestId');
+    const status = normalizeText(getRowValue(row, 'changeRequestStatus') || '');
+    if (!requestId) return '-';
+    if (status === 'rejected') return 'ไม่อนุมัติ';
+    if (status === 'done') return 'อนุมัติแล้ว';
+    if (status === 'processing') return 'กำลังดำเนินการ';
+    return 'รอดำเนินการ';
+  } },
+  { colClass: 'col-notify', header: 'แจ้งลบ/แก้ไข', min: 100, max: 140, cap: 14, pick: () => 'แจ้งลบ/แก้ไข' }
+];
+
+function estimateHistoryColWidth(rows, cfg) {
+  const items = Array.isArray(rows) ? rows : [];
+  const sampleCount = Math.min(items.length, 240);
+  let maxLen = String(cfg.header || '').trim().length || 4;
+  for (let i = 0; i < sampleCount; i++) {
+    let text = '';
+    try {
+      text = String(cfg.pick(items[i]) || '');
+    } catch (_) {
+      text = '';
+    }
+    const normalized = text.replace(/\s+/g, ' ').trim();
+    if (!normalized) continue;
+    const len = Math.min(normalized.length, Number(cfg.cap || 50));
+    if (len > maxLen) maxLen = len;
+  }
+  const width = Math.round((maxLen * 7.5) + 28);
+  return Math.min(Number(cfg.max || 360), Math.max(Number(cfg.min || 90), width));
+}
+
+function autoFitHistoryColumns(rows) {
+  const table = document.querySelector('.history-table');
+  if (!table) return;
+  HISTORY_COLUMN_AUTOFIT.forEach((cfg) => {
+    const col = table.querySelector(`col.${cfg.colClass}`);
+    if (!col) return;
+    col.style.width = `${estimateHistoryColWidth(rows, cfg)}px`;
+  });
+}
+
+function renderFilteredRows(rows) {
+  const tbody = document.getElementById('historyTbody');
+  const emptyEl = document.getElementById('historyEmpty');
+  const filteredRows = Array.isArray(rows) ? rows : [];
+  tbody.innerHTML = '';
+
+  if (!historyRows.length) {
+    lastRenderedRows = [];
+    autoFitHistoryColumns([]);
+    emptyEl.textContent = 'ยังไม่มีข้อมูลในชุดปฏิบัติการของท่าน';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  if (!filteredRows.length) {
+    lastRenderedRows = [];
+    autoFitHistoryColumns(historyRows);
+    emptyEl.textContent = 'ไม่พบข้อมูลที่ตรงกับเงื่อนไขฟิลเตอร์';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  lastRenderedRows = filteredRows;
+  tbody.innerHTML = filteredRows.map((row, idx) => {
+    const no = getRowValue(row, 'ลำดับ') || '-';
+    const recDate = formatThaiDateShort(getRowValue(row, 'วันที่บันทึก')) || getRowValue(row, 'วันที่บันทึก') || '-';
+    const recTime = formatThaiTime(getRowValue(row, 'เวลาบันทึก')) || getRowValue(row, 'เวลาบันทึก') || '-';
+    const reporter = getRowValue(row, 'ผู้รายงาน') || '-';
+    const reporterEmail = getRowValue(row, 'อีเมล') || '-';
+    const unit = getRowValue(row, 'ชุดปฏิบัติการ') || '-';
+    const center = getRowValue(row, 'หน้างานศูนย์') || '-';
+    const otherWork = getWorkTag(row) || '-';
+    const suspect = getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-';
+    const warrant = getWarrantNo(row) || '-';
+    const citizenId = getCitizenId(row) || '-';
+    const charge = getRowValue(row, 'ข้อหา (ฐานความผิด)') || '-';
+    const dateTime = formatThaiDateTimePair(getRowValue(row, 'วันที่'), getRowValue(row, 'เวลา'));
+    const location = getRowValue(row, 'สถานที่ (จับกุม/หรือตรวจสอบ)') || '-';
+    const actionType = getRowValue(row, 'การจับกุม ตรวจสอบ') || '-';
+    const changeRequestId = getRowValue(row, 'changeRequestId');
+    const changeRequestStatus = normalizeText(getRowValue(row, 'changeRequestStatus') || '');
+    const hasSubmitted = !!changeRequestId;
+    let notifyLabel = 'แจ้งลบ/แก้ไข';
+    let statusBadge = '<span class="status-tag none">-</span>';
+    if (hasSubmitted) {
+      notifyLabel = 'ยื่นคำร้องแล้ว';
+      const safeId = escapeHtml(changeRequestId);
+      if (changeRequestStatus === 'rejected') {
+        statusBadge = `<button class="status-tag rejected" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">ไม่อนุมัติ</button>`;
+      } else if (changeRequestStatus === 'done') {
+        statusBadge = `<button class="status-tag done" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">อนุมัติแล้ว</button>`;
+      } else if (changeRequestStatus === 'processing') {
+        statusBadge = `<button class="status-tag processing" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">กำลังดำเนินการ</button>`;
+      } else {
+        statusBadge = `<button class="status-tag new" type="button" onclick="copyRequestId('${safeId}')" title="คัดลอกรหัสคำขอ: ${safeId}">รอดำเนินการ</button>`;
+      }
+    }
+    const notifyDisabledAttr = hasSubmitted ? ' disabled aria-disabled="true"' : '';
+    const notifyClass = hasSubmitted
+      ? 'notify-btn is-submitted is-locked'
+      : 'notify-btn';
+    return `
+      <tr>
+        <td class="nowrap">${escapeHtml(no)}</td>
+        <td class="nowrap">${escapeHtml(recDate)}</td>
+        <td class="nowrap">${escapeHtml(recTime)}</td>
+        <td>${escapeHtml(reporter)}</td>
+        <td class="nowrap">${escapeHtml(reporterEmail)}</td>
+        <td>${escapeHtml(unit)}</td>
+        <td>${escapeHtml(center)}</td>
+        <td>${escapeHtml(otherWork)}</td>
+        <td>${escapeHtml(suspect)}</td>
+        <td>${escapeHtml(warrant)}</td>
+        <td class="nowrap">${escapeHtml(citizenId)}</td>
+        <td class="clamp-4"><span>${escapeHtml(charge)}</span></td>
+        <td class="nowrap">${escapeHtml(dateTime)}</td>
+        <td>${escapeHtml(location)}</td>
+        <td>${escapeHtml(actionType)}</td>
+        <td class="nowrap"><button class="mini-btn" type="button" onclick="openHistoryDetail(${idx})">ดูทั้งหมด</button></td>
+        <td class="nowrap">${statusBadge}</td>
+        <td class="nowrap"><button class="${notifyClass}" type="button" onclick="notifyAdminByRow(${idx})"${notifyDisabledAttr}>${escapeHtml(notifyLabel)}</button></td>
+      </tr>
+    `;
+  }).join('');
+  autoFitHistoryColumns(filteredRows);
+}
+
+function applyHistoryFilters() {
+  let filteredRows = getCurrentFilteredRows();
+  filteredRows = sortRows(filteredRows, currentSortKey, currentSortDir);
+  updateFilterSummary(historyRows.length, filteredRows.length);
+  renderFilteredRows(filteredRows);
+}
+
+function clearHistoryFilters() {
+  ['filterKeyword', 'filterUnit', 'filterDateStart', 'filterDateEnd', 'filterTimePeriod'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  applyHistoryFilters();
+}
+
+function bindFilterInputs() {
+  ['filterKeyword', 'filterUnit', 'filterDateStart', 'filterDateEnd', 'filterTimePeriod'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el || el.__boundFilter) return;
+    el.addEventListener('input', applyHistoryFilters);
+    el.addEventListener('change', applyHistoryFilters);
+    el.__boundFilter = true;
+  });
+}
+
+function populateUnitDropdown() {
+  const select = document.getElementById('filterUnit');
+  if (!select) return;
+  const currentVal = select.value;
+  const units = [...new Set(historyRows.map(r => getRowValue(r, 'ชุดปฏิบัติการ')).filter(Boolean))].sort();
+  select.innerHTML = '<option value="">ทั้งหมด</option>' + units.map(u => `<option value="${u}">${u}</option>`).join('');
+  select.value = currentVal;
+}
+
+function shouldHideHistoryDetailValue(value) {
+  const text = String(value == null ? '' : value).trim();
+  return !text || /^[-–—]+$/.test(text);
+}
+
+function getHistoryDetailEntries(row) {
+  const source = row && typeof row === 'object' ? row : {};
+  const allKeys = Object.keys(source);
+  const hasAlias = {};
+  allKeys.forEach((key) => {
+    const m = key.match(/^(.*)\s#\d+$/);
+    if (m) hasAlias[m[1]] = true;
+  });
+
+  const keysToShow = allKeys.filter((key) => {
+    const m = key.match(/^(.*)\s#\d+$/);
+    if (m) return true;
+    return !hasAlias[key];
+  });
+
+  return keysToShow.map((key) => {
+    const label = key.replace(/\s#\d+$/, '').trim();
+    const value = formatHistoryValueByKey(key, getRowValue(source, key));
+    if (shouldHideHistoryDetailValue(value)) return null;
+    return { label, value };
+  }).filter(Boolean);
+}
+
+function buildHistoryDetailHtml(row) {
+  const entries = getHistoryDetailEntries(row);
+  if (!entries.length) return '<div class="detail-empty">-</div>';
+
+  const SECTION_DEFS = [
+    { title: '📋 ข้อมูลการบันทึก', keys: ['ลำดับ', 'วันที่บันทึก', 'เวลาบันทึก'] },
+    { title: '👮 เจ้าหน้าที่', keys: ['ผู้รายงาน', 'อีเมล', 'ชุดปฏิบัติการ', 'หัวหน้าชุด', 'หมายเลขโทรศัพท์', 'ตรวจค้น จับกุมโดย'] },
+    { title: '📁 ข้อมูลคดี', keys: ['การจับกุม ตรวจสอบ', 'วันที่', 'เวลา', 'สถานที่ (จับกุม/หรือตรวจสอบ)', 'พิกัด Google Maps', 'ข้อหา (ฐานความผิด)', 'พร้อมของกลาง (ถ้ามี)', 'นำส่งพนักงานสอบสวน', 'ผลการตรวจสอบ'] },
+    { title: '🧑 ผู้ต้องหา / บุคคล', keys: ['ชื่อ-สกุล ผู้ต้องหา', 'อายุ (ปี)', 'เลขประจำตัวประชาชน (13 หลัก)', 'ที่อยู่ (ตามบัตร)', 'ชื่อ-สกุล เจ้าของสถานที่ / พยาน นำตรวจ'] },
+    { title: '⚖️ หมายจับ / หมายค้น', keys: ['ศาลที่ออกหมายจับ', 'เลขที่หมายจับ', 'วันเดือนปีที่ออกหมาย', 'ประเภทหมายจับ', 'ศาลที่ออกหมายค้น', 'เลขที่หมายค้น', 'วันเดือนปีที่ออกหมายค้น'] },
+    { title: '🏢 หน้างาน', keys: ['หน้างานศูนย์', 'หน้างานต่างด้าว', 'หน้างานห้วงระดม', 'งานออกสื่อ'] }
+  ];
+
+  const usedLabels = new Set();
+  const sections = [];
+
+  SECTION_DEFS.forEach((def) => {
+    const matched = entries.filter((e) => def.keys.some((k) => k.replace(/\s#\d+$/, '') === e.label));
+    if (!matched.length) return;
+    matched.forEach((e) => usedLabels.add(e.label));
+    sections.push({ title: def.title, items: matched });
+  });
+
+  const remaining = entries.filter((e) => !usedLabels.has(e.label));
+  if (remaining.length) {
+    sections.push({ title: '📌 อื่น ๆ', items: remaining });
+  }
+
+  return sections.map((sec) => {
+    const rows = sec.items.map((entry) =>
+      `<div class="detail-row"><span class="detail-key">${escapeHtml(entry.label)}:</span> <span class="detail-value">${escapeHtml(entry.value)}</span></div>`
+    ).join('');
+    return `<div class="detail-section"><div class="detail-section-title">${escapeHtml(sec.title)}</div><div class="detail-section-body">${rows}</div></div>`;
+  }).join('');
+}
+
+function buildHistoryDetailText(row) {
+  const entries = getHistoryDetailEntries(row);
+  return entries.map((entry) => `${entry.label}: ${entry.value}`).join('\n');
+}
+
+function fallbackCopyText(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  el.setAttribute('readonly', '');
+  el.style.position = 'fixed';
+  el.style.opacity = '0';
+  el.style.pointerEvents = 'none';
+  document.body.appendChild(el);
+  el.focus();
+  el.select();
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch (_) {
+    copied = false;
+  }
+  document.body.removeChild(el);
+  return copied;
+}
+
+function setHistoryCopyButtonState(copied) {
+  const btn = document.getElementById('historyDetailCopyBtn');
+  const label = document.getElementById('historyDetailCopyLabel');
+  if (!btn || !label) return;
+  const isCopied = !!copied;
+  btn.classList.toggle('is-copied', isCopied);
+  label.textContent = isCopied ? 'คัดลอกเนื้อหาแล้ว' : 'คัดลอกเนื้อหา';
+  btn.setAttribute('aria-label', isCopied ? 'คัดลอกเนื้อหาแล้ว' : 'คัดลอกเนื้อหา');
+}
+
+async function copyHistoryDetailContent() {
+  const row = activeHistoryDetailRow;
+  if (!row) {
+    showToast('ไม่พบข้อมูลสำหรับคัดลอก');
+    return;
+  }
+  const text = buildHistoryDetailText(row).trim();
+  if (!text) {
+    showToast('ไม่มีเนื้อหาให้คัดลอก');
+    return;
+  }
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      await navigator.clipboard.writeText(text);
+      setHistoryCopyButtonState(true);
+      if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+      historyCopyStateTimer = setTimeout(() => setHistoryCopyButtonState(false), 2500);
+      showToast('คัดลอกเนื้อหาแล้ว');
+      return;
+    }
+  } catch (_) {}
+  if (fallbackCopyText(text)) {
+    setHistoryCopyButtonState(true);
+    if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+    historyCopyStateTimer = setTimeout(() => setHistoryCopyButtonState(false), 2500);
+    showToast('คัดลอกเนื้อหาแล้ว');
+    return;
+  }
+  showToast('ไม่สามารถคัดลอกได้');
+}
+
+function openHistoryDetail(index) {
+  const row = lastRenderedRows[index];
+  if (!row) return;
+  if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+  setHistoryCopyButtonState(false);
+  activeHistoryDetailRow = row;
+  const overlay = document.getElementById('historyDetailOverlay');
+  const content = document.getElementById('historyDetailContent');
+  if (content) {
+    const detailHtml = buildHistoryDetailHtml(row);
+    content.innerHTML = detailHtml || '<div class="detail-empty">-</div>';
+  }
+  if (overlay) overlay.classList.add('show');
+}
+
+function closeHistoryDetail() {
+  document.getElementById('historyDetailOverlay')?.classList.remove('show');
+  if (historyCopyStateTimer) clearTimeout(historyCopyStateTimer);
+  setHistoryCopyButtonState(false);
+  activeHistoryDetailRow = null;
+}
+
+function syncChangeRequestType() {
+  const type = normalizeText(document.getElementById('changeRequestType')?.value || 'edit');
+  const deleteField = document.getElementById('changeDeleteReasonField');
+  const correctedField = document.getElementById('changeCorrectedDataField');
+  const editInfo = document.getElementById('changeEditInfo');
+  const editInfoText = type === 'delete'
+    ? 'คำขอลบจะถูกส่งตรงถึงแอดมินทันที เมื่อแอดมินอนุมัติ ระบบจะย้ายข้อมูลไป Recycle Bin และปรับสีแถวนั้นเป็นสีเทา'
+    : 'แบบฟอร์มนี้แสดงผลหน้าเดิมที่ท่านเคยกรอก\nเมื่อแก้ไขแล้ว จะแสดงกรอบสีเขียวในส่วนที่แก้ไข';
+  if (deleteField) deleteField.style.display = type === 'delete' ? '' : 'none';
+  if (correctedField) correctedField.style.display = 'none';
+  if (editInfo) {
+    editInfo.style.display = '';
+    editInfo.textContent = editInfoText;
+  }
+}
+
+function getChangeRequestStatusLabel(row) {
+  const status = normalizeText(getRowValue(row, 'changeRequestStatus') || '');
+  if (status === 'rejected') return 'คำขอนี้ถูกไม่อนุมัติแล้ว';
+  if (status === 'done') return 'คำขอนี้อนุมัติแล้ว';
+  return 'รายการนี้ส่งคำขอแล้ว';
+}
+
+function buildChangeRequestSummary(row) {
+  const id = getRowValue(row, 'ลำดับ') || '-';
+  const name = getRowValue(row, 'ชื่อ-สกุล ผู้ต้องหา') || '-';
+  const citizen = getCitizenId(row) || '-';
+  const warrant = getWarrantNo(row) || '-';
+  return `<div class="change-target-id">ลำดับ: ${id}</div><div>ผู้ต้องหา: ${name}</div><div>เลขบัตรประชาชน: ${citizen}</div><div>หมายจับ/ค้น: ${warrant}</div>`;
+}
+
+function parseChangedFieldsFromText(row, rawText) {
+  const sourceRow = row && typeof row === 'object' ? row : {};
+  const text = String(rawText || '').trim();
+  if (!text) return {};
+
+  const candidateKeys = Object.keys(sourceRow).filter((key) => {
+    const k = String(key || '').trim();
+    if (!k) return false;
+    return !/^changeRequest/i.test(k);
+  });
+  const byNormalized = {};
+  candidateKeys.forEach((key) => {
+    byNormalized[normalizeText(key)] = key;
+  });
+
+  const changed = {};
+  text.split(/\r?\n/).forEach((line) => {
+    const rawLine = String(line || '').trim();
+    if (!rawLine) return;
+    const match = rawLine.match(/^([^:：]+)\s*[:：]\s*(.*)$/);
+    if (!match) return;
+    const rawKey = String(match[1] || '').trim();
+    const value = String(match[2] || '').trim();
+    if (!rawKey) return;
+    const resolvedKey = byNormalized[normalizeText(rawKey)] || rawKey;
+    if (candidateKeys.indexOf(resolvedKey) === -1) return;
+    changed[resolvedKey] = value;
+  });
+  return changed;
+}
+
+function openChangeRequestModal(row) {
+  if (!row || typeof row !== 'object') return;
+  activeChangeRequestRow = row;
+  const summaryEl = document.getElementById('changeRequestTargetSummary');
+  const typeEl = document.getElementById('changeRequestType');
+  const deleteReasonEl = document.getElementById('changeDeleteReason');
+  const correctedEl = document.getElementById('changeCorrectedData');
+  const noteEl = document.getElementById('changeNote');
+  if (summaryEl) summaryEl.innerHTML = buildChangeRequestSummary(row);
+  if (typeEl) typeEl.value = 'edit';
+  if (deleteReasonEl) deleteReasonEl.value = 'ข้อมูลซ้ำ';
+  if (correctedEl) correctedEl.value = '';
+  if (noteEl) noteEl.value = '';
+  syncChangeRequestType();
+  document.getElementById('changeRequestOverlay')?.classList.add('show');
+}
+
+function closeChangeRequestModal(forceClose) {
+  if (pendingChangeRequest && !forceClose) return;
+  document.getElementById('changeRequestOverlay')?.classList.remove('show');
+  activeChangeRequestRow = null;
+}
+
+function buildEditContextSourceRow(row) {
+  const source = row && typeof row === 'object' ? row : {};
+  const keepKeys = [
+    'ลำดับ', 'วันที่บันทึก', 'เวลาบันทึก', 'ผู้รายงาน', 'อีเมล', 'ชุดปฏิบัติการ', 'หัวหน้าชุด', 'หมายเลขโทรศัพท์',
+    'วันที่', 'เวลา', 'สถานที่ (จับกุม/หรือตรวจสอบ)', 'พิกัด Google Maps', 'การจับกุม ตรวจสอบ',
+    'ศาลที่ออกหมายจับ', 'เลขที่หมายจับ', 'วันเดือนปีที่ออกหมาย', 'ประเภทหมายจับ',
+    'ชื่อ-สกุล ผู้ต้องหา', 'อายุ (ปี) #1', 'เลขประจำตัวประชาชน (13 หลัก) #1', 'ที่อยู่ (ตามบัตร) #1',
+    'ข้อหา (ฐานความผิด)', 'พร้อมของกลาง (ถ้ามี)', 'นำส่งพนักงานสอบสวน',
+    'ชื่อ-สกุล เจ้าของสถานที่ / พยาน นำตรวจ', 'อายุ (ปี)', 'เลขประจำตัวประชาชน (13 หลัก)', 'ที่อยู่ (ตามบัตร)',
+    'ผลการตรวจสอบ', 'ตรวจค้น จับกุมโดย', 'ศาลที่ออกหมายค้น', 'เลขที่หมายค้น', 'วันเดือนปีที่ออกหมายค้น',
+    'หน้างานต่างด้าว', 'หน้างานห้วงระดม', 'หน้างานศูนย์', 'งานออกสื่อ'
+  ];
+  const out = {};
+  keepKeys.forEach((key) => {
+    out[key] = getRowValue(source, key);
+  });
+  return out;
+}
+
+function openIndexEditRequestForm(row, options) {
+  const sourceRow = row && typeof row === 'object' ? row : null;
+  if (!sourceRow) return false;
+  const opts = options && typeof options === 'object' ? options : {};
+  const note = String(opts.note || '').trim();
+  const compactSourceRow = buildEditContextSourceRow(sourceRow);
+  const ctx = {
+    sourcePage: 'history.html',
+    targetNo: getRowValue(sourceRow, 'ลำดับ'),
+    targetTimestamp: [getRowValue(sourceRow, 'วันที่บันทึก'), getRowValue(sourceRow, 'เวลาบันทึก')].filter(Boolean).join(' '),
+    sourceRow: compactSourceRow,
+    requestType: 'edit',
+    deleteReason: '',
+    note: note
+  };
+  let stored = false;
+  try {
+    localStorage.setItem(EDIT_REQUEST_CONTEXT_KEY, JSON.stringify(ctx));
+    stored = true;
+  } catch (_) {}
+  try {
+    sessionStorage.setItem(EDIT_REQUEST_CONTEXT_FALLBACK_KEY, JSON.stringify(ctx));
+    stored = true;
+  } catch (_) {}
+  if (saveEditContextToWindowName(ctx)) {
+    stored = true;
+  }
+  if (!stored) {
+    showToast('ไม่สามารถเปิดฟอร์มแก้ไขได้: พื้นที่เก็บข้อมูลเต็ม');
+    return false;
+  }
+  closeChangeRequestModal(true);
+  showToast('กำลังเปิดฟอร์มแก้ไขแบบหน้า index...');
+  const params = new URLSearchParams({ editRequest: '1', requestType: 'edit' });
+  if (ctx.targetNo) params.set('targetNo', String(ctx.targetNo));
+  if (ctx.targetTimestamp) params.set('targetTs', String(ctx.targetTimestamp));
+  return navigateInApp(null, 'actionreport.html?' + params.toString());
+}
+
+async function submitDeleteRequestDirect(row, opts) {
+  const url = getSheetUrl();
+  if (!url) { showToast('ไม่พบ URL ระบบ กรุณาตั้งค่าใหม่'); return; }
+  const user = getStoredUserSafe();
+  const sessionToken = getSessionToken(user);
+  if (!user.email || !sessionToken) { showToast('ไม่พบเซสชัน กรุณาเข้าสู่ระบบใหม่'); return; }
+
+  const deleteReason = String((opts && opts.deleteReason) || '').trim();
+  const note = String((opts && opts.note) || '').trim();
+  const targetNo = String(getRowValue(row, 'ลำดับ') || '').trim();
+  const targetTimestamp = [getRowValue(row, 'วันที่บันทึก'), getRowValue(row, 'เวลาบันทึก')].filter(Boolean).join(' ').trim();
+
+  closeChangeRequestModal(true);
+  pendingChangeRequest = true;
+  showToast('กำลังส่งคำขอลบ...');
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'submitChangeRequest',
+        email: user.email,
+        sessionToken: sessionToken,
+        requestType: 'delete',
+        target: { no: targetNo, timestamp: targetTimestamp },
+        deleteReason: deleteReason,
+        note: note,
+        changedFields: {},
+        correctedData: ''
+      })
+    });
+    const result = await response.json();
+    if (result.status !== 'success') throw new Error(result.message || 'ส่งคำขอไม่สำเร็จ');
+
+    // อัปเดต local row เพื่อล็อคปุ่มแจ้งทันที
+    const requestId = String(result.requestId || '').trim();
+    if (requestId) {
+      row['changeRequestId'] = requestId;
+      row['changeRequestStatus'] = 'new';
+    }
+    showRequestSubmittedPopup('ยื่นคำร้องแล้ว ระบบกำลังส่งให้แอดมินตรวจสอบ', requestId);
+    renderFilteredRows(getCurrentFilteredRows());
+  } catch (err) {
+    showToast('ส่งคำขอไม่สำเร็จ: ' + (err.message || err));
+  } finally {
+    pendingChangeRequest = false;
+  }
+}
+
+function notifyAdminByRow(index) {
+  const row = lastRenderedRows[index];
+  if (!row) return;
+  if (getRowValue(row, 'changeRequestId')) {
+    showToast(getChangeRequestStatusLabel(row));
+    return;
+  }
+  openChangeRequestModal(row);
+}
+
+function submitChangeRequestFromModal() {
+  const row = activeChangeRequestRow;
+  if (!row) {
+    showToast('ไม่พบรายการที่ต้องการส่งคำขอ');
+    return;
+  }
+
+  const type = normalizeText(document.getElementById('changeRequestType')?.value || 'edit');
+  if (type !== 'edit' && type !== 'delete') {
+    showToast('ประเภทคำขอไม่ถูกต้อง');
+    return;
+  }
+  const deleteReason = String(document.getElementById('changeDeleteReason')?.value || '').trim();
+  const note = String(document.getElementById('changeNote')?.value || '').trim();
+
+  if (type === 'delete' && !deleteReason) {
+    showToast('กรุณาเลือกเหตุผลการลบรายการ');
+    return;
+  }
+  if (type === 'delete') {
+    submitDeleteRequestDirect(row, { deleteReason: deleteReason, note: note });
+    return;
+  }
+  openIndexEditRequestForm(row, {
+    requestType: type,
+    deleteReason: deleteReason,
+    note: note
+  });
+}
+
+function setMobileDataLoading(isLoading) {
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  if (!isMobile) {
+    if (!isLoading) document.body.classList.remove('mobile-loading-data');
+    return;
+  }
+  document.body.classList.toggle('mobile-loading-data', !!isLoading);
+}
+
+async function loadHistory(_bg) {
+  const user = getStoredUserSafe();
+  const roleLabel = document.getElementById('historyRoleLabel');
+  const unitLabel = document.getElementById('historyUnitLabel');
+  const countLabel = document.getElementById('historyCountLabel');
+  const emptyEl = document.getElementById('historyEmpty');
+  const cacheKey = 'history|' + (user.email || 'anon');
+
+  if (!_bg) {
+    syncAdminHistoryMenus(user);
+    renderUserProfile(user);
+    roleLabel.textContent = isAdminRole(user) ? 'Admin' : (isUserRole(user) ? 'User' : '-');
+    unitLabel.textContent = user.unit || '-';
+    countLabel.textContent = '0';
+    updateFilterSummary(0, 0);
+    historyRows = [];
+    bindFilterInputs();
+    applyHistoryFilters();
+    const pendingPopup = consumePendingChangeRequestPopup();
+    if (pendingPopup) {
+      setTimeout(() => { showRequestSubmittedPopup(pendingPopup.message, pendingPopup.requestId); }, 120);
+    }
+  }
+
+  const sessionToken = getSessionToken(user);
+  if (!user.email || !sessionToken) {
+    if (!_bg) emptyEl.textContent = 'ไม่พบเซสชันเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่';
+    return;
+  }
+  if (!isUserRole(user) && !isAdminRole(user)) {
+    if (!_bg) emptyEl.textContent = 'ไม่มีสิทธิ์เข้าถึงเมนูนี้';
+    return;
+  }
+
+  /* SWR: show cached data instantly, refresh in background */
+  if (!_bg && window.CSD1Cache) {
+    const hit = window.CSD1Cache.get(cacheKey);
+    if (hit) {
+      unitLabel.textContent = hit.data.unit || user.unit || '-';
+      countLabel.textContent = String(hit.data.total || 0);
+      historyRows = Array.isArray(hit.data.rows) ? hit.data.rows : [];
+      populateUnitDropdown();
+      emptyEl.style.display = 'none';
+      applyHistoryFilters();
+      setTimeout(() => loadHistory(true), 100);
+      return;
+    }
+  }
+
+  if (!_bg) { emptyEl.textContent = 'กำลังโหลดข้อมูล...'; emptyEl.style.display = 'block'; }
+
+  try {
+    const response = await fetch(getSheetUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'getUnitHistory', email: user.email, sessionToken: sessionToken })
+    });
+    const result = await response.json();
+    if (result.status !== 'success') throw new Error(result.message || 'โหลดข้อมูลไม่สำเร็จ');
+
+    if (window.CSD1Cache) window.CSD1Cache.set(cacheKey, { unit: result.unit, total: result.total, rows: result.data });
+    unitLabel.textContent = result.unit || user.unit || '-';
+    countLabel.textContent = String(result.total || 0);
+    historyRows = Array.isArray(result.data) ? result.data : [];
+    populateUnitDropdown();
+    if (!_bg) emptyEl.style.display = 'none';
+    applyHistoryFilters();
+  } catch (err) {
+    if (!_bg) emptyEl.textContent = 'เกิดข้อผิดพลาด: ' + (err.message || err);
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeProfileMenu();
+    closeHistoryDetail();
+    closeChangeRequestModal();
+    closeAppSidebar();
+    closeMobileSettings();
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (profileMenuOpen && !e.target.closest('.user-profile-wrap')) {
+    closeProfileMenu();
+  }
+});
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+  }
+});
+
+applyTheme(getPreferredTheme());
+(function() {
+  const _u = getStoredUserSafe();
+  if (!_u || !_u.email || !_u.sessionToken) { window.location.replace('index.html'); return; }
+  const _pages = Array.isArray(_u.allowedPages) ? _u.allowedPages : [];
+  if (!_pages.includes('history')) {
+    try { sessionStorage.setItem('CSD1_ACCESS_DENIED', '1'); } catch (_) {}
+    window.location.replace('index.html');
+    return;
+  }
+  syncAdminHistoryMenus(_u);
+  loadHistory();
+})();
+</script>
+<script>
+// ==================== PWA LINK INTERCEPTOR ====================
+(function() {
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (!isStandalone) return;
+  document.addEventListener('click', function(e) {
+    if (e.defaultPrevented) return;
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    let url;
+    try { url = new URL(a.href, location.href); } catch(_) { return; }
+    if (url.origin === location.origin && !a.getAttribute('target')) {
+      e.preventDefault();
+      location.href = url.pathname + url.search + url.hash;
+    }
+  });
+})();
+</script>
+<script src="connect-mobile-nav.js"></script>
+<script src="sidebar-account.js"></script>
+<div class="bottom-bar-veil" aria-hidden="true"></div>
+</body>
+</html>

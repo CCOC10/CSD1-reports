@@ -1,0 +1,3404 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<script src="page-transition.js"></script>
+<script src="csd1-cache.js"></script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Notification คำขอแก้ไข | CSD1</title>
+<link rel="manifest" href="manifest.webmanifest">
+<script src="app-shell-lock.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(() => {
+  try {
+    const t = localStorage.getItem('CSD1_THEME');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch(_) {}
+})();
+</script>
+<style>
+:root {
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --primary: #0f172a;
+  --primary-deep: #020617;
+  --primary-surface: #172036;
+  --accent: #ffd400;
+  --accent-dim: #c79d00;
+  --accent-soft: rgba(255, 212, 0, 0.14);
+  --info: #38bdf8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 212, 0, 0.22);
+  --border-accent: rgba(255, 212, 0, 0.38);
+  --card-bg: rgba(15, 23, 42, 0.72);
+  --card-bg-strong: rgba(17, 24, 39, 0.9);
+  --body-bg: radial-gradient(circle at top left, rgba(0, 38, 75, 0.55), transparent 32%), linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] {
+  --primary: #ffffff;
+  --primary-deep: #edf3fb;
+  --primary-surface: #ffffff;
+  --accent: #0f766e;
+  --accent-dim: #115e59;
+  --accent-soft: rgba(15, 118, 110, 0.08);
+  --info: #0284c7;
+  --success: #15803d;
+  --danger: #dc2626;
+  --text: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(15, 118, 110, 0.22);
+  --border-accent: rgba(15, 118, 110, 0.38);
+  --card-bg: rgba(255, 255, 255, 0.86);
+  --card-bg-strong: rgba(255, 255, 255, 0.98);
+  --body-bg: radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 30%), linear-gradient(160deg, #eef5fb 0%, #f8fbff 56%, #e2ecf7 100%);
+  --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+html {
+  background-color: var(--primary-deep);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--body-bg);
+  color: var(--text);
+  min-height: 100dvh;
+  line-height: 1.55;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 18px);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes authSlideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes authShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.auth-check-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 23, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 5200;
+  padding: 1rem;
+  padding-top: calc(1rem + env(safe-area-inset-top));
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+[data-theme="light"] .auth-check-wrapper {
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.auth-check-wrapper.hidden { display: none; }
+
+.auth-check-card {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset, 0 0 50px rgba(255, 212, 0, 0.15);
+  animation: authSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .auth-check-card {
+  background: #00264B;
+  border-color: rgba(255, 212, 0, 0.35);
+  box-shadow: 0 28px 60px rgba(0, 38, 75, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.05) inset, 0 0 42px rgba(255, 212, 0, 0.12);
+}
+
+.auth-check-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #FFD400, transparent);
+  background-size: 200% 100%;
+  animation: authShimmer 3s ease infinite;
+}
+
+.auth-check-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 15px rgba(255, 212, 0, 0.35));
+}
+
+.auth-check-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #FFD400;
+  margin: 0 0 0.25rem;
+}
+
+.auth-check-subtitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0 0 1rem;
+}
+
+[data-theme="light"] .auth-check-subtitle {
+  color: rgba(226, 232, 240, 0.82);
+}
+
+.auth-check-error {
+  color: #fda4af;
+  font-size: 0.84rem;
+  margin: 0 0 1rem;
+  min-height: 1.2em;
+}
+
+.auth-check-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.auth-check-actions .btn {
+  flex: 1;
+}
+
+.app-nav-fab {
+  position: fixed;
+  left: max(0.75rem, env(safe-area-inset-left));
+  top: max(0.75rem, env(safe-area-inset-top));
+  width: 40px;
+  height: 41px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  color: #FFD400;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  z-index: 4305;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  padding: 0;
+}
+
+.app-nav-fab:hover {
+  transform: translateY(-1px);
+}
+
+.app-nav-fab:active {
+  transform: translateY(0);
+}
+
+.app-nav-fab svg {
+  width: 40px;
+  height: 41px;
+  stroke: currentColor;
+  stroke-width: 4.2;
+  filter: drop-shadow(0 0 4px rgba(255, 212, 0, 0.22));
+}
+
+.app-nav-fab svg line {
+  vector-effect: non-scaling-stroke;
+}
+
+body.nav-open .app-nav-fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+}
+
+.app-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  z-index: 4306;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.app-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: min(290px, 88vw);
+  background: rgba(0, 38, 75, 0.5);
+  border-right: 1px solid rgba(255, 212, 0, 0.34);
+  transform: translateX(-100%);
+  transition: transform 0.24s ease;
+  z-index: 4307;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(9px);
+}
+
+[data-theme="light"] .app-sidebar {
+  background: rgba(0, 38, 75, 0.5);
+  border-right-color: rgba(255, 255, 255, 0.2);
+}
+
+body.nav-open .app-sidebar-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.nav-open .app-sidebar {
+  transform: translateX(0);
+}
+
+.app-sidebar-head {
+  padding: max(1rem, env(safe-area-inset-top)) 1rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.app-sidebar-title {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.app-sidebar-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.42);
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFD400;
+  cursor: pointer;
+  font-size: 1.22rem;
+}
+
+.app-sidebar-nav {
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.52rem;
+}
+
+.app-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.62rem;
+  padding: 0.62rem 0.7rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.app-sidebar-link svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.app-sidebar-link.active {
+  border-color: rgba(255, 212, 0, 0.52);
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+}
+
+.app-sidebar-theme {
+  margin-top: auto;
+  padding: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.app-sidebar-theme-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #dbe7ff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.44rem;
+}
+
+.app-theme-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 58px;
+  height: 30px;
+}
+
+.app-theme-switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.app-theme-switch-track {
+  width: 58px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.14);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+}
+
+.app-theme-switch-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+
+.app-theme-switch input:checked + .app-theme-switch-track .app-theme-switch-thumb {
+  transform: translateX(27px);
+}
+
+.app-theme-switch-sun,.app-theme-switch-moon { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.3; }
+.app-theme-switch-moon { display: none; }
+[data-theme="dark"] .app-theme-switch-sun { display: none; }
+[data-theme="dark"] .app-theme-switch-moon { display: block; }
+
+.sidebar-settings-action {
+  margin-top: 0.55rem;
+  width: 100%;
+  border: 1px solid rgba(255, 212, 0, 0.42);
+  border-radius: 10px;
+  background: rgba(255, 212, 0, 0.15);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.7rem 0.62rem;
+  cursor: pointer;
+}
+
+[data-theme="light"] .sidebar-settings-action {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.mobile-mini-nav {
+  position: fixed;
+  left: max(0.5rem, env(safe-area-inset-left));
+  right: max(0.5rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 0.35rem - 2px);
+  height: 65px;
+  padding: 0.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: rgba(2, 6, 23, 0.94);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  z-index: 4307;
+  display: none;
+  gap: 0.15rem;
+}
+
+.mobile-mini-link,
+.mobile-mini-settings {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.mobile-mini-link svg,
+.mobile-mini-settings svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+
+[data-theme="dark"] .mobile-mini-link.active {
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.42) inset, 0 0 14px rgba(255, 212, 0, 0.46);
+  text-shadow: 0 0 10px rgba(255, 212, 0, 0.45);
+}
+[data-theme="dark"] .mobile-mini-link.active svg {
+  filter: drop-shadow(0 0 6px rgba(255, 212, 0, 0.75));
+}
+.mobile-mini-settings { cursor: pointer; font-family: inherit; color: #f8fafc; }
+.mobile-mini-link:active,
+.mobile-mini-settings:active {
+  transform: scale(0.96);
+}
+[data-theme="light"] .mobile-mini-nav { background: rgba(0, 38, 75, 0.6); border-color: rgba(0, 38, 75, 0.36); box-shadow: 0 12px 24px rgba(0, 38, 75, 0.18); }
+[data-theme="light"] .mobile-mini-link,
+[data-theme="light"] .mobile-mini-settings { color: #f8fafc; }
+[data-theme="light"] .mobile-mini-link.active { background: rgba(0, 38, 75, 0.32); color: #fff; }
+
+.mobile-settings-overlay,
+.mobile-settings-sheet { display: none; }
+.mobile-settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.52);
+  z-index: 4308;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mobile-settings-sheet {
+  position: fixed;
+  left: max(0.7rem, env(safe-area-inset-left));
+  right: max(0.7rem, env(safe-area-inset-right));
+  bottom: calc(env(safe-area-inset-bottom) + 5rem);
+  background: rgba(0, 38, 75, 0.86);
+  border: 1px solid rgba(255, 212, 0, 0.42);
+  border-radius: 16px;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.34);
+  z-index: 4309;
+  padding: 0.75rem 0.85rem 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.mobile-settings-overlay.show { opacity: 1; pointer-events: auto; }
+.mobile-settings-sheet.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+.mobile-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.3);
+}
+
+.mobile-settings-title { font-size: 0.94rem; font-weight: 800; color: #FFD400; }
+.mobile-settings-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 212, 0, 0.36);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+[data-theme="light"] .mobile-settings-close {
+  border-color: rgba(0, 38, 75, 0.28);
+  background: rgba(0, 38, 75, 0.07);
+  color: #00264B;
+}
+
+.mobile-settings-row {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.mobile-settings-label { font-size: 0.86rem; font-weight: 700; color: #f8fafc; }
+.mobile-settings-action {
+  width: 100%;
+  padding: 0.58rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 212, 0, 0.34);
+  background: rgba(255, 212, 0, 0.14);
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-theme="light"] .mobile-settings-sheet {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 38, 75, 0.38);
+}
+
+[data-theme="light"] .mobile-settings-head { border-bottom-color: rgba(0, 38, 75, 0.26); }
+[data-theme="light"] .mobile-settings-title,
+[data-theme="light"] .mobile-settings-label { color: #00264B; }
+[data-theme="light"] .mobile-settings-action {
+  border-color: rgba(0, 38, 75, 0.22);
+  background: rgba(0, 38, 75, 0.08);
+  color: #00264B;
+}
+
+/* === Page Layout (history.html design language) === */
+
+.page-shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 18px 16px 40px;
+  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.back-link,
+.ghost-btn {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 12px 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.back-link:hover,
+.ghost-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.back-link svg,
+.ghost-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.hero-card,
+.panel {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  padding: 24px;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.88), rgba(10, 24, 46, 0.92));
+}
+
+[data-theme="light"] .hero-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(241, 248, 255, 0.98));
+}
+
+.hero-card::before,
+.panel::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-card::before {
+  inset: -24% auto auto -18%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.14), transparent 72%);
+}
+
+.panel {
+  position: relative;
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.panel::before {
+  top: -84px;
+  right: -52px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12), transparent 72%);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  margin-top: 16px;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.hero-desc {
+  margin-top: 12px;
+  max-width: 760px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.tips-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 212, 0, 0.15);
+  background: rgba(255, 212, 0, 0.06);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.tips-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.7;
+}
+.tips-text strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.content-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.table-panel {
+  overflow: hidden;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 0.56rem 1rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary {
+  border-color: rgba(255, 212, 0, 0.5);
+  background: rgba(255, 212, 0, 0.16);
+  color: #FFD400;
+}
+.btn-primary:hover {
+  background: rgba(255, 212, 0, 0.24);
+  border-color: rgba(255, 212, 0, 0.7);
+}
+[data-theme="light"] .btn-primary {
+  border-color: rgba(15, 118, 110, 0.4);
+  background: rgba(15, 118, 110, 0.12);
+  color: var(--accent);
+}
+
+.user-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.9rem;
+  padding: 0.62rem 0.78rem;
+  border-radius: 18px;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .user-bar {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-profile-wrap { position: relative; }
+
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.user-profile-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  text-align: right;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="light"] .user-name { color: #f1f5f9; }
+
+.user-role-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.user-role-badge.admin {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.25));
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+.user-role-badge.user {
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.2));
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.2);
+}
+
+.user-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  margin: 2px 0;
+}
+
+.avatar-wrap { position: relative; flex-shrink: 0; }
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #f59e0b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  border: 2px solid rgba(15,23,42,0.8);
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: scale(0.85) translateY(-6px);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 5000;
+  min-width: 160px;
+}
+
+.profile-menu.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.profile-menu-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.profile-menu-option.logout { color: #f87171; }
+.profile-menu-option.logout:hover { background: rgba(239,68,68,0.12); }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.info-card {
+  border-radius: 18px;
+  padding: 14px 14px 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.035);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.info-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.info-value {
+  margin-top: 8px;
+  font-size: clamp(22px, 2.1vw, 28px);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+[data-theme="light"] .info-card {
+  border-color: rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+}
+[data-theme="light"] .info-value { color: #0f172a; }
+
+.filter-panel {
+  margin-bottom: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+[data-theme="light"] .filter-panel { background: transparent; }
+
+.filter-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+}
+
+.filter-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.filter-grid {
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+}
+
+.filter-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+
+.filter-input,
+.filter-select {
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(2, 6, 23, 0.48);
+  color: var(--text);
+  padding: 0 1rem;
+  font-family: inherit;
+  font-size: 0.94rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.1);
+}
+
+[data-theme="light"] .filter-input,
+[data-theme="light"] .filter-select {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+[data-theme="light"] .filter-input:focus,
+[data-theme="light"] .filter-select:focus {
+  border-color: rgba(15, 118, 110, 0.28);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+}
+
+.filter-actions {
+  grid-column: 2;
+  align-self: end;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.result-note {
+  grid-column: 1 / -1;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.mini-btn {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  padding: 0.36rem 0.72rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+[data-theme="light"] .mini-btn {
+  background: rgba(15, 118, 110, 0.06);
+}
+
+.filter-actions .mini-btn {
+  min-height: 48px;
+  border-radius: 14px;
+  padding: 0 1.25rem;
+  font-size: 0.88rem;
+  gap: 0.4rem;
+  white-space: nowrap;
+  border-color: rgba(239, 68, 68, 0.24);
+  color: #fda4af;
+  background: rgba(239, 68, 68, 0.1);
+}
+.filter-actions .mini-btn:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.44);
+  color: #fecdd3;
+}
+[data-theme="light"] .filter-actions .mini-btn {
+  border-color: rgba(220, 38, 38, 0.18);
+  color: #b91c1c;
+  background: rgba(220, 38, 38, 0.06);
+}
+[data-theme="light"] .filter-actions .mini-btn:hover {
+  background: rgba(220, 38, 38, 0.12);
+}
+
+.table-wrap {
+  position: relative;
+  z-index: 1;
+  border-radius: 20px;
+  background: rgba(2, 6, 23, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+[data-theme="light"] .table-wrap {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.table-scroll {
+  overflow: auto;
+  max-height: 66vh;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.notification-table {
+  min-width: 2180px;
+}
+
+.notification-table col.col-created { width: 190px; }
+.notification-table col.col-requester { width: 260px; }
+.notification-table col.col-unit { width: 130px; }
+.notification-table col.col-type { width: 130px; }
+.notification-table col.col-status { width: 130px; }
+.notification-table col.col-delete { width: 200px; }
+.notification-table col.col-target { width: 360px; }
+.notification-table col.col-new-data { width: 380px; }
+.notification-table col.col-detail { width: 130px; }
+.notification-table col.col-action { width: 260px; }
+
+.notification-table th,
+.notification-table td {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(6, 15, 38, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.88rem 0.95rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.065em;
+  color: var(--text-muted);
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.16);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
+[data-theme="light"] thead th {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--accent);
+  border-bottom-color: rgba(15, 118, 110, 0.16);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+thead th[data-sort-key] {
+  cursor: pointer;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding-right: 1.6rem;
+}
+thead th[data-sort-key]::after {
+  content: '⇅';
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.72rem;
+  opacity: 0.3;
+  transition: opacity 0.18s ease;
+}
+thead th[data-sort-key]:hover::after {
+  opacity: 0.6;
+}
+thead th[data-sort-key].sort-asc::after {
+  content: '▲';
+  opacity: 0.85;
+  color: var(--accent);
+}
+thead th[data-sort-key].sort-desc::after {
+  content: '▼';
+  opacity: 0.85;
+  color: var(--accent);
+}
+
+tbody td {
+  padding: 0.84rem 0.95rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="light"] tbody tr:nth-child(even) td {
+  background: rgba(15, 118, 110, 0.02);
+}
+
+tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] tbody tr:hover td {
+  background: rgba(15, 118, 110, 0.04);
+}
+
+.nowrap { white-space: nowrap; }
+.muted { color: var(--text-muted); }
+.empty-state {
+  padding: 1.2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+  font-size: 0.67rem;
+  font-weight: 800;
+}
+
+.tag.edit { background: rgba(14,165,233,0.2); color: #7dd3fc; }
+.tag.delete { background: rgba(244,63,94,0.18); color: #fda4af; }
+[data-theme="light"] .tag.edit { background: rgba(2,132,199,0.13); color: #0369a1; }
+[data-theme="light"] .tag.delete { background: rgba(220,38,38,0.11); color: #b91c1c; }
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.16rem 0.52rem;
+  font-size: 0.67rem;
+  font-weight: 800;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+}
+
+.status-tag.new {
+  border-color: rgba(250, 204, 21, 0.52);
+  background: rgba(250, 204, 21, 0.16);
+  color: #fde68a;
+}
+
+.status-tag.done {
+  border-color: rgba(34, 197, 94, 0.52);
+  background: rgba(34, 197, 94, 0.16);
+  color: #bbf7d0;
+}
+
+.status-tag.processing {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.14);
+  color: #bfdbfe;
+}
+
+.status-tag.rejected {
+  border-color: rgba(244, 63, 94, 0.52);
+  background: rgba(244, 63, 94, 0.15);
+  color: #fda4af;
+}
+
+.approve-btn {
+  border-color: rgba(34, 197, 94, 0.65);
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  font-weight: 700;
+  transition: all 0.18s ease;
+}
+
+.reject-btn {
+  border-color: rgba(220, 38, 38, 0.65);
+  background: rgba(220, 38, 38, 0.2);
+  color: #f87171;
+  font-weight: 700;
+  transition: all 0.18s ease;
+}
+
+.decision-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+.decision-actions .mini-btn {
+  min-width: 88px;
+}
+
+.approve-btn:not([disabled]):hover {
+  border-color: rgba(34, 197, 94, 0.85);
+  background: rgba(34, 197, 94, 0.32);
+  color: #bbf7d0;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18), 0 4px 14px rgba(34, 197, 94, 0.22);
+  transform: translateY(-1px);
+  transition: all 0.18s ease;
+}
+
+.reject-btn:not([disabled]):hover {
+  border-color: rgba(244, 63, 94, 0.85);
+  background: rgba(244, 63, 94, 0.32);
+  color: #fecdd3;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.18), 0 4px 14px rgba(244, 63, 94, 0.22);
+  transform: translateY(-1px);
+  transition: all 0.18s ease;
+}
+
+.approve-btn[disabled] {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.08);
+  color: #86efac;
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  text-decoration-color: rgba(134, 239, 172, 0.6);
+}
+
+.reject-btn[disabled] {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.08);
+  color: #f87171;
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  text-decoration-color: rgba(248, 113, 113, 0.6);
+}
+
+[data-theme="light"] .status-tag {
+  border-color: rgba(100, 116, 139, 0.36);
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+
+[data-theme="light"] .status-tag.new {
+  border-color: rgba(202, 138, 4, 0.46);
+  background: rgba(202, 138, 4, 0.14);
+  color: #854d0e;
+}
+
+[data-theme="light"] .status-tag.done {
+  border-color: rgba(22, 163, 74, 0.44);
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+
+[data-theme="light"] .status-tag.processing {
+  border-color: rgba(37, 99, 235, 0.42);
+  background: rgba(37, 99, 235, 0.11);
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .status-tag.rejected {
+  border-color: rgba(220, 38, 38, 0.44);
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+}
+
+[data-theme="light"] .approve-btn {
+  border-color: rgba(22, 163, 74, 0.6);
+  background: rgba(22, 163, 74, 0.14);
+  color: #15803d;
+  font-weight: 700;
+}
+
+[data-theme="light"] .approve-btn:not([disabled]):hover {
+  border-color: rgba(22, 163, 74, 0.85);
+  background: rgba(22, 163, 74, 0.24);
+  color: #14532d;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.14), 0 4px 14px rgba(22, 163, 74, 0.18);
+}
+
+[data-theme="light"] .approve-btn[disabled] {
+  border-color: rgba(22, 163, 74, 0.3);
+  background: rgba(22, 163, 74, 0.07);
+  color: #4ade80;
+  opacity: 0.55;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  text-decoration-color: rgba(74, 222, 128, 0.55);
+}
+
+[data-theme="light"] .reject-btn {
+  border-color: rgba(185, 28, 28, 0.6);
+  background: rgba(185, 28, 28, 0.14);
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+[data-theme="light"] .reject-btn:not([disabled]):hover {
+  border-color: rgba(185, 28, 28, 0.85);
+  background: rgba(185, 28, 28, 0.24);
+  color: #7f1d1d;
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.14), 0 4px 14px rgba(185, 28, 28, 0.18);
+}
+
+[data-theme="light"] .reject-btn[disabled] {
+  border-color: rgba(185, 28, 28, 0.3);
+  background: rgba(185, 28, 28, 0.07);
+  color: #f87171;
+  opacity: 0.55;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  text-decoration-color: rgba(248, 113, 113, 0.55);
+}
+
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 4600;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.detail-overlay.show { display: flex; }
+
+.detail-panel {
+  width: min(980px, 96vw);
+  max-height: 88vh;
+  border: 1px solid rgba(255, 212, 0, 0.22);
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(6, 18, 48, 0.97) 0%, rgba(3, 10, 28, 0.99) 100%);
+  box-shadow: 0 28px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="light"] .detail-panel {
+  background: #ffffff;
+  border-color: rgba(0,38,75,0.2);
+  box-shadow: 0 20px 48px rgba(0,38,75,0.18);
+}
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.82rem 1rem;
+  border-bottom: 1px solid rgba(255, 212, 0, 0.18);
+  background: linear-gradient(135deg, rgba(2, 12, 32, 0.8), rgba(1, 7, 22, 0.9));
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .detail-head {
+  background: linear-gradient(135deg, #00264B, #001e3c);
+  border-bottom-color: rgba(255, 212, 0, 0.3);
+}
+
+.detail-title {
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: #FFD400;
+  letter-spacing: 0.01em;
+}
+
+[data-theme="light"] .detail-title { color: #FFD400; }
+
+.detail-close {
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: #f1f5f9;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-close:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.32);
+}
+
+.detail-content {
+  margin: 0;
+  padding: 0.9rem 1rem 1.1rem;
+  overflow: auto;
+  display: grid;
+  gap: 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,212,0,0.25) transparent;
+}
+
+.detail-content::-webkit-scrollbar { width: 5px; }
+.detail-content::-webkit-scrollbar-track { background: transparent; }
+.detail-content::-webkit-scrollbar-thumb { background: rgba(255,212,0,0.25); border-radius: 99px; }
+
+[data-theme="light"] .detail-content {
+  scrollbar-color: rgba(0, 38, 75, 0.2) transparent;
+}
+[data-theme="light"] .detail-content::-webkit-scrollbar-thumb { background: rgba(0, 38, 75, 0.2); }
+
+.detail-section {
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  padding: 0.82rem 0.92rem;
+}
+
+[data-theme="light"] .detail-section {
+  border-color: rgba(0,38,75,0.12);
+  background: rgba(0,38,75,0.03);
+}
+
+.detail-request-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 12px;
+  padding: 0.6rem 0.72rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+.detail-request-notice.edit {
+  border: 1px solid rgba(22, 163, 74, 0.5);
+  background: rgba(22, 163, 74, 0.16);
+  color: #86efac;
+  box-shadow: 0 2px 12px rgba(22, 163, 74, 0.12);
+}
+.detail-request-notice.delete {
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  background: rgba(244, 63, 94, 0.16);
+  color: #fecdd3;
+  box-shadow: 0 2px 12px rgba(244, 63, 94, 0.12);
+}
+
+.detail-section-title {
+  margin: 0 0 0.62rem;
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #FFD400;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+[data-theme="light"] .detail-section-title { color: #00264B; opacity: 1; }
+
+.detail-kv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.58rem 0.9rem;
+}
+
+.detail-kv {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.detail-kv.full {
+  grid-column: 1 / -1;
+}
+
+.detail-kv-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-kv-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.detail-kv-value.multiline {
+  white-space: pre-wrap;
+  font-weight: 600;
+}
+
+.detail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  padding: 0.22rem 0.52rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.detail-badge.type-edit {
+  border-color: rgba(22, 163, 74, 0.42);
+  background: rgba(22, 163, 74, 0.14);
+  color: #86efac;
+}
+
+.detail-badge.type-delete {
+  border-color: rgba(244, 63, 94, 0.44);
+  background: rgba(244, 63, 94, 0.14);
+  color: #fda4af;
+}
+
+.detail-badge.status-new {
+  border-color: rgba(250, 204, 21, 0.5);
+  background: rgba(250, 204, 21, 0.14);
+  color: #fde68a;
+}
+
+.detail-badge.status-processing {
+  border-color: rgba(59, 130, 246, 0.48);
+  background: rgba(59, 130, 246, 0.14);
+  color: #bfdbfe;
+}
+
+.detail-badge.status-done {
+  border-color: rgba(22, 163, 74, 0.46);
+  background: rgba(22, 163, 74, 0.14);
+  color: #bbf7d0;
+}
+
+.detail-badge.status-rejected {
+  border-color: rgba(239, 68, 68, 0.46);
+  background: rgba(239, 68, 68, 0.14);
+  color: #fecaca;
+}
+
+.detail-change-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.detail-change-item {
+  border: 1px solid rgba(34, 197, 94, 0.36);
+  border-radius: 10px;
+  background: rgba(22, 163, 74, 0.1);
+  padding: 0.5rem 0.56rem;
+}
+
+.detail-change-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #86efac;
+}
+
+.detail-change-value {
+  margin-top: 0.18rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #dcfce7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-delete-box {
+  border: 1px solid rgba(244, 63, 94, 0.42);
+  border-radius: 10px;
+  background: rgba(244, 63, 94, 0.12);
+  padding: 0.55rem 0.62rem;
+}
+
+.detail-delete-title {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #fecdd3;
+}
+
+.detail-delete-reason {
+  margin-top: 0.2rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffe4e6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-empty {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+[data-theme="light"] .detail-request-notice.edit {
+  border-color: rgba(22, 163, 74, 0.38);
+  background: rgba(22, 163, 74, 0.11);
+  color: #166534;
+}
+[data-theme="light"] .detail-request-notice.delete {
+  border-color: rgba(220, 38, 38, 0.34);
+  background: rgba(220, 38, 38, 0.1);
+  color: #991b1b;
+}
+
+[data-theme="light"] .detail-kv-value {
+  color: #00264B;
+}
+
+[data-theme="light"] .detail-kv-value.multiline {
+  color: #0f2742;
+}
+
+[data-theme="light"] .detail-badge {
+  background: rgba(255,255,255,0.95);
+}
+
+[data-theme="light"] .detail-badge.type-edit {
+  border-color: rgba(22, 163, 74, 0.44);
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+
+[data-theme="light"] .detail-badge.type-delete {
+  border-color: rgba(220, 38, 38, 0.42);
+  background: rgba(220, 38, 38, 0.1);
+  color: #b91c1c;
+}
+
+[data-theme="light"] .detail-badge.status-new {
+  border-color: rgba(202, 138, 4, 0.42);
+  background: rgba(202, 138, 4, 0.12);
+  color: #854d0e;
+}
+
+[data-theme="light"] .detail-badge.status-processing {
+  border-color: rgba(37, 99, 235, 0.4);
+  background: rgba(37, 99, 235, 0.11);
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .detail-badge.status-done {
+  border-color: rgba(22, 163, 74, 0.42);
+  background: rgba(22, 163, 74, 0.11);
+  color: #166534;
+}
+
+[data-theme="light"] .detail-badge.status-rejected {
+  border-color: rgba(220, 38, 38, 0.42);
+  background: rgba(220, 38, 38, 0.11);
+  color: #b91c1c;
+}
+
+[data-theme="light"] .detail-change-item {
+  border-color: rgba(22, 163, 74, 0.34);
+  background: rgba(22, 163, 74, 0.1);
+}
+
+[data-theme="light"] .detail-change-label {
+  color: #166534;
+}
+
+[data-theme="light"] .detail-change-value {
+  color: #14532d;
+}
+
+[data-theme="light"] .detail-delete-box {
+  border-color: rgba(220, 38, 38, 0.34);
+  background: rgba(220, 38, 38, 0.1);
+}
+
+[data-theme="light"] .detail-delete-title,
+[data-theme="light"] .detail-delete-reason {
+  color: #7f1d1d;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 5.3rem);
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.78rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 4500;
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 980px) {
+  .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-panel { grid-template-columns: 1fr; }
+  .filter-grid { grid-template-columns: 1fr; }
+  .filter-actions { justify-content: stretch; margin-top: 0.55rem; }
+  .filter-actions .mini-btn { width: 100%; }
+  .detail-kv-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile bottom fade veil (covers safe-area + blends content under nav) ── */
+.mobile-nav-fade {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .mobile-nav-fade {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(env(safe-area-inset-bottom) + 90px);
+    background: linear-gradient(to top, rgba(2, 6, 23, 0.5) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 4306;
+    transition: opacity 0.22s ease;
+  }
+  [data-theme="light"] .mobile-nav-fade {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+  }
+  body.mobile-loading-data .mobile-nav-fade {
+    opacity: 0;
+  }
+}
+
+/* === History-style Media Queries === */
+@media (max-width: 900px) {
+  .page-shell { padding-bottom: calc(env(safe-area-inset-bottom) + 89px); }
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .back-link,
+  .ghost-btn {
+    width: 100%;
+  }
+  .hero-card,
+  .panel {
+    padding: 20px;
+  }
+  .hero-title { font-size: 1.9rem; }
+  body.mobile-loading-data::after {
+    content: "";
+    position: fixed;
+    left: max(0.5rem, env(safe-area-inset-left));
+    right: max(0.5rem, env(safe-area-inset-right));
+    bottom: calc(env(safe-area-inset-bottom) + 0.35rem);
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.70);
+    pointer-events: none;
+    z-index: 9490;
+  }
+  [data-theme="light"] body.mobile-loading-data::after {
+    background: rgba(255, 255, 255, 0.70);
+  }
+  .app-nav-fab { display: none !important; }
+  .mobile-mini-nav, .mobile-settings-overlay, .mobile-settings-sheet { display: block; }
+  .mobile-mini-nav {
+    display: flex;
+    position: fixed !important;
+    left: max(0.5rem, env(safe-area-inset-left)) !important;
+    right: max(0.5rem, env(safe-area-inset-right)) !important;
+    bottom: calc(env(safe-area-inset-bottom) + 0.35rem) !important;
+    top: auto !important;
+    margin: 0 !important;
+    transform: none !important;
+    z-index: 9500 !important;
+  }
+  body {
+    transform: none !important;
+    animation: none !important;
+    will-change: auto !important;
+  }
+  .app-sidebar-theme { display: none; }
+  .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-panel { grid-template-columns: 1fr; }
+  .filter-grid { grid-template-columns: 1fr; }
+  .filter-actions { grid-column: 1; justify-content: stretch; margin-top: 0.6rem; }
+  .filter-actions .mini-btn { flex: 1; }
+  .result-note { grid-column: 1; }
+}
+
+@media (max-width: 480px) {
+  .page-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .hero-title { font-size: 1.65rem; }
+  .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Status bar veil (top frosted glass for iOS standalone mode) ── */
+.status-bar-veil {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: calc(env(safe-area-inset-top) + 14px);
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  z-index: 99990;
+  pointer-events: none;
+}
+[data-theme="light"] .status-bar-veil {
+  background: rgba(241, 245, 249, 0.3);
+}
+/* ── Bottom bar veil (bottom frosted glass for home indicator area) ── */
+.bottom-bar-veil {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: calc(env(safe-area-inset-bottom) + 20px);
+  background: rgba(2, 6, 23, 0.3);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  z-index: 4295;
+  pointer-events: none;
+}
+[data-theme="light"] .bottom-bar-veil {
+  background: rgba(241, 245, 249, 0.38);
+}
+</style>
+<link rel="stylesheet" href="sidebar-account.css">
+</head>
+<body>
+<div class="status-bar-veil" aria-hidden="true"></div>
+
+<div class="page-shell">
+  <nav class="topbar">
+    <a class="back-link" href="index.html" onclick="return navigateInApp(event, 'index.html')">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+      <span>กลับหน้าหลัก</span>
+    </a>
+    <a class="ghost-btn" href="dashboard.html" onclick="return navigateInApp(event, 'dashboard.html')">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      <span>กลับหน้า Dashboard</span>
+    </a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">ตรวจสอบ คำขอ</div>
+      <h1 class="hero-title">ระบบตรวจสอบ คำขอแก้ไข/ลบรายการ</h1>
+      <p class="hero-desc">สำหรับผู้ดูแลระบบเท่านั้น</p>
+      <div class="info-grid">
+        <article class="info-card">
+          <div class="info-label">จำนวนคำขอทั้งหมด</div>
+          <div class="info-value" id="totalCountLabel">0</div>
+        </article>
+        <article class="info-card">
+          <div class="info-label">ผลลัพธ์หลังกรอง</div>
+          <div class="info-value" id="filteredCountLabel">0</div>
+        </article>
+        <article class="info-card">
+          <div class="info-label">คำขอใหม่ (new)</div>
+          <div class="info-value" id="newCountLabel">0</div>
+        </article>
+        <article class="info-card">
+          <div class="info-label">แจ้งแก้ไข</div>
+          <div class="info-value" id="editCountLabel">0</div>
+        </article>
+        <article class="info-card">
+          <div class="info-label">แจ้งลบ</div>
+          <div class="info-value" id="deleteCountLabel">0</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="user-bar">
+    <div class="user-profile-wrap" id="userProfileWrap">
+      <button class="user-profile-btn" type="button" onclick="toggleProfileMenu()">
+        <div class="user-details">
+          <span class="user-name" id="userDisplayName">-</span>
+          <span class="user-role-badge user" id="userRoleBadge">-</span>
+        </div>
+        <span class="user-divider"></span>
+        <div class="avatar-wrap">
+          <div class="user-avatar" id="userAvatar">-</div>
+        </div>
+      </button>
+      <div class="profile-menu" id="profileMenu">
+        <button class="profile-menu-option logout" type="button" onclick="handleLogout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-stack">
+    <div class="panel">
+      <div class="filter-panel">
+        <div class="filter-head">
+          <span class="filter-title">กรองข้อมูล</span>
+        </div>
+        <div class="filter-grid">
+          <label class="filter-field">
+            <span class="filter-label">ค้นหา</span>
+            <input class="filter-input" id="filterKeyword" type="text" placeholder="ค้นหา รหัสคำร้อง, ผู้แจ้ง, ชป., ผู้ต้องหา, เลขหมายจับ, หมายเหตุ">
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">ประเภทคำขอ</span>
+            <select class="filter-select" id="filterRequestType">
+              <option value="">ทั้งหมด</option>
+              <option value="edit">แจ้งแก้ไข</option>
+              <option value="delete">แจ้งลบรายการ</option>
+            </select>
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">สถานะ</span>
+            <select class="filter-select" id="filterStatus">
+              <option value="">ทั้งหมด</option>
+              <option value="new">รอดำเนินการ</option>
+              <option value="processing">กำลังดำเนินการ</option>
+              <option value="done">อนุมัติ</option>
+              <option value="rejected">ไม่อนุมัติ</option>
+            </select>
+          </label>
+        </div>
+        <div class="filter-actions">
+          <button class="mini-btn" type="button" onclick="clearFilters()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg><span>ล้างฟิลเตอร์</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tips-bar">
+      <svg class="tips-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+      <div class="tips-text">
+        <strong>คำแนะนำ</strong>
+        ตรวจสอบคำขอแก้ไข/ลบรายการจากผู้ใช้งาน กดปุ่ม <strong>อนุมัติ</strong> หรือ <strong>ไม่อนุมัติ</strong> เพื่อดำเนินการ
+      </div>
+    </div>
+
+    <div class="panel table-panel">
+      <div class="panel-head">
+        <div><div class="panel-title">รายการคำขอ</div></div>
+        <div><button class="btn btn-primary" type="button" onclick="loadNotifications()">รีเฟรช</button></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table class="notification-table">
+            <colgroup>
+              <col class="col-created">
+              <col class="col-requester">
+              <col class="col-unit">
+              <col class="col-type">
+              <col class="col-status">
+              <col class="col-delete">
+              <col class="col-target">
+              <col class="col-new-data">
+              <col class="col-detail">
+              <col class="col-action">
+            </colgroup>
+            <thead>
+              <tr>
+                <th class="nowrap" data-sort-key="createdAt" onclick="handleSort('createdAt')">เวลาแจ้ง</th>
+                <th data-sort-key="name" onclick="handleSort('name')">ผู้แจ้ง</th>
+                <th class="nowrap" data-sort-key="unit" onclick="handleSort('unit')">ชป.ผู้แจ้ง</th>
+                <th class="nowrap" data-sort-key="type" onclick="handleSort('type')">ประเภท</th>
+                <th class="nowrap" data-sort-key="status" onclick="handleSort('status')">สถานะ</th>
+                <th>เหตุผล</th>
+                <th>รายการอ้างอิง</th>
+                <th>ข้อมูลใหม่/หมายเหตุ</th>
+                <th class="nowrap">รายละเอียด</th>
+                <th class="nowrap">ตัดสินใจ</th>
+              </tr>
+            </thead>
+            <tbody id="notificationTbody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="notificationEmpty">กำลังโหลดข้อมูล...</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="auth-check-wrapper hidden" id="authCheckWrapper" aria-live="polite">
+  <div class="auth-check-card">
+    <img src="logo.png" alt="CSD1 Logo" class="auth-check-logo">
+    <h2 class="auth-check-title" id="authCheckTitle">ตรวจสอบสิทธิ์การเข้าใช้งาน</h2>
+    <p class="auth-check-subtitle" id="authCheckSubtitle">หน้านี้ต้องตรวจสอบสิทธิ์ก่อนเข้าใช้งาน</p>
+    <div class="auth-check-error" id="authCheckMessage"></div>
+    <div class="auth-check-actions">
+      <button class="btn btn-primary" type="button" onclick="navigateInApp(event, 'index.html')">ไปหน้าเข้าสู่ระบบ</button>
+      <button class="btn" type="button" onclick="loadNotifications()">ลองอีกครั้ง</button>
+    </div>
+  </div>
+</section>
+
+<div class="detail-overlay" id="detailOverlay" onclick="if (event.target === this) closeDetail()">
+  <section class="detail-panel">
+    <div class="detail-head">
+      <div class="detail-title">รายละเอียดคำขอ</div>
+      <button class="detail-close" type="button" onclick="closeDetail()" aria-label="ปิดรายละเอียด">&times;</button>
+    </div>
+    <div class="detail-content" id="detailContent">-</div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbzRTP16rrmz3tUN7FqDQse7f1fDOzXx6pMuBDd6R3r5s_cnoELkVAy5opLWmwj2Unyypg/exec";
+let appSidebarOpen = false;
+let mobileSettingsOpen = false;
+let profileMenuOpen = false;
+let currentUser = {};
+let notifications = [];
+const pendingDecisionRequestIds = new Set();
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function showAuthCheck(message, title, subtitle) {
+  const wrapper = document.getElementById('authCheckWrapper');
+  const titleEl = document.getElementById('authCheckTitle');
+  const subtitleEl = document.getElementById('authCheckSubtitle');
+  const messageEl = document.getElementById('authCheckMessage');
+  if (titleEl) titleEl.textContent = title || 'ตรวจสอบสิทธิ์การเข้าใช้งาน';
+  if (subtitleEl) subtitleEl.textContent = subtitle || 'หน้านี้ต้องตรวจสอบสิทธิ์ก่อนเข้าใช้งาน';
+  if (messageEl) messageEl.textContent = message || '';
+  wrapper?.classList.remove('hidden');
+}
+
+function hideAuthCheck() {
+  document.getElementById('authCheckWrapper')?.classList.add('hidden');
+}
+
+function resolveInAppUrl(targetPath) {
+  const rawTarget = String(targetPath == null ? '' : targetPath).trim();
+  if (!rawTarget) return new URL(window.location.href);
+  if (/^https?:\/\//i.test(rawTarget)) return new URL(rawTarget);
+
+  const pathName = window.location.pathname || '/';
+  const hasFileName = /\/[^/]+\.[a-z0-9]+$/i.test(pathName);
+  const basePath = hasFileName
+    ? pathName.replace(/[^/]+$/, '')
+    : (pathName.endsWith('/') ? pathName : pathName + '/');
+  const cleanedTarget = rawTarget.replace(/^\/+/, '');
+  return new URL(cleanedTarget, window.location.origin + basePath);
+}
+
+function navigateInApp(evt, targetPath) {
+  if (evt) evt.preventDefault();
+  const nextUrl = resolveInAppUrl(targetPath);
+  const standaloneMode =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (standaloneMode && nextUrl.origin === window.location.origin) {
+    window.location.assign(nextUrl.pathname + nextUrl.search + nextUrl.hash);
+    return false;
+  }
+  window.location.assign(nextUrl.href);
+  return false;
+}
+
+function openAppSidebar() {
+  closeMobileSettings();
+  appSidebarOpen = true;
+  document.body.classList.add('nav-open');
+}
+
+function closeAppSidebar() {
+  appSidebarOpen = false;
+  document.body.classList.remove('nav-open');
+}
+
+function toggleAppSidebar(evt) {
+  if (evt) evt.stopPropagation();
+  if (appSidebarOpen) closeAppSidebar();
+  else openAppSidebar();
+}
+
+function openMobileSettings(evt) {
+  if (evt) evt.stopPropagation();
+  closeAppSidebar();
+  mobileSettingsOpen = true;
+  document.body.classList.add('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.add('show');
+  document.getElementById('mobileSettingsSheet')?.classList.add('show');
+}
+
+function closeMobileSettings() {
+  mobileSettingsOpen = false;
+  document.body.classList.remove('settings-open');
+  document.getElementById('mobileSettingsOverlay')?.classList.remove('show');
+  document.getElementById('mobileSettingsSheet')?.classList.remove('show');
+}
+
+function navigateViaSidebar(evt, targetPath) {
+  closeAppSidebar();
+  return navigateInApp(evt, targetPath);
+}
+
+function getPreferredTheme() {
+  const stored = localStorage.getItem('CSD1_THEME') || 'dark';
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function syncThemeSwitch(mode) {
+  const isDark = mode === 'dark';
+  const sidebarToggleEl = document.getElementById('sidebarThemeToggle');
+  if (sidebarToggleEl) sidebarToggleEl.checked = isDark;
+  const mobileToggleEl = document.getElementById('mobileThemeToggle');
+  if (mobileToggleEl) mobileToggleEl.checked = isDark;
+}
+
+function applyTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', normalized);
+  syncThemeSwitch(normalized);
+  const themeColor = normalized === 'dark' ? '#020617' : '#e8ecf2';
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.setAttribute('content', themeColor);
+}
+
+function setTheme(mode) {
+  const normalized = mode === 'light' ? 'light' : 'dark';
+  localStorage.setItem('CSD1_THEME', normalized);
+  applyTheme(normalized);
+}
+
+function toggleThemeSwitch(evt) {
+  const isDark = !!evt?.target?.checked;
+  setTheme(isDark ? 'dark' : 'light');
+}
+
+function normalizeSheetUrl(rawValue) {
+  const raw = String(rawValue == null ? '' : rawValue).trim();
+  if (!raw) return DEFAULT_SHEET_URL;
+  const candidate = /^https?:\/\//i.test(raw) ? raw : ('https://' + raw);
+  try {
+    const parsed = new URL(candidate);
+    if (!/^https?:$/i.test(parsed.protocol)) throw new Error('invalid protocol');
+    return parsed.href;
+  } catch (_) {
+    return DEFAULT_SHEET_URL;
+  }
+}
+
+function getSheetUrl() {
+  const stored = localStorage.getItem('CSD1_SHEET_URL');
+  const resolved = normalizeSheetUrl(stored);
+  const normalizedStored = String(stored == null ? '' : stored).trim();
+  if (normalizedStored && normalizedStored !== resolved) {
+    localStorage.setItem('CSD1_SHEET_URL', resolved);
+  }
+  return resolved;
+}
+
+function getStoredUserSafe() {
+  try {
+    return JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+  } catch (_) {
+    return {};
+  }
+}
+
+function getSessionToken(user) {
+  if (!user || typeof user !== 'object') return '';
+  return String(
+    user.sessionToken ||
+    user.session_token ||
+    (user.session && user.session.token) ||
+    user.token ||
+    user.accessToken ||
+    ''
+  ).trim();
+}
+
+function isAdminRole(user) {
+  return !!(user && user.isReportAdmin);
+}
+
+function isUserRole(user) {
+  return !!(user && user.canReport);
+}
+
+function hasAuthSession(user) {
+  return !!(user && user.email && getSessionToken(user));
+}
+
+function setMobileDataLoading(isLoading) {
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  if (!isMobile) {
+    if (!isLoading) document.body.classList.remove('mobile-loading-data');
+    return;
+  }
+  document.body.classList.toggle('mobile-loading-data', !!isLoading);
+}
+
+function syncRoleMenus(user) {
+  const userVisible = isUserRole(user) && hasAuthSession(user);
+  const adminVisible = isAdminRole(user) && hasAuthSession(user);
+  document.querySelectorAll('[data-admin-history]').forEach((el) => {
+    el.style.display = userVisible ? '' : 'none';
+  });
+  document.querySelectorAll('[data-admin-notification]').forEach((el) => {
+    el.style.display = adminVisible ? '' : 'none';
+  });
+}
+
+function openHistoryPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'history.html');
+}
+
+function openNotificationPage(evt) {
+  closeMobileSettings();
+  closeAppSidebar();
+  return navigateInApp(evt, 'notification.html');
+}
+
+function toggleProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  profileMenuOpen = !profileMenuOpen;
+  menu.classList.toggle('show', profileMenuOpen);
+}
+
+function closeProfileMenu() {
+  const menu = document.getElementById('profileMenu');
+  if (!menu) return;
+  profileMenuOpen = false;
+  menu.classList.remove('show');
+}
+
+function renderUserProfile(user) {
+  const normalized = user && typeof user === 'object' ? user : {};
+  const displayName = String(normalized.name || normalized.email || 'ผู้ใช้').trim();
+  const roleBadge = document.getElementById('userRoleBadge');
+  const displayNameEl = document.getElementById('userDisplayName');
+  const avatarEl = document.getElementById('userAvatar');
+
+  if (displayNameEl) displayNameEl.textContent = displayName || '-';
+  if (roleBadge) {
+    roleBadge.textContent = normalized.unit || '-';
+    roleBadge.className = 'user-role-badge ' + (isAdminRole(normalized) ? 'admin' : 'user');
+  }
+  if (avatarEl) {
+    const photoUrl = String(normalized.avatarUrl || normalized.googlePhoto || '').trim();
+    const initial = (displayName || '-').charAt(0).toUpperCase();
+    if (photoUrl) {
+      avatarEl.innerHTML = `<img src="${photoUrl}" alt="${displayName}" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${initial}'">`;
+    } else {
+      avatarEl.textContent = initial;
+    }
+  }
+}
+
+function handleLogout() {
+  localStorage.removeItem('CSD1_USER');
+  closeProfileMenu();
+  showToast('ออกจากระบบแล้ว');
+  setTimeout(() => {
+    navigateInApp(null, 'index.html');
+  }, 220);
+}
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function normalizeText(value) {
+  return String(value == null ? '' : value).trim().toLowerCase();
+}
+
+function getTypeLabel(type) {
+  const t = normalizeText(type);
+  if (t === 'edit') return 'แจ้งแก้ไข';
+  if (t === 'delete') return 'แจ้งลบรายการ';
+  return '-';
+}
+
+function getTypeTagClass(type) {
+  return normalizeText(type) === 'delete' ? 'delete' : 'edit';
+}
+
+function getStatusMeta(status) {
+  const normalized = normalizeText(status);
+  if (normalized === 'done' || normalized === 'completed' || normalized === 'resolved' || normalized === 'closed') {
+    return { normalized: 'done', className: 'done', label: 'อนุมัติแล้ว', canApprove: false };
+  }
+  if (normalized === 'processing' || normalized === 'in_progress' || normalized === 'in-progress' || normalized === 'working') {
+    return { normalized: 'processing', className: 'processing', label: 'กำลังดำเนินการ', canApprove: false };
+  }
+  if (normalized === 'rejected' || normalized === 'cancelled' || normalized === 'canceled') {
+    return { normalized: 'rejected', className: 'rejected', label: 'ไม่อนุมัติ', canApprove: false };
+  }
+  return { normalized: 'new', className: 'new', label: 'รอดำเนินการ', canApprove: true };
+}
+
+function formatColumnLabel(key) {
+  return String(key || '')
+    .replace(/\s#(\d+)$/, ' (ช่อง $1)')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseCorrectedDataPayload(rawValue) {
+  const raw = String(rawValue == null ? '' : rawValue).trim();
+  if (!raw || raw.charAt(0) !== '{') return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function getLegacyChangedFieldsMap(row) {
+  const payload = parseCorrectedDataPayload(row && row.correctedData);
+  const raw = payload && payload.changedFields && typeof payload.changedFields === 'object'
+    ? payload.changedFields
+    : null;
+  if (!raw || Array.isArray(raw)) return {};
+  const out = {};
+  Object.keys(raw).forEach((key) => {
+    const trimmed = String(key || '').trim();
+    if (!trimmed) return;
+    out[trimmed] = String(raw[key] == null ? '' : raw[key]).trim();
+  });
+  return out;
+}
+
+function getChangedFieldsMap(row) {
+  if (!row || typeof row !== 'object') return {};
+  const raw = row.changedFields;
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return getLegacyChangedFieldsMap(row);
+  }
+  const out = {};
+  Object.keys(raw).forEach((key) => {
+    const trimmed = String(key || '').trim();
+    if (!trimmed) return;
+    out[trimmed] = String(raw[key] == null ? '' : raw[key]).trim();
+  });
+  return out;
+}
+
+function getChangedColumnsList(row) {
+  if (!row || typeof row !== 'object') return [];
+  const fromArray = Array.isArray(row.changedColumns)
+    ? row.changedColumns.map((col) => String(col || '').trim()).filter(Boolean)
+    : [];
+  if (fromArray.length) return Array.from(new Set(fromArray));
+  const payload = parseCorrectedDataPayload(row.correctedData);
+  const fromPayload = payload && Array.isArray(payload.changedColumns)
+    ? payload.changedColumns.map((col) => String(col || '').trim()).filter(Boolean)
+    : [];
+  if (fromPayload.length) return Array.from(new Set(fromPayload));
+  const fromFields = Object.keys(getChangedFieldsMap(row));
+  return Array.from(new Set(fromFields));
+}
+
+function shortText(value, maxLen) {
+  const text = String(value == null ? '' : value).trim();
+  if (!text) return '-';
+  const limit = Number(maxLen) > 0 ? Number(maxLen) : 120;
+  return text.length > limit ? (text.slice(0, limit - 1) + '…') : text;
+}
+
+function getEditSummary(row, maxCols) {
+  const changedColumns = getChangedColumnsList(row);
+  const changedFields = getChangedFieldsMap(row);
+  if (!changedColumns.length) {
+    return {
+      count: 0,
+      labels: [],
+      headerText: row && row.correctedData ? shortText(row.correctedData, 140) : '-',
+      previewLines: []
+    };
+  }
+
+  const labels = changedColumns.map(formatColumnLabel);
+  const limit = Number(maxCols) > 0 ? Number(maxCols) : 3;
+  const previewLines = changedColumns.slice(0, limit).map((key) => {
+    const label = formatColumnLabel(key);
+    const value = shortText(formatValueByColumnKey(key, changedFields[key]), 70);
+    return `${label}: ${value}`;
+  });
+  return {
+    count: changedColumns.length,
+    labels: labels,
+    headerText: `แก้ไข ${changedColumns.length} คอลัมน์`,
+    previewLines: previewLines
+  };
+}
+
+const THAI_MONTH_SHORT = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+const THAI_TIME_ZONE = 'Asia/Bangkok';
+const THAI_MONTH_TO_NUM = {
+  'ม.ค.': 1, 'ม.ค': 1, 'มกราคม': 1,
+  'ก.พ.': 2, 'ก.พ': 2, 'กุมภาพันธ์': 2,
+  'มี.ค.': 3, 'มี.ค': 3, 'มีนาคม': 3,
+  'เม.ย.': 4, 'เม.ย': 4, 'เมษายน': 4,
+  'พ.ค.': 5, 'พ.ค': 5, 'พฤษภาคม': 5,
+  'มิ.ย.': 6, 'มิ.ย': 6, 'มิถุนายน': 6,
+  'ก.ค.': 7, 'ก.ค': 7, 'กรกฎาคม': 7,
+  'ส.ค.': 8, 'ส.ค': 8, 'สิงหาคม': 8,
+  'ก.ย.': 9, 'ก.ย': 9, 'กันยายน': 9,
+  'ต.ค.': 10, 'ต.ค': 10, 'ตุลาคม': 10,
+  'พ.ย.': 11, 'พ.ย': 11, 'พฤศจิกายน': 11,
+  'ธ.ค.': 12, 'ธ.ค': 12, 'ธันวาคม': 12
+};
+
+function toArabicDigits(value) {
+  const digits = { '๐': '0', '๑': '1', '๒': '2', '๓': '3', '๔': '4', '๕': '5', '๖': '6', '๗': '7', '๘': '8', '๙': '9' };
+  return String(value == null ? '' : value).replace(/[๐-๙]/g, (ch) => digits[ch] || ch);
+}
+
+function normalizeDateTimeRaw(value) {
+  return toArabicDigits(value)
+    .replace(/\(([^)]*)\)/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getBangkokDateTimeParts(value) {
+  const dt = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dt.getTime())) return null;
+  try {
+    const parts = new Intl.DateTimeFormat('en-GB-u-ca-gregory', {
+      timeZone: THAI_TIME_ZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).formatToParts(dt);
+    const map = {};
+    parts.forEach((part) => {
+      if (part && part.type) map[part.type] = part.value;
+    });
+    const year = Number(map.year);
+    const month = Number(map.month);
+    const day = Number(map.day);
+    const hh = Number(map.hour);
+    const mm = Number(map.minute);
+    if (![year, month, day, hh, mm].every(Number.isFinite)) return null;
+    return { year, month, day, hh, mm };
+  } catch (_) {
+    return {
+      year: dt.getFullYear(),
+      month: dt.getMonth() + 1,
+      day: dt.getDate(),
+      hh: dt.getHours(),
+      mm: dt.getMinutes()
+    };
+  }
+}
+
+function toGregorianYear(yearText) {
+  let year = Number(yearText || 0);
+  if (!Number.isFinite(year) || year <= 0) return null;
+  if (year > 2400) year -= 543;
+  if (year < 100) year += 2000;
+  return year;
+}
+
+function parseDateOnly(value) {
+  const raw = normalizeDateTimeRaw(value);
+  if (!raw) return null;
+
+  if (/^\d{4}-\d{1,2}-\d{1,2}T/i.test(raw)) {
+    const bangkokDate = getBangkokDateTimeParts(raw);
+    if (bangkokDate && bangkokDate.year > 1900) {
+      return new Date(bangkokDate.year, bangkokDate.month - 1, bangkokDate.day);
+    }
+  }
+
+  const thaiMatch = raw.match(/(\d{1,2})\s+([ก-๙A-Za-z.]+)\s+(\d{2,4})/);
+  if (thaiMatch) {
+    const day = Number(thaiMatch[1]);
+    const month = THAI_MONTH_TO_NUM[thaiMatch[2]] || null;
+    const year = toGregorianYear(thaiMatch[3]);
+    if (day >= 1 && day <= 31 && month && year && year > 1900) return new Date(year, month - 1, day);
+  }
+
+  const isoMatch = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (isoMatch) {
+    const year = Number(isoMatch[1]);
+    const month = Number(isoMatch[2]);
+    const day = Number(isoMatch[3]);
+    if (year > 1900 && month >= 1 && month <= 12 && day >= 1 && day <= 31) return new Date(year, month - 1, day);
+  }
+
+  const slashMatch = raw.match(/(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/);
+  if (slashMatch) {
+    const day = Number(slashMatch[1]);
+    const month = Number(slashMatch[2]);
+    const year = toGregorianYear(slashMatch[3]);
+    if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year && year > 1900) return new Date(year, month - 1, day);
+  }
+
+  const fallback = new Date(raw);
+  if (!Number.isNaN(fallback.getTime()) && fallback.getFullYear() > 1900) {
+    return new Date(fallback.getFullYear(), fallback.getMonth(), fallback.getDate());
+  }
+  return null;
+}
+
+function parseTimeOnly(value) {
+  const raw = normalizeDateTimeRaw(value);
+  if (!raw) return null;
+  if (/^\d{4}-\d{1,2}-\d{1,2}T/i.test(raw)) {
+    const bangkokDate = getBangkokDateTimeParts(raw);
+    if (bangkokDate) {
+      return { hh: bangkokDate.hh, mm: bangkokDate.mm };
+    }
+  }
+  const allMatches = raw.match(/\b\d{1,2}[:.]\d{2}(?::\d{2})?\b/g);
+  if (!allMatches || !allMatches.length) return null;
+  const last = allMatches[allMatches.length - 1];
+  const match = last.match(/(\d{1,2})[:.](\d{2})/);
+  if (!match) return null;
+  const hh = Number(match[1]);
+  const mm = Number(match[2]);
+  if (hh < 0 || hh > 23 || mm < 0 || mm > 59) return null;
+  return { hh, mm };
+}
+
+function formatThaiDateShort(value) {
+  const dt = value instanceof Date ? value : parseDateOnly(value);
+  if (!dt) return '';
+  const yearBE = dt.getFullYear() + 543;
+  return `${dt.getDate()} ${THAI_MONTH_SHORT[dt.getMonth()]} ${String(yearBE % 100).padStart(2, '0')}`;
+}
+
+function formatThaiTime(value) {
+  const tm = value && typeof value === 'object' && Number.isFinite(value.hh)
+    ? value
+    : parseTimeOnly(value);
+  if (!tm) return '';
+  return `${String(tm.hh).padStart(2, '0')}.${String(tm.mm).padStart(2, '0')} น.`;
+}
+
+function composeThaiDateTime(dateVal, timeVal) {
+  const dateText = formatThaiDateShort(dateVal);
+  const timeText = formatThaiTime(timeVal);
+  if (dateText && timeText) return `${dateText} เวลา ${timeText}`;
+  return dateText || timeText || '';
+}
+
+function formatThaiDateTimeValue(value) {
+  const dateObj = parseDateOnly(value);
+  const timeObj = parseTimeOnly(value);
+  const composed = composeThaiDateTime(dateObj, timeObj);
+  if (composed) return composed;
+  const raw = String(value || '').trim();
+  return raw || '-';
+}
+
+function formatThaiDateTimePair(dateValue, timeValue) {
+  const dateObj = parseDateOnly(dateValue);
+  const timeObj = parseTimeOnly(timeValue) || parseTimeOnly(dateValue);
+  const composed = composeThaiDateTime(dateObj, timeObj);
+  if (composed) return composed;
+  const rawDate = String(dateValue || '').trim();
+  const rawTime = String(timeValue || '').trim();
+  return [rawDate, rawTime].filter(Boolean).join(' ').trim() || '-';
+}
+
+function normalizeDateTimeKey(key) {
+  return String(key || '').trim().replace(/\s*#\d+\s*$/, '').trim();
+}
+
+function isDateTimeColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'ประทับเวลา' || normalized === 'วันที่/เวลา' || normalized === 'เวลาแจ้ง') return true;
+  return /(requestedat|createdat|updatedat|timestamp|datetime)/.test(compact);
+}
+
+function isDateOnlyColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'วันที่' || normalized.indexOf('วันเดือนปี') === 0) return true;
+  return /(targetdate|warrantdate|issueddate|^date$)/.test(compact);
+}
+
+function isTimeOnlyColumnKey(key) {
+  const normalized = normalizeDateTimeKey(key);
+  const compact = normalized.replace(/\s+/g, '').toLowerCase();
+  if (normalized === 'เวลา') return true;
+  return /(targettime|^time$)/.test(compact);
+}
+
+function formatValueByColumnKey(key, value) {
+  const raw = String(value || '').trim();
+  if (!raw) return raw;
+  if (isDateTimeColumnKey(key)) return formatThaiDateTimeValue(raw);
+  if (isDateOnlyColumnKey(key)) return formatThaiDateShort(raw) || raw;
+  if (isTimeOnlyColumnKey(key)) return formatThaiTime(raw) || raw;
+  return raw;
+}
+
+function toDisplayDate(value) {
+  return formatThaiDateTimeValue(value);
+}
+
+function getFilters() {
+  return {
+    keyword: normalizeText(document.getElementById('filterKeyword')?.value || ''),
+    requestType: normalizeText(document.getElementById('filterRequestType')?.value || ''),
+    status: normalizeText(document.getElementById('filterStatus')?.value || '')
+  };
+}
+
+function rowMatchesFilters(row, filters) {
+  if (!filters) return true;
+  if (filters.requestType && normalizeText(row.requestType) !== filters.requestType) return false;
+  const statusMeta = getStatusMeta(row.status);
+  if (filters.status && statusMeta.normalized !== filters.status) return false;
+
+  if (filters.keyword) {
+    const changedColumnsText = getChangedColumnsList(row).map(formatColumnLabel).join(' ');
+    const changedValuesText = Object.values(getChangedFieldsMap(row)).join(' ');
+    const text = normalizeText([
+      row.requestId,
+      row.requestedByName,
+      row.requestedByEmail,
+      row.requestedByUnit,
+      row.targetReporter,
+      row.targetReporterEmail,
+      row.targetUnit,
+      row.targetSuspect,
+      row.targetWarrantNo,
+      row.targetCitizenId,
+      row.note,
+      row.correctedData,
+      row.deleteReason,
+      changedColumnsText,
+      changedValuesText,
+      statusMeta.label
+    ].join(' '));
+    if (text.indexOf(filters.keyword) === -1) return false;
+  }
+
+  return true;
+}
+
+function getCurrentFilteredRows() {
+  const filters = getFilters();
+  return notifications.filter((row) => rowMatchesFilters(row, filters));
+}
+
+function updateSummary(filteredRows) {
+  const rows = Array.isArray(notifications) ? notifications : [];
+  const filtered = Array.isArray(filteredRows) ? filteredRows : [];
+  const totalEl = document.getElementById('totalCountLabel');
+  const filteredEl = document.getElementById('filteredCountLabel');
+  const newEl = document.getElementById('newCountLabel');
+  const editEl = document.getElementById('editCountLabel');
+  const deleteEl = document.getElementById('deleteCountLabel');
+
+  const newCount = rows.filter((row) => getStatusMeta(row.status).normalized === 'new').length;
+  const editCount = rows.filter((row) => normalizeText(row.requestType) === 'edit').length;
+  const deleteCount = rows.filter((row) => normalizeText(row.requestType) === 'delete').length;
+
+  if (totalEl) totalEl.textContent = String(rows.length);
+  if (filteredEl) filteredEl.textContent = String(filtered.length);
+  if (newEl) newEl.textContent = String(newCount);
+  if (editEl) editEl.textContent = String(editCount);
+  if (deleteEl) deleteEl.textContent = String(deleteCount);
+}
+
+function renderRows(rows) {
+  const tbody = document.getElementById('notificationTbody');
+  const emptyEl = document.getElementById('notificationEmpty');
+  const list = Array.isArray(rows) ? rows : [];
+  tbody.innerHTML = '';
+
+  if (!notifications.length) {
+    emptyEl.textContent = 'ยังไม่มีคำขอแก้ไข/ลบรายการ';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  if (!list.length) {
+    emptyEl.textContent = 'ไม่พบคำขอตามเงื่อนไขที่เลือก';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  tbody.innerHTML = list.map((row, idx) => {
+    const requestId = String(row.requestId || '').trim();
+    const statusMeta = getStatusMeta(row.status);
+    const isDeciding = requestId ? pendingDecisionRequestIds.has(requestId) : false;
+    const canDecide = !!requestId && statusMeta.canApprove && !isDeciding;
+    const targetRef = [
+      'ลำดับ ' + (row.targetNo || '-'),
+      'ผู้ต้องหา ' + (row.targetSuspect || '-'),
+      'หมายจับ/ค้น ' + (row.targetWarrantNo || '-')
+    ].join(' | ');
+    const isDelete = normalizeText(row.requestType) === 'delete';
+    const editSummary = getEditSummary(row, 2);
+    const changedLabelPreview = editSummary.labels.slice(0, 4).join(', ');
+    const changedLabelMore = editSummary.count > 4 ? ` +อีก ${editSummary.count - 4}` : '';
+    const changedDetailHtml = editSummary.previewLines.length
+      ? '<br>' + editSummary.previewLines.map((line) => `<span class="muted">${escapeHtml(line)}</span>`).join('<br>')
+      : '';
+    const noteHtml = row.note
+      ? '<br><span class="muted">หมายเหตุ: ' + escapeHtml(shortText(row.note, 120)) + '</span>'
+      : '';
+    const detailHtml = isDelete
+      ? `<strong>${escapeHtml(shortText(row.deleteReason || '-', 120))}</strong>${noteHtml}`
+      : `<strong>${escapeHtml(editSummary.headerText)}</strong>` +
+        (changedLabelPreview ? `<br><span class="muted">${escapeHtml(changedLabelPreview + changedLabelMore)}</span>` : '') +
+        changedDetailHtml +
+        noteHtml;
+    const statusClass = statusMeta.className ? `status-tag ${statusMeta.className}` : 'status-tag';
+    const approveBtnLabel = isDeciding
+      ? 'กำลังบันทึก...'
+      : (statusMeta.normalized === 'done' ? 'อนุมัติ' : 'อนุมัติ');
+    const rejectBtnLabel = isDeciding
+      ? 'กำลังบันทึก...'
+      : (statusMeta.normalized === 'rejected' ? 'ไม่อนุมัติ' : 'ไม่อนุมัติ');
+    const approveDisabledAttr = canDecide ? '' : ' disabled aria-disabled="true"';
+    const rejectDisabledAttr = canDecide ? '' : ' disabled aria-disabled="true"';
+    return `
+      <tr>
+        <td class="nowrap">${escapeHtml(toDisplayDate(row.createdAt))}</td>
+        <td>${escapeHtml(row.requestedByName || '-')}<br><span class="muted">${escapeHtml(row.requestedByEmail || '-')}</span></td>
+        <td class="nowrap">${escapeHtml(row.requestedByUnit || '-')}</td>
+        <td class="nowrap"><span class="tag ${getTypeTagClass(row.requestType)}">${escapeHtml(getTypeLabel(row.requestType))}</span></td>
+        <td class="nowrap"><span class="${statusClass}">${escapeHtml(statusMeta.label)}</span></td>
+        <td>${escapeHtml(row.deleteReason || '-')}</td>
+        <td>${escapeHtml(targetRef)}</td>
+        <td>${detailHtml}</td>
+        <td class="nowrap"><button class="mini-btn" type="button" onclick="openDetail(${idx})">ดูทั้งหมด</button></td>
+        <td class="nowrap">
+          <div class="decision-actions">
+            <button class="mini-btn approve-btn" type="button"${approveDisabledAttr} onclick="return decideRequest(${idx}, 'approve', event)">${approveBtnLabel}</button>
+            <button class="mini-btn reject-btn" type="button"${rejectDisabledAttr} onclick="return decideRequest(${idx}, 'reject', event)">${rejectBtnLabel}</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+let currentSortKey = null;
+let currentSortDir = 'asc';
+
+function getSortValue(row, key) {
+  switch (key) {
+    case 'createdAt': return row.createdAt || '';
+    case 'name': return row.requestedByName || '';
+    case 'unit': return row.requestedByUnit || '';
+    case 'type': return normalizeText(row.requestType) || '';
+    case 'status': return getStatusMeta(row.status).normalized || '';
+    default: return '';
+  }
+}
+
+function sortRows(rows, key, dir) {
+  if (!key) return rows;
+  const sorted = rows.slice();
+  sorted.sort((a, b) => {
+    let va = String(getSortValue(a, key)).toLowerCase();
+    let vb = String(getSortValue(b, key)).toLowerCase();
+    if (va < vb) return dir === 'asc' ? -1 : 1;
+    if (va > vb) return dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return sorted;
+}
+
+function handleSort(key) {
+  if (currentSortKey === key) {
+    currentSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    currentSortKey = key;
+    currentSortDir = 'asc';
+  }
+  document.querySelectorAll('thead th[data-sort-key]').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (th.getAttribute('data-sort-key') === key) {
+      th.classList.add(currentSortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    }
+  });
+  applyFilters();
+}
+
+function applyFilters() {
+  let filtered = getCurrentFilteredRows();
+  filtered = sortRows(filtered, currentSortKey, currentSortDir);
+  updateSummary(filtered);
+  renderRows(filtered);
+}
+
+function clearFilters() {
+  const keyword = document.getElementById('filterKeyword');
+  const requestType = document.getElementById('filterRequestType');
+  const status = document.getElementById('filterStatus');
+  if (keyword) keyword.value = '';
+  if (requestType) requestType.value = '';
+  if (status) status.value = '';
+  applyFilters();
+}
+
+function bindFilterInputs() {
+  ['filterKeyword', 'filterRequestType', 'filterStatus'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el || el.__boundFilter) return;
+    el.addEventListener('input', applyFilters);
+    el.addEventListener('change', applyFilters);
+    el.__boundFilter = true;
+  });
+}
+
+function renderDetailText(value) {
+  const text = String(value == null ? '' : value).trim();
+  if (!text) return '<span class="detail-empty">-</span>';
+  return escapeHtml(text).replace(/\n/g, '<br>');
+}
+
+function buildDetailKv(label, value, options) {
+  const opts = options && typeof options === 'object' ? options : {};
+  const wrapClass = opts.full ? 'detail-kv full' : 'detail-kv';
+  const valueClass = opts.multiline ? 'detail-kv-value multiline' : 'detail-kv-value';
+  const valueHtml = opts.rawHtml ? String(opts.rawHtml) : renderDetailText(value);
+  return (
+    `<div class="${wrapClass}">` +
+      `<div class="detail-kv-label">${escapeHtml(label || '-')}</div>` +
+      `<div class="${valueClass}">${valueHtml}</div>` +
+    '</div>'
+  );
+}
+
+function getDetailStatusBadgeClass(statusMeta) {
+  const normalized = statusMeta && statusMeta.normalized ? statusMeta.normalized : 'new';
+  if (normalized === 'done') return 'status-done';
+  if (normalized === 'processing') return 'status-processing';
+  if (normalized === 'rejected') return 'status-rejected';
+  return 'status-new';
+}
+
+function buildDetailHtml(row) {
+  if (!row || typeof row !== 'object') {
+    return (
+      '<section class="detail-section">' +
+        '<div class="detail-kv-value"><span class="detail-empty">-</span></div>' +
+      '</section>'
+    );
+  }
+
+  const statusMeta = getStatusMeta(row.status);
+  const isDelete = normalizeText(row.requestType) === 'delete';
+  const changedColumns = getChangedColumnsList(row);
+  const changedFields = getChangedFieldsMap(row);
+  const statusBadgeClass = getDetailStatusBadgeClass(statusMeta);
+  const typeBadgeClass = isDelete ? 'type-delete' : 'type-edit';
+  const targetDateTime = formatThaiDateTimePair(row.targetDate || '', row.targetTime || '');
+  const correctedDataText = String(row.correctedData || '').trim();
+  const actionNoticeText = isDelete
+    ? 'คำขอนี้เป็นการลบข้อมูล: ตรวจสอบเหตุผล และรายการอ้างอิงก่อนอนุมัติ'
+    : 'คำขอนี้เป็นข้อมูลการแก้ไข: ระบบจะแสดงไฮไลต์สีเขียว ในส่วนที่ผู้ใช้ทำการแก้ไขข้อมูล';
+
+  const changedList = changedColumns.map((key) => {
+    const label = formatColumnLabel(key);
+    const value = Object.prototype.hasOwnProperty.call(changedFields, key) ? changedFields[key] : '';
+    return (
+      '<li class="detail-change-item">' +
+        `<div class="detail-change-label">${escapeHtml(label)}</div>` +
+        `<div class="detail-change-value">${renderDetailText(formatValueByColumnKey(key, value))}</div>` +
+      '</li>'
+    );
+  }).join('');
+
+  let actionSectionBody = '';
+  if (isDelete) {
+    actionSectionBody =
+      '<div class="detail-delete-box">' +
+        '<div class="detail-delete-title">คำขอนี้เป็นการลบรายการ</div>' +
+        `<div class="detail-delete-reason">เหตุผล: ${renderDetailText(row.deleteReason)}</div>` +
+      '</div>';
+  } else if (changedList) {
+    actionSectionBody = `<ul class="detail-change-list">${changedList}</ul>`;
+  } else {
+    actionSectionBody =
+      '<div class="detail-kv">' +
+        '<div class="detail-kv-label">ข้อมูลที่ส่งมา</div>' +
+        `<div class="detail-kv-value multiline">${renderDetailText(correctedDataText || '-')}</div>` +
+      '</div>';
+  }
+
+  const noteSection = String(row.note || '').trim()
+    ? (
+      '<section class="detail-section">' +
+        '<div class="detail-section-title">หมายเหตุจากผู้แจ้ง</div>' +
+        `<div class="detail-kv-value multiline">${renderDetailText(row.note)}</div>` +
+      '</section>'
+    )
+    : '';
+
+  return [
+    '<section class="detail-section">',
+      `<div class="detail-request-notice ${isDelete ? 'delete' : 'edit'}">${escapeHtml(actionNoticeText)}</div>`,
+    '</section>',
+
+    '<section class="detail-section">',
+      '<div class="detail-section-title">ข้อมูลคำขอ</div>',
+      '<div class="detail-kv-grid">',
+        buildDetailKv('รหัสคำขอ', row.requestId || '-'),
+        buildDetailKv('เวลาแจ้ง', toDisplayDate(row.createdAt)),
+        buildDetailKv('ประเภทคำขอ', null, { rawHtml: `<span class="detail-badge ${typeBadgeClass}">${escapeHtml(getTypeLabel(row.requestType))}</span>` }),
+        buildDetailKv('สถานะ', null, { rawHtml: `<span class="detail-badge ${statusBadgeClass}">${escapeHtml(statusMeta.label)}</span>` }),
+        buildDetailKv('ผู้แจ้ง', `${row.requestedByName || '-'} (${row.requestedByEmail || '-'})`, { full: true }),
+        buildDetailKv('ชป.ผู้แจ้ง', row.requestedByUnit || '-'),
+      '</div>',
+    '</section>',
+
+    '<section class="detail-section">',
+      '<div class="detail-section-title">รายการอ้างอิง</div>',
+      '<div class="detail-kv-grid">',
+        buildDetailKv('ลำดับ', row.targetNo || '-'),
+        buildDetailKv('ประทับเวลา', formatThaiDateTimeValue(row.targetTimestamp || '-')),
+        buildDetailKv('ผู้รายงาน', `${row.targetReporter || '-'} (${row.targetReporterEmail || '-'})`, { full: true }),
+        buildDetailKv('ชุดปฏิบัติการ', row.targetUnit || '-'),
+        buildDetailKv('วันที่/เวลา', targetDateTime || '-'),
+        buildDetailKv('สถานที่', row.targetLocation || '-', { full: true, multiline: true }),
+        buildDetailKv('การจับกุม/ตรวจสอบ', row.targetActionType || '-'),
+        buildDetailKv('ชื่อผู้ต้องหา', row.targetSuspect || '-'),
+        buildDetailKv('เลขหมายจับ/ค้น', row.targetWarrantNo || '-'),
+        buildDetailKv('เลขบัตรประชาชน', row.targetCitizenId || '-'),
+      '</div>',
+    '</section>',
+
+    '<section class="detail-section">',
+      `<div class="detail-section-title">${isDelete ? 'รายละเอียดการลบ' : 'รายละเอียดการแก้ไข'}</div>`,
+      actionSectionBody,
+    '</section>',
+    noteSection
+  ].join('');
+}
+
+function openDetail(index) {
+  const rows = getCurrentFilteredRows();
+  const row = rows[index];
+  if (!row) return;
+  const content = document.getElementById('detailContent');
+  if (content) content.innerHTML = buildDetailHtml(row);
+  document.getElementById('detailOverlay')?.classList.add('show');
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay')?.classList.remove('show');
+}
+
+async function decideRequest(index, decision, evt) {
+  if (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+
+  const rows = getCurrentFilteredRows();
+  const row = rows[index];
+  if (!row || typeof row !== 'object') return false;
+
+  const requestId = String(row.requestId || '').trim();
+  if (!requestId) {
+    showToast('ไม่พบรหัสคำขอ');
+    return false;
+  }
+
+  const normalizedDecision = normalizeText(decision) === 'reject' ? 'reject' : 'approve';
+  const decisionLabel = normalizedDecision === 'reject' ? 'ไม่อนุมัติ' : 'อนุมัติ';
+
+  const statusMeta = getStatusMeta(row.status);
+  if (!statusMeta.canApprove) {
+    if (statusMeta.normalized === 'rejected') {
+      showToast('คำขอนี้ไม่อนุมัติ');
+    } else {
+      showToast('คำขอนี้ดำเนินการแล้ว');
+    }
+    return false;
+  }
+  if (pendingDecisionRequestIds.has(requestId)) return false;
+
+  const user = currentUser || getStoredUserSafe();
+  const sessionToken = getSessionToken(user);
+  if (!user.email || !sessionToken) {
+    showToast('ไม่พบเซสชันเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่');
+    return false;
+  }
+
+  pendingDecisionRequestIds.add(requestId);
+  applyFilters();
+  setMobileDataLoading(true);
+
+  try {
+    const response = await fetch(getSheetUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'approveChangeRequest',
+        email: user.email,
+        sessionToken: sessionToken,
+        requestId: requestId,
+        decision: normalizedDecision
+      })
+    });
+    const rawText = await response.text();
+    let result = {};
+    try {
+      result = rawText ? JSON.parse(rawText) : {};
+    } catch (_) {
+      throw new Error('เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง (HTTP ' + response.status + ')');
+    }
+    if (!response.ok) {
+      throw new Error((result && result.message) || ('HTTP ' + response.status));
+    }
+    if (result.status !== 'success') {
+      const errMsg = String(result.message || (decisionLabel + 'คำขอไม่สำเร็จ'));
+      if (/unknown action/i.test(errMsg)) {
+        throw new Error('Web App ยังเป็นเวอร์ชันเก่า กรุณา Deploy Apps Script เวอร์ชันล่าสุด');
+      }
+      throw new Error(errMsg);
+    }
+
+    notifications.forEach((item) => {
+      if (String(item.requestId || '').trim() !== requestId) return;
+      item.status = String(result.requestStatus || 'done').trim() || 'done';
+      if (Array.isArray(result.updatedColumns) && result.updatedColumns.length) {
+        item.updatedColumns = result.updatedColumns.slice();
+      }
+    });
+
+    showToast(decisionLabel + 'คำขอเรียบร้อยแล้ว');
+    applyFilters();
+  } catch (err) {
+    showToast(decisionLabel + 'ไม่สำเร็จ: ' + (err.message || err));
+  } finally {
+    setMobileDataLoading(false);
+    pendingDecisionRequestIds.delete(requestId);
+    applyFilters();
+  }
+
+  return false;
+}
+
+async function loadNotifications() {
+  const user = getStoredUserSafe();
+  currentUser = user && typeof user === 'object' ? user : {};
+  const emptyEl = document.getElementById('notificationEmpty');
+
+  hideAuthCheck();
+  syncRoleMenus(user);
+  renderUserProfile(user);
+  bindFilterInputs();
+  notifications = [];
+  applyFilters();
+
+  if (!hasAuthSession(user)) {
+    setMobileDataLoading(false);
+    showAuthCheck(
+      'ไม่พบเซสชันเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่',
+      'กรุณาเข้าสู่ระบบ',
+      'ต้องเข้าสู่ระบบก่อนใช้งานหน้าตรวจสอบสิทธิ์'
+    );
+    emptyEl.textContent = 'ไม่พบเซสชันเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่';
+    emptyEl.style.display = 'none';
+    return;
+  }
+  const notifPages = Array.isArray(user.allowedPages) ? user.allowedPages : [];
+  if (!notifPages.includes('notification')) {
+    setMobileDataLoading(false);
+    try { sessionStorage.setItem('CSD1_ACCESS_DENIED', '1'); } catch (_) {}
+    window.location.replace('index.html');
+    return;
+  }
+
+  const payload = {
+    action: 'getAdminNotifications',
+    email: user.email,
+    sessionToken: getSessionToken(user)
+  };
+
+  setMobileDataLoading(true);
+  try {
+    const response = await fetch(getSheetUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const rawText = await response.text();
+    let result = {};
+    try {
+      result = rawText ? JSON.parse(rawText) : {};
+    } catch (_) {
+      throw new Error('เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง (HTTP ' + response.status + ')');
+    }
+    if (!response.ok) {
+      throw new Error((result && result.message) || ('HTTP ' + response.status));
+    }
+    if (result.status !== 'success') {
+      const errMsg = String(result.message || 'โหลดข้อมูลไม่สำเร็จ');
+      if (/unknown action/i.test(errMsg)) {
+        throw new Error('Web App ยังเป็นเวอร์ชันเก่า กรุณา Deploy Apps Script เวอร์ชันล่าสุด');
+      }
+      throw new Error(errMsg);
+    }
+    notifications = Array.isArray(result.data) ? result.data : [];
+    hideAuthCheck();
+    applyFilters();
+  } catch (err) {
+    const errMsg = String(err && err.message ? err.message : err || 'เกิดข้อผิดพลาด');
+    if (/เซสชัน|เข้าสู่ระบบ|ไม่มีสิทธิ์|แอดมิน/i.test(errMsg)) {
+      showAuthCheck(errMsg, 'ตรวจสอบสิทธิ์ไม่ผ่าน', 'กรุณาตรวจสอบบัญชีผู้ใช้และสิทธิ์การเข้าใช้งาน');
+      emptyEl.style.display = 'none';
+      return;
+    }
+    hideAuthCheck();
+    emptyEl.textContent = 'เกิดข้อผิดพลาด: ' + errMsg;
+    emptyEl.style.display = 'block';
+  } finally {
+    setMobileDataLoading(false);
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeProfileMenu();
+    closeDetail();
+    closeAppSidebar();
+    closeMobileSettings();
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (profileMenuOpen && !e.target.closest('.user-profile-wrap')) {
+    closeProfileMenu();
+  }
+});
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+  }
+});
+
+applyTheme(getPreferredTheme());
+syncRoleMenus(getStoredUserSafe());
+loadNotifications();
+</script>
+<script>
+// ==================== PWA LINK INTERCEPTOR ====================
+(function() {
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (!isStandalone) return;
+  document.addEventListener('click', function(e) {
+    if (e.defaultPrevented) return;
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    let url;
+    try { url = new URL(a.href, location.href); } catch(_) { return; }
+    if (url.origin === location.origin && !a.getAttribute('target')) {
+      e.preventDefault();
+      location.href = url.pathname + url.search + url.hash;
+    }
+  });
+})();
+</script>
+<script src="connect-mobile-nav.js"></script>
+<script src="sidebar-account.js"></script>
+<div class="bottom-bar-veil" aria-hidden="true"></div>
+</body>
+</html>

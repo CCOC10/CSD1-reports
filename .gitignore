@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+
+# Generated documents
+backend/generated/
+
+# macOS
+.DS_Store

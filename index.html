@@ -1,0 +1,2775 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<script src="page-transition.js"></script>
+<script src="csd1-cache.js"></script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
+<title>CSD1 — ระบบงาน กก.1 บก.ป.</title>
+<link rel="icon" type="image/png" href="web logo.png">
+<link rel="apple-touch-icon" href="web logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(() => {
+  try {
+    const t = localStorage.getItem('CSD1_THEME');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch(_) {}
+  try {
+    const fs = parseInt(localStorage.getItem('CSD1_FONT_SIZE') || '100', 10);
+    if (fs >= 85 && fs <= 180) document.documentElement.style.fontSize = fs + '%';
+  } catch(_) {}
+  try {
+    if (localStorage.getItem('CSD1_COMPACT') === '1') document.documentElement.setAttribute('data-compact', '1');
+  } catch(_) {}
+})();
+</script>
+<style>
+:root {
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --primary: #0f172a;
+  --primary-deep: #020617;
+  --primary-surface: #172036;
+  --accent: #ffd400;
+  --accent-dim: #c79d00;
+  --accent-soft: rgba(255, 212, 0, 0.14);
+  --info: #38bdf8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --purple: #a78bfa;
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 212, 0, 0.22);
+  --card-bg: rgba(15, 23, 42, 0.72);
+  --card-bg-strong: rgba(17, 24, 39, 0.9);
+  --body-bg: radial-gradient(circle at top left, rgba(0, 38, 75, 0.55), transparent 32%), linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 18px 45px rgba(0, 0, 0, 0.35);
+  --overlay: rgba(2, 6, 23, 0.84);
+}
+
+[data-theme="light"] {
+  --primary: #ffffff;
+  --primary-deep: #edf3fb;
+  --primary-surface: #ffffff;
+  --accent: #0f766e;
+  --accent-dim: #115e59;
+  --accent-soft: rgba(15, 118, 110, 0.08);
+  --info: #0284c7;
+  --success: #15803d;
+  --danger: #dc2626;
+  --purple: #7c3aed;
+  --text: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(15, 118, 110, 0.22);
+  --card-bg: rgba(255, 255, 255, 0.86);
+  --card-bg-strong: rgba(255, 255, 255, 0.98);
+  --body-bg: radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 30%), linear-gradient(160deg, #eef5fb 0%, #f8fbff 56%, #e2ecf7 100%);
+  --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.12);
+  --overlay: rgba(15, 23, 42, 0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background-color: var(--primary-deep);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--body-bg);
+  color: var(--text);
+  min-height: 100dvh;
+  line-height: 1.55;
+  -webkit-tap-highlight-color: transparent;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 18px);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-orbs::before,
+.bg-orbs::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+
+.bg-orbs::before {
+  width: 620px;
+  height: 620px;
+  top: -210px;
+  left: -180px;
+  background: radial-gradient(circle, rgba(0, 38, 75, 0.55) 0%, transparent 72%);
+}
+
+.bg-orbs::after {
+  width: 520px;
+  height: 520px;
+  right: -120px;
+  bottom: -160px;
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.08) 0%, transparent 72%);
+}
+
+.status-bar-veil {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(env(safe-area-inset-top) + 14px);
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  z-index: 99990;
+  pointer-events: none;
+}
+
+.bottom-bar-veil {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(env(safe-area-inset-bottom) + 20px);
+  background: rgba(2, 6, 23, 0.24);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  z-index: 4295;
+  pointer-events: none;
+}
+
+[data-theme="light"] .bottom-bar-veil,
+[data-theme="light"] .status-bar-veil {
+  background: rgba(241, 245, 249, 0.28);
+}
+
+.page-shell {
+  position: relative;
+  z-index: 5;
+  width: min(1180px, 100% - 24px);
+  margin: 0 auto;
+  padding: 18px 0 40px;
+  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.brand-block,
+.topbar-action,
+.hero-card,
+.panel,
+.dashboard-card,
+.helper-card,
+.popup-sheet {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  min-width: 0;
+  flex: 1;
+}
+
+.brand-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+  padding: 6px;
+  border: 1px solid rgba(255, 212, 0, 0.22);
+  background: rgba(255, 212, 0, 0.08);
+}
+
+[data-theme="light"] .brand-logo {
+  border-color: rgba(15, 118, 110, 0.18);
+  background: rgba(15, 118, 110, 0.05);
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.brand-title {
+  margin-top: 10px;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+
+.brand-subtitle {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.topbar-action {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.topbar-action:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.topbar-action svg,
+.quick-item-icon svg,
+.card-icon svg,
+.helper-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.hero-card,
+.panel,
+.dashboard-card,
+.helper-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card {
+  border-radius: 28px;
+  padding: 24px;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.88), rgba(10, 24, 46, 0.92));
+}
+
+.hero-avatar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 212, 0, 0.35);
+  background: rgba(255, 212, 0, 0.1);
+  display: none;
+}
+
+[data-theme="light"] .hero-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(241, 248, 255, 0.98));
+}
+
+.hero-card::before,
+.panel::before,
+.dashboard-card::before,
+.helper-card::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-card::before {
+  inset: -24% auto auto -18%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.14), transparent 72%);
+}
+
+.hero-title {
+  margin-top: 16px;
+  font-size: clamp(30px, 4.6vw, 54px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  max-width: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-desc {
+  margin-top: 14px;
+  max-width: 700px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.hero-link,
+.hero-ghost {
+  min-height: 46px;
+  border-radius: 14px;
+  padding: 11px 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.hero-link {
+  background: var(--accent);
+  color: #111827;
+  box-shadow: 0 12px 24px rgba(255, 212, 0, 0.18);
+}
+
+.hero-link:hover,
+.hero-ghost:hover {
+  transform: translateY(-1px);
+}
+
+.hero-ghost {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.hero-side {
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.hero-side::before,
+.section-card::before,
+.helper-card::before {
+  top: -84px;
+  right: -52px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12), transparent 72%);
+}
+
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-kicker {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.panel-title {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.panel-sub {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.mini-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.14);
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.mini-chip::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.quick-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.quick-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.quick-item-icon,
+.card-icon,
+.helper-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-item-icon.report,
+.card-icon.report {
+  background: rgba(255, 212, 0, 0.14);
+  color: var(--accent);
+}
+
+.quick-item-icon.connect,
+.card-icon.connect {
+  background: rgba(34, 197, 94, 0.14);
+  color: var(--success);
+}
+
+.quick-item-icon.meeting,
+.card-icon.meeting {
+  background: rgba(239, 68, 68, 0.14);
+  color: var(--danger);
+}
+
+.quick-item strong,
+.card-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.quick-item span,
+.card-desc,
+.helper-text {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.content-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.section-card,
+.helper-card {
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.section-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.section-title {
+  margin-top: 6px;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.section-note {
+  max-width: 420px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.dashboard-card {
+  min-height: 210px;
+  border-radius: 22px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transition);
+  color: inherit;
+}
+
+.dashboard-card.interactive {
+  cursor: pointer;
+}
+
+.dashboard-card.interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.dashboard-card.interactive:active {
+  transform: scale(0.988);
+}
+
+.dashboard-card::before {
+  inset: auto -56px -56px auto;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 72%);
+}
+
+.dashboard-card.featured {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.88), rgba(13, 25, 44, 0.9));
+}
+
+[data-theme="light"] .dashboard-card.featured {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 255, 0.98));
+}
+
+.dashboard-card.accent-gold { grid-column: span 6; }
+.dashboard-card.accent-green { grid-column: span 6; }
+.dashboard-card.accent-red { grid-column: span 6; }
+.dashboard-card.accent-blue { grid-column: span 3; }
+.dashboard-card.accent-purple { grid-column: span 3; }
+
+.dashboard-card.accent-gold { border-color: rgba(255, 212, 0, 0.22); }
+.dashboard-card.accent-green { border-color: rgba(34, 197, 94, 0.22); }
+.dashboard-card.accent-red { border-color: rgba(239, 68, 68, 0.22); }
+.dashboard-card.accent-blue { border-color: rgba(56, 189, 248, 0.2); }
+.dashboard-card.accent-purple { border-color: rgba(167, 139, 250, 0.22); }
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.accent-gold .card-kicker { background: rgba(255, 212, 0, 0.12); color: var(--accent); }
+.accent-green .card-kicker { background: rgba(34, 197, 94, 0.12); color: var(--success); }
+.accent-red .card-kicker { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+.accent-blue .card-kicker { background: rgba(56, 189, 248, 0.12); color: var(--info); }
+.accent-purple .card-kicker { background: rgba(167, 139, 250, 0.12); color: var(--purple); }
+
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.card-badge.ready {
+  background: rgba(34, 197, 94, 0.14);
+  color: var(--success);
+}
+
+.card-badge.beta {
+  background: rgba(255, 212, 0, 0.14);
+  color: var(--accent);
+}
+
+.card-badge.soon {
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--text-muted);
+}
+
+.card-body {
+  margin-top: 20px;
+}
+
+.card-body .card-icon {
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+
+.dashboard-card:not(.featured) .card-title {
+  font-size: 18px;
+}
+
+.card-desc {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.card-meta-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.card-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.dashboard-card.interactive:hover .card-arrow {
+  border-color: var(--border-strong);
+  color: var(--accent);
+  transform: translateX(2px);
+}
+
+.helper-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.helper-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.helper-card::before {
+  opacity: 0.85;
+}
+
+.helper-icon {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--accent);
+}
+
+.helper-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.helper-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.home-footer {
+  position: relative;
+  z-index: 5;
+  margin-top: 18px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.popup-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.popup-sheet {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 110;
+  width: min(560px, calc(100% - 24px));
+  max-height: min(78vh, 760px);
+  overflow: auto;
+  background: var(--card-bg-strong, var(--primary-surface, #1e293b));
+  border-radius: 28px;
+  padding: 14px 0 18px;
+  transform: translate(-50%, calc(-50% + 22px)) scale(0.985);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+}
+
+[data-theme="dark"] .popup-sheet {
+  background: linear-gradient(160deg, rgba(17, 24, 39, 0.98), rgba(13, 23, 42, 0.98));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="light"] .popup-sheet {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.99), rgba(245, 249, 255, 0.99));
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+}
+
+.popup-sheet.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popup-sheet::before {
+  content: '';
+  position: absolute;
+  top: -92px;
+  right: -54px;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.14), transparent 72%);
+  pointer-events: none;
+}
+
+.popup-handle {
+  display: none;
+}
+
+.popup-header {
+  position: relative;
+  z-index: 1;
+  padding: 8px 22px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.popup-header-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: rgba(255, 212, 0, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.popup-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.popup-subtitle {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.popup-close-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  margin-left: auto;
+}
+
+.popup-close-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--danger);
+}
+
+.popup-menu-list {
+  list-style: none;
+  position: relative;
+  z-index: 1;
+  padding: 14px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popup-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 16px;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.popup-menu-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.popup-menu-item:active {
+  transform: scale(0.98);
+}
+
+.popup-menu-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.popup-menu-text { flex: 1; }
+
+.popup-menu-label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.popup-menu-hint {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.popup-menu-arrow {
+  font-size: 16px;
+  color: var(--text-muted);
+  transition: transform 0.2s, color 0.2s;
+}
+
+.popup-menu-item:hover .popup-menu-arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* ── Settings: Profile (horizontal) ── */
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 212, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.settings-avatar-placeholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 212, 0, 0.4);
+  background: rgba(255, 212, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.settings-profile-info { flex: 1; min-width: 0; }
+
+.settings-profile-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="light"] .settings-profile-name { color: var(--primary); }
+
+.settings-profile-email {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Settings: Sections ── */
+.settings-section {
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.settings-section-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 12px 20px 4px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px;
+  cursor: default;
+  transition: background 0.15s;
+  border-top: 1px solid var(--border);
+}
+
+.settings-row:first-of-type { border-top: none; }
+
+.settings-row-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.settings-row-body { flex: 1; min-width: 0; }
+
+.settings-row-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.settings-row-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.settings-row-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.settings-row-chevron {
+  font-size: 12px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  margin-left: 2px;
+}
+
+/* ── Settings: Theme toggle row (reuse .settings-row) ── */
+.settings-theme-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.settings-theme-label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Legacy - keep info cards hidden but don't break JS */
+.settings-info-cards { display: none; }
+
+/* ── Font size stepper ── */
+.settings-font-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.settings-font-label-text {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.settings-font-stepper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.settings-font-step-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.settings-font-step-btn:hover {
+  background: rgba(255, 212, 0, 0.1);
+  border-color: rgba(255, 212, 0, 0.35);
+  color: var(--accent);
+}
+
+.settings-font-step-btn:disabled {
+  opacity: 0.28;
+  cursor: default;
+  pointer-events: none;
+}
+
+[data-theme="light"] .settings-font-step-btn {
+  background: rgba(0, 38, 75, 0.05);
+}
+
+.settings-font-size-display {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 38px;
+  text-align: center;
+}
+
+/* ── Compact mode: data-compact reduces spacing ── */
+[data-compact] .dashboard-card,
+[data-compact] .panel,
+[data-compact] .hero-card,
+[data-compact] .helper-card {
+  padding: 12px 14px !important;
+}
+
+[data-compact] .dashboard-grid,
+[data-compact] .helper-grid,
+[data-compact] .home-grid {
+  gap: 10px !important;
+}
+
+[data-compact] .section-head {
+  margin-bottom: 6px !important;
+}
+
+[data-compact] .card-value {
+  font-size: 1.6em !important;
+}
+
+/* ── About section action button ── */
+.settings-about-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  border-top: 1px solid var(--border);
+  transition: background 0.15s;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.settings-about-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .settings-about-btn:hover {
+  background: rgba(0, 38, 75, 0.04);
+}
+
+.settings-about-btn-label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.settings-about-btn-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.app-theme-switch {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid #bcc1ca;
+  background: #d8dce1;
+  cursor: pointer;
+  transition: var(--transition);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.app-theme-switch:hover {
+  box-shadow: 0 0 0 2px rgba(255, 212, 0, 0.22), 0 0 16px rgba(255, 212, 0, 0.28);
+}
+
+[data-theme="dark"] .app-theme-switch {
+  background: #252c36;
+  border-color: #3d4654;
+}
+
+[data-theme="light"] .app-theme-switch {
+  background: #d8dce1;
+  border-color: #bcc1ca;
+}
+
+.app-theme-switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.app-theme-switch-track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.app-theme-switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+  transition: transform 0.28s ease, background 0.28s ease, color 0.28s ease;
+}
+
+[data-theme="dark"] .app-theme-switch-thumb {
+  transform: translate(24px, -50%);
+  background: #05070b;
+  color: #f8fafc;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+.app-theme-switch-sun,
+.app-theme-switch-moon {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.app-theme-switch-moon { display: none; }
+[data-theme="dark"] .app-theme-switch-sun { display: none; }
+[data-theme="dark"] .app-theme-switch-moon { display: block; }
+
+/* ── Plain toggle (thumb follows :checked, not theme) ── */
+.app-plain-switch {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid #bcc1ca;
+  background: #d8dce1;
+  cursor: pointer;
+  transition: var(--transition);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+[data-theme="dark"] .app-plain-switch {
+  background: #252c36;
+  border-color: #3d4654;
+}
+.app-plain-switch:hover {
+  box-shadow: 0 0 0 2px rgba(255, 212, 0, 0.22), 0 0 16px rgba(255, 212, 0, 0.28);
+}
+.app-plain-switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.app-plain-switch-track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+.app-plain-switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+  transition: transform 0.28s ease, background 0.28s ease;
+}
+.app-plain-switch input:checked ~ .app-plain-switch-track .app-plain-switch-thumb {
+  transform: translate(24px, -50%);
+  background: var(--accent, #ffd400);
+  box-shadow: 0 8px 22px rgba(255, 212, 0, 0.35);
+}
+
+.settings-notif-section {
+  border-top: 1px solid var(--border);
+  padding: 0 20px 10px;
+}
+
+.settings-notif-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 8px;
+}
+
+.settings-notif-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.settings-notif-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-notif-badge[hidden] { display: none; }
+
+.settings-notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.settings-notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.settings-notif-item:hover { background: rgba(255, 255, 255, 0.06); }
+[data-theme="light"] .settings-notif-item:hover { background: rgba(0, 38, 75, 0.07); }
+
+.settings-notif-item.unread {
+  background: rgba(255, 212, 0, 0.05);
+  border-color: rgba(255, 212, 0, 0.15);
+}
+
+[data-theme="light"] .settings-notif-item { background: rgba(0, 38, 75, 0.03); }
+[data-theme="light"] .settings-notif-item.unread {
+  background: rgba(0, 38, 75, 0.06);
+  border-color: rgba(0, 38, 75, 0.15);
+}
+
+.settings-notif-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 4px;
+  display: none;
+}
+
+.settings-notif-item.unread .settings-notif-dot { display: block; }
+.settings-notif-body { flex: 1; min-width: 0; }
+
+.settings-notif-text {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.settings-notif-sub {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.settings-notif-status {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.notif-status-pending { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+.notif-status-processing { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.notif-status-done { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+.notif-status-cancelled { background: rgba(239, 68, 68, 0.12); color: #f87171; }
+[data-theme="light"] .notif-status-done { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
+[data-theme="light"] .notif-status-pending { color: #d97706; }
+
+.settings-notif-empty {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 14px 0 6px;
+}
+
+.settings-logout-wrap {
+  padding: 10px 14px 4px;
+}
+
+.settings-logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.06);
+  color: #f87171;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.settings-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+[data-theme="light"] .settings-logout-btn {
+  border-color: rgba(220, 38, 38, 0.2);
+  background: rgba(220, 38, 38, 0.05);
+  color: #dc2626;
+}
+
+[data-theme="light"] .settings-logout-btn:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-note {
+    text-align: left;
+  }
+
+  .dashboard-card.accent-blue,
+  .dashboard-card.accent-purple,
+  .dashboard-card.accent-gold,
+  .dashboard-card.accent-green,
+  .dashboard-card.accent-red {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(100% - 20px, 1180px);
+  }
+
+  .topbar {
+    align-items: stretch;
+  }
+
+  .brand-block {
+    padding: 14px;
+  }
+
+  .hero-card,
+  .hero-side,
+  .section-card,
+  .helper-card {
+    padding: 18px;
+  }
+
+  .hero-title,
+  .section-title {
+    max-width: none;
+  }
+
+  .app-grid,
+  .helper-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-card.accent-blue,
+  .dashboard-card.accent-purple,
+  .dashboard-card.accent-gold,
+  .dashboard-card.accent-green,
+  .dashboard-card.accent-red {
+    grid-column: span 1;
+  }
+
+  .dashboard-card {
+    min-height: 190px;
+  }
+}
+
+@media (max-width: 560px) {
+  .popup-sheet {
+    width: calc(100% - 18px);
+    max-height: min(84vh, 760px);
+    border-radius: 24px;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+  }
+
+  .popup-header {
+    padding: 6px 18px 14px;
+  }
+
+  .popup-menu-list {
+    padding: 12px 12px 0;
+  }
+}
+
+/* ==================== LOGIN PAGE ==================== */
+[data-theme="dark"] {
+  --accent-glow: rgba(255, 212, 0, 0.5);
+  --accent-glow-soft: rgba(255, 212, 0, 0.15);
+  --card-bg-solid: #1e293b;
+  --shadow-lg: 0 15px 40px rgba(0,0,0,0.5);
+  --toast-bg: #1e293b;
+}
+[data-theme="light"] {
+  --accent-glow: rgba(15, 118, 110, 0.35);
+  --accent-glow-soft: rgba(15, 118, 110, 0.08);
+  --card-bg-solid: #ffffff;
+  --shadow-lg: 0 15px 40px rgba(15,23,42,0.15);
+  --toast-bg: #ffffff;
+}
+@keyframes loginSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes loginShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.login-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2,6,23,0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 2000;
+  padding: 1rem;
+  padding-top: calc(1rem + env(safe-area-inset-top));
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+[data-theme="light"] .login-wrapper {
+  background: #ffffff !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.login-wrapper.hidden { display: none; }
+.login-card {
+  background: rgba(15,23,42,0.75);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset, 0 0 50px var(--accent-glow-soft);
+  animation: loginSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="light"] .login-card {
+  background: #00264B;
+  border-color: rgba(255, 212, 0, 0.35);
+  box-shadow: 0 28px 60px rgba(0,38,75,0.28), 0 0 0 1px rgba(255,255,255,0.05) inset, 0 0 42px rgba(255,212,0,0.12);
+}
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ffd400, transparent);
+  background-size: 200% 100%;
+  animation: loginShimmer 3s ease infinite;
+}
+.login-logo {
+  width: 150px; height: 150px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 15px var(--accent-glow));
+}
+.login-card h2 { font-size: 1.4rem; font-weight: 800; color: #FFD400; margin-bottom: 0.25rem; }
+.login-card .login-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+[data-theme="light"] .login-card .login-subtitle { color: rgba(226,232,240,0.82); }
+.login-error { color: var(--danger); font-size: 0.82rem; margin-top: 0.75rem; min-height: 1.2em; }
+.login-settings-link {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+[data-theme="light"] .login-settings-link { color: rgba(226,232,240,0.82); }
+.login-settings-link:hover { color: #FFD400; }
+.login-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.login-modal-overlay.show { opacity: 1; pointer-events: auto; }
+.login-modal-card {
+  background: var(--card-bg-solid);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.login-modal-overlay.show .login-modal-card { transform: scale(1) translateY(0); }
+.login-modal-card h3 { font-size: 1.15rem; font-weight: 700; color: #FFD400; margin-bottom: 1.25rem; }
+.login-modal-field { margin-bottom: 1rem; }
+.login-modal-field label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+.login-modal-field input { width: 100%; padding: 0.65rem 0.9rem; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.15); color: var(--text); font-size: 0.9rem; }
+.login-modal-field .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; }
+.login-modal-btns { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+.login-modal-btns button { flex: 1; padding: 0.7rem; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem; border: none; }
+.login-modal-btn-cancel { background: transparent; border: 1px solid var(--border) !important; color: var(--text-muted); }
+.login-modal-btn-save { background: #FFD400; color: #0f172a; }
+.login-page-toast {
+  position: fixed;
+  bottom: calc(2rem + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--toast-bg);
+  color: var(--text);
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 5000;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.login-page-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<div class="status-bar-veil" aria-hidden="true"></div>
+
+<div class="login-wrapper" id="loginWrapper">
+  <div class="login-card">
+    <img src="JJ logo.png" alt="Logo" class="login-logo">
+    <h2>เข้าสู่ระบบ</h2>
+    <p class="login-subtitle">ระบบรายงานผลการปฏิบัติงาน กก.1 บก.ป.</p>
+    <div id="g_id_onload"
+         data-client_id="108806756839-iv4nrrfk4355ogcl2p2ehkh5f6a1u90b.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="filled_blue"
+           data-text="signin_with"
+           data-size="large"
+           data-logo_alignment="left">
+      </div>
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="login-settings-link" id="loginSettingsBtn" onclick="openLoginSettings()" style="display:none;">&#9881; ตั้งค่าเชื่อมต่อ Google Sheets</button>
+  </div>
+</div>
+
+<div class="login-modal-overlay" id="loginSettingsModal">
+  <div class="login-modal-card">
+    <h3>&#9881; ตั้งค่าระบบ</h3>
+    <div class="login-modal-field">
+      <label>Google Apps Script URL</label>
+      <input type="url" id="loginSheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+      <div class="hint">วาง URL ที่ได้จาก Deploy Google Apps Script (Web app)</div>
+    </div>
+    <div class="login-modal-btns">
+      <button class="login-modal-btn-cancel" onclick="closeLoginSettings()">ยกเลิก</button>
+      <button class="login-modal-btn-save" onclick="saveLoginSettings()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="login-page-toast" id="loginPageToast"></div>
+
+<div class="bg-orbs" aria-hidden="true"></div>
+
+<div class="page-shell">
+  <header class="topbar">
+    <div class="brand-block">
+      <img src="web logo.png" alt="CSD1 Logo" class="brand-logo" onerror="this.style.display='none'">
+      <div class="brand-copy">
+        <div class="brand-eyebrow">CSD1 Family</div>
+        <div class="brand-title">ระบบฐานข้อมูลรวม CSD1 Family</div>
+        <div class="brand-subtitle">รวมเมนูและระบบที่ใช้งานในงานประจำไว้ในหน้าเดียว</div>
+      </div>
+    </div>
+    <button class="topbar-action" id="settingsCard" type="button" aria-label="ตั้งค่า" aria-haspopup="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.57 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1.04H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.66 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9.02 4.6a1.7 1.7 0 0 0 1.04-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 8.98c.2.49.7.82 1.23.82H21a2 2 0 1 1 0 4h-.09c-.53 0-1.03.33-1.51 1.2z"></path></svg>
+    </button>
+  </header>
+
+  <main class="content-grid" role="main">
+    <section class="hero">
+      <div class="hero-card">
+        <img class="hero-avatar" id="heroUserAvatar" src="" alt="โปรไฟล์" referrerpolicy="no-referrer" onerror="this.style.display='none'">
+        <div class="brand-eyebrow">Main Hub</div>
+        <h1 class="hero-title" id="heroGreeting">สวัสดีผู้ใช้งาน</h1>
+        <p class="hero-desc" id="heroGreetingSub">เลือกเข้าระบบที่ต้องการได้ทันที ทั้งงานรายงาน งานประสานข้อมูล และงานจองห้องประชุม</p>
+        <div class="hero-actions">
+          <a class="hero-link" href="connect-status.html">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18"></path><path d="M13 5l8 7-8 7"></path></svg>
+            ติดตามสถานะหมายเรียก
+          </a>
+          <a class="hero-ghost" href="meeting-room.html">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            จองห้องประชุม
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card panel">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Main Modules</div>
+          <h2 class="section-title">เมนูหลัก</h2>
+        </div>
+        <div class="section-note"></div>
+      </div>
+
+      <div class="app-grid">
+        <div class="dashboard-card accent-gold featured interactive" id="csd1ReportCard" role="button" tabindex="0" aria-label="งานหมายจับ CSD1 Report" aria-haspopup="true">
+          <div class="card-top">
+            <span class="card-kicker">Report Suite</span>
+            <span class="card-badge ready">พร้อมใช้งาน</span>
+          </div>
+          <div class="card-body">
+            <div class="card-icon report">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"></path><path d="M7 16l3-4 3 2 4-6"></path><path d="M17 8h2v2"></path></svg>
+            </div>
+            <div class="card-title">งานหมายจับ CSD1 Report</div>
+            <div class="card-desc">รายงานการจับกุม Dashboard เปรียบเทียบผลงาน Hall of Fame และประวัติการรายงานในชุดเดียว</div>
+          </div>
+          <div class="card-meta">
+            <span class="card-meta-label">รายงานและวิเคราะห์ผล</span>
+            <span class="card-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="dashboard-card accent-green featured interactive" id="connectCard" role="button" tabindex="0" aria-label="ระบบประสานข้อมูล CSD1 Connect" aria-haspopup="true">
+          <div class="card-top">
+            <span class="card-kicker">Connect Flow</span>
+            <span class="card-badge beta">ทดลองใช้งาน</span>
+          </div>
+          <div class="card-body">
+            <div class="card-icon connect">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12h6"></path><path d="M7 7h.01"></path><path d="M17 17h.01"></path><path d="M7 17h.01"></path><path d="M17 7h.01"></path><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect></svg>
+            </div>
+            <div class="card-title">CSD1 Connect</div>
+            <div class="card-desc">ส่งคำขอข้อมูล ติดตามสถานะคำขอ และจัดการเอกสารตอบกลับให้ไหลต่อเนื่องในงานประสานข้อมูลจริง</div>
+          </div>
+          <div class="card-meta">
+            <span class="card-meta-label">ขอข้อมูลและติดตามผล</span>
+            <span class="card-arrow">›</span>
+          </div>
+        </div>
+
+        <a class="dashboard-card accent-red featured interactive" href="meeting-room.html" aria-label="จองห้องประชุม ศปก.">
+          <div class="card-top">
+            <span class="card-kicker">Meeting Center</span>
+            <span class="card-badge ready">พร้อมใช้งาน</span>
+          </div>
+          <div class="card-body">
+            <div class="card-icon meeting">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18"></path><path d="M5 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"></path><path d="M8 3v6"></path><path d="M16 3v6"></path></svg>
+            </div>
+            <div class="card-title">จองห้องประชุม ศปก.</div>
+            <div class="card-desc">ดูปฏิทินการใช้งาน จัดคิวประชุม และวางแผนช่วงเวลาว่างของห้องประชุมจากหน้าจอเดียว</div>
+          </div>
+          <div class="card-meta">
+            <span class="card-meta-label">ปฏิทินและรายการจอง</span>
+            <span class="card-arrow">›</span>
+          </div>
+        </a>
+
+        <div class="dashboard-card accent-blue">
+          <div class="card-top">
+            <span class="card-kicker">Personnel</span>
+            <span class="card-badge soon">เร็วๆ นี้</span>
+          </div>
+          <div class="card-body">
+            <div class="card-icon" style="background: rgba(56, 189, 248, 0.13); color: var(--info);">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M20 8v6"></path><path d="M23 11h-6"></path></svg>
+            </div>
+            <div class="card-title">ข้อมูลกำลังพล</div>
+            <div class="card-desc">รายชื่อ ตำแหน่ง และข้อมูลติดต่อสำหรับใช้ในงานประจำและการประสานงานภายในหน่วย</div>
+          </div>
+        </div>
+
+        <div class="dashboard-card accent-purple">
+          <div class="card-top">
+            <span class="card-kicker">Assets</span>
+            <span class="card-badge soon">เร็วๆ นี้</span>
+          </div>
+          <div class="card-body">
+            <div class="card-icon" style="background: rgba(167, 139, 250, 0.14); color: var(--purple);">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8l-9-5-9 5 9 5 9-5z"></path><path d="M3 8v8l9 5 9-5V8"></path><path d="M12 13v8"></path></svg>
+            </div>
+            <div class="card-title">ข้อมูลพัสดุสิ่งของหลวง</div>
+            <div class="card-desc">เตรียมพื้นที่สำหรับทะเบียนพัสดุ ครุภัณฑ์ และข้อมูลการติดตามทรัพย์สินของทางราชการ</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="helper-grid">
+      <div class="helper-card panel">
+        <div class="helper-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+        </div>
+        <div>
+          <div class="helper-title">ตั้งค่าและการแจ้งเตือน</div>
+          <div class="helper-text">เปิดดูโปรไฟล์ เปลี่ยนธีม และติดตามคำขอใหม่ได้จากปุ่มตั้งค่ามุมขวาบน</div>
+          <button class="helper-link" type="button" data-open-settings>
+            เปิดหน้าตั้งค่า
+            <span>›</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="home-footer">CCOC CSD1 Team © 2026</footer>
+</div>
+
+<!-- ==================== POPUP: CSD1 Connect submenu ==================== -->
+<div class="popup-overlay" id="connectPopupOverlay" role="dialog" aria-modal="true" aria-label="เมนู CSD1 Connect"></div>
+<div class="popup-sheet" id="connectPopupSheet">
+  <div class="popup-handle" aria-hidden="true"></div>
+  <div class="popup-header">
+    <div class="popup-header-icon" style="background:rgba(34,197,94,0.13)">🔗</div>
+    <div>
+      <div class="popup-title">CSD1 Connect</div>
+      <div class="popup-subtitle">ระบบประสานข้อมูล</div>
+    </div>
+    <button class="popup-close-btn" id="connectPopupCloseBtn" aria-label="ปิด">✕</button>
+  </div>
+  <ul class="popup-menu-list" role="list">
+
+    <li>
+      <a class="popup-menu-item" href="CSD1 connect.html#request" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(34,197,94,0.13)">📝</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">ขอข้อมูล</div>
+          <div class="popup-menu-hint">ส่งคำขอข้อมูลใหม่</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="popup-menu-item" href="connect-status.html" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(56,189,248,0.13)">🔍</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">สถานะคำขอ</div>
+          <div class="popup-menu-hint">ติดตามสถานะคำขอข้อมูล</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+<!-- ==================== POPUP: CSD1 Report submenu ==================== -->
+<div class="popup-overlay" id="csd1PopupOverlay" role="dialog" aria-modal="true" aria-label="เมนู CSD1 Report"></div>
+<div class="popup-sheet" id="csd1PopupSheet">
+  <div class="popup-handle" aria-hidden="true"></div>
+  <div class="popup-header">
+    <div class="popup-header-icon">🎯</div>
+    <div>
+      <div class="popup-title">งานหมายจับ CSD1 Report</div>
+      <div class="popup-subtitle">เลือกรายการที่ต้องการ</div>
+    </div>
+    <button class="popup-close-btn" id="csd1PopupCloseBtn" aria-label="ปิด">✕</button>
+  </div>
+  <ul class="popup-menu-list" role="list">
+
+    <li>
+      <a class="popup-menu-item" href="actionreport.html" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(239,68,68,0.13)">📋</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">รายงานการจับกุม</div>
+          <div class="popup-menu-hint">บันทึกและดูรายงานผลการจับกุม</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="popup-menu-item" href="dashboard.html" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(56,189,248,0.13)">📊</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">Dashboard</div>
+          <div class="popup-menu-hint">ภาพรวมสถิติและกราฟผลงาน</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="popup-menu-item" href="compare.html" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(167,139,250,0.13)">⚖️</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">เปรียบเทียบ</div>
+          <div class="popup-menu-hint">เปรียบเทียบผลงานรายบุคคล/ทีม</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="popup-menu-item" href="rank.html" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(255,212,0,0.13)">🏆</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">Hall of Fame</div>
+          <div class="popup-menu-hint">ตารางจัดอันดับเกียรติยศ</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="popup-menu-item" href="history.html" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(34,197,94,0.13)">📁</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">ประวัติการรายงาน</div>
+          <div class="popup-menu-hint">ดูประวัติรายงานการจับกุมย้อนหลัง</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+    <li id="adminNotificationItem" style="display:none">
+      <a class="popup-menu-item" href="notification.html" role="listitem">
+        <div class="popup-menu-icon" style="background:rgba(251,191,36,0.13)">🛠️</div>
+        <div class="popup-menu-text">
+          <div class="popup-menu-label">ตรวจสอบคำขอแก้ไข</div>
+          <div class="popup-menu-hint">จัดการคำขอแก้ไขข้อมูล (Admin)</div>
+        </div>
+        <span class="popup-menu-arrow">›</span>
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+<!-- ==================== POPUP: ตั้งค่า ==================== -->
+<div class="popup-overlay" id="settingsPopupOverlay" role="dialog" aria-modal="true" aria-label="ตั้งค่า"></div>
+<div class="popup-sheet" id="settingsPopupSheet">
+  <div class="popup-handle" aria-hidden="true"></div>
+  <div class="popup-header">
+    <div class="popup-header-icon" style="background:rgba(100,116,139,0.13)">⚙️</div>
+    <div>
+      <div class="popup-title">ตั้งค่า</div>
+      <div class="popup-subtitle">โปรไฟล์และการแสดงผล</div>
+    </div>
+    <button class="popup-close-btn" id="settingsPopupCloseBtn" aria-label="ปิด">✕</button>
+  </div>
+
+  <!-- Profile (horizontal) -->
+  <div class="settings-profile" id="settingsProfile">
+    <div class="settings-avatar-placeholder" id="settingsAvatarWrap">👤</div>
+    <div class="settings-profile-info">
+      <div class="settings-profile-name" id="settingsName">—</div>
+      <div class="settings-profile-email" id="settingsEmail">—</div>
+    </div>
+  </div>
+  <!-- hidden info-cards kept for JS compatibility -->
+  <div class="settings-info-cards" aria-hidden="true">
+    <div class="settings-info-card"><div class="settings-info-value" id="settingsUnit">—</div></div>
+    <div class="settings-info-card"><div class="settings-info-value" id="settingsRole">—</div></div>
+  </div>
+
+  <!-- Section: บัญชีผู้ใช้ -->
+  <div class="settings-section">
+    <div class="settings-section-label">บัญชีผู้ใช้</div>
+    <div class="settings-row">
+      <div class="settings-row-icon" style="background:rgba(56,189,248,0.13)">🏢</div>
+      <div class="settings-row-body">
+        <div class="settings-row-label">ชุดปฏิบัติการ</div>
+      </div>
+      <div class="settings-row-value" id="settingsUnitDisplay">—</div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-row-icon" style="background:rgba(167,139,250,0.13)">🛡️</div>
+      <div class="settings-row-body">
+        <div class="settings-row-label">ระดับสิทธิ์</div>
+      </div>
+      <div class="settings-row-value" id="settingsRoleDisplay">—</div>
+    </div>
+  </div>
+
+  <!-- Section: การแสดงผล -->
+  <div class="settings-section">
+    <div class="settings-section-label">การแสดงผล</div>
+    <div class="settings-theme-row">
+      <div class="settings-row-icon" style="background:rgba(251,191,36,0.13)">🌙</div>
+      <span class="settings-theme-label">โหมดมืด</span>
+      <label class="app-theme-switch" id="themeToggleBtn" title="สลับโหมดสว่าง/มืด">
+        <input type="checkbox" id="profileThemeToggle" aria-label="สลับโหมดมืด">
+        <span class="app-theme-switch-track">
+          <span class="app-theme-switch-thumb">
+            <svg class="app-theme-switch-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><line x1="12" y1="2.8" x2="12" y2="5.2"></line><line x1="12" y1="18.8" x2="12" y2="21.2"></line><line x1="2.8" y1="12" x2="5.2" y2="12"></line><line x1="18.8" y1="12" x2="21.2" y2="12"></line><line x1="5.5" y1="5.5" x2="7.2" y2="7.2"></line><line x1="16.8" y1="16.8" x2="18.5" y2="18.5"></line><line x1="16.8" y1="7.2" x2="18.5" y2="5.5"></line><line x1="5.5" y1="18.5" x2="7.2" y2="16.8"></line></svg>
+            <svg class="app-theme-switch-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.6A8.8 8.8 0 1 1 11 3.5a6.9 6.9 0 0 0 9.5 11.1z"></path></svg>
+          </span>
+        </span>
+      </label>
+    </div>
+    <!-- Font size stepper -->
+    <div class="settings-font-row">
+      <div class="settings-row-icon" style="background:rgba(34,197,94,0.13)">🔤</div>
+      <span class="settings-font-label-text">ขนาดตัวอักษร</span>
+      <div class="settings-font-stepper">
+        <button class="settings-font-step-btn" id="fontDecBtn" aria-label="ลดขนาดตัวอักษร">A−</button>
+        <span class="settings-font-size-display" id="fontSizeDisplay">100%</span>
+        <button class="settings-font-step-btn" id="fontIncBtn" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
+      </div>
+    </div>
+    <!-- Compact mode -->
+    <div class="settings-theme-row">
+      <div class="settings-row-icon" style="background:rgba(99,102,241,0.13)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="4" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="3" y="10" width="7" height="4" rx="1"/><rect x="14" y="10" width="7" height="4" rx="1"/><rect x="3" y="17" width="7" height="4" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/></svg>
+      </div>
+      <span class="settings-theme-label">โหมดกระชับ</span>
+      <label class="app-plain-switch" title="แสดงข้อมูลได้มากขึ้น">
+        <input type="checkbox" id="compactModeToggle" aria-label="โหมดกระชับ">
+        <span class="app-plain-switch-track">
+          <span class="app-plain-switch-thumb"></span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Section: การแจ้งเตือน -->
+  <div class="settings-notif-section">
+    <div class="settings-notif-head">
+      <span class="settings-notif-title">การแจ้งเตือน</span>
+      <span class="settings-notif-badge" id="settingsNotifBadge" hidden>0</span>
+    </div>
+    <div class="settings-notif-list" id="settingsNotifList">
+      <div class="settings-notif-empty">ไม่มีการแจ้งเตือน</div>
+    </div>
+  </div>
+
+  <!-- Section: เกี่ยวกับระบบ -->
+  <div class="settings-section">
+    <div class="settings-section-label">เกี่ยวกับระบบ</div>
+    <div class="settings-row">
+      <div class="settings-row-icon" style="background:rgba(100,116,139,0.13)">📋</div>
+      <div class="settings-row-body">
+        <div class="settings-row-label">CSD1 Family</div>
+        <div class="settings-row-sub">CCOC CSD10 TEAM</div>
+      </div>
+      <div class="settings-row-value">v1.0</div>
+    </div>
+    <button class="settings-about-btn" id="clearCacheBtn" type="button">
+      <div class="settings-row-icon" style="background:rgba(239,68,68,0.1)">🗑️</div>
+      <span class="settings-about-btn-label">ล้างแคชและโหลดใหม่</span>
+      <span class="settings-about-btn-value">›</span>
+    </button>
+  </div>
+
+  <!-- Logout -->
+  <div class="settings-logout-wrap">
+    <button class="settings-logout-btn" id="settingsLogoutBtn" type="button">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      ออกจากระบบ
+    </button>
+  </div>
+</div>
+
+<script>
+// ==================== THEME TOGGLE ====================
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  const cb = document.getElementById('profileThemeToggle');
+  if (cb) cb.checked = (t === 'dark');
+  try { localStorage.setItem('CSD1_THEME', t); } catch(_) {}
+}
+document.getElementById('profileThemeToggle').addEventListener('change', function() {
+  applyTheme(this.checked ? 'dark' : 'light');
+});
+// init
+applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
+// ==================== FONT SIZE ====================
+const FONT_STEPS = [85, 90, 95, 100, 105, 110, 115, 120, 130, 140, 150, 160, 170, 180];
+function applyFontSize(pct) {
+  document.documentElement.style.fontSize = pct + '%';
+  const disp = document.getElementById('fontSizeDisplay');
+  if (disp) disp.textContent = pct + '%';
+  const dec = document.getElementById('fontDecBtn');
+  const inc = document.getElementById('fontIncBtn');
+  if (dec) dec.disabled = pct <= FONT_STEPS[0];
+  if (inc) inc.disabled = pct >= FONT_STEPS[FONT_STEPS.length - 1];
+  try { localStorage.setItem('CSD1_FONT_SIZE', pct); } catch(_) {}
+}
+(function() {
+  const saved = parseInt(localStorage.getItem('CSD1_FONT_SIZE') || '100', 10);
+  applyFontSize(FONT_STEPS.includes(saved) ? saved : 100);
+})();
+document.getElementById('fontDecBtn').addEventListener('click', function() {
+  const curr = parseInt(document.documentElement.style.fontSize || '100', 10);
+  const idx = FONT_STEPS.indexOf(curr);
+  if (idx > 0) applyFontSize(FONT_STEPS[idx - 1]);
+});
+document.getElementById('fontIncBtn').addEventListener('click', function() {
+  const curr = parseInt(document.documentElement.style.fontSize || '100', 10);
+  const idx = FONT_STEPS.indexOf(curr);
+  if (idx < FONT_STEPS.length - 1) applyFontSize(FONT_STEPS[idx + 1]);
+});
+
+// ==================== COMPACT MODE ====================
+function applyCompact(on) {
+  if (on) document.documentElement.setAttribute('data-compact', '1');
+  else document.documentElement.removeAttribute('data-compact');
+  const cb = document.getElementById('compactModeToggle');
+  if (cb) cb.checked = on;
+  try { localStorage.setItem('CSD1_COMPACT', on ? '1' : '0'); } catch(_) {}
+}
+applyCompact(localStorage.getItem('CSD1_COMPACT') === '1');
+document.getElementById('compactModeToggle').addEventListener('change', function() {
+  applyCompact(this.checked);
+});
+
+// ==================== CLEAR CACHE ====================
+document.getElementById('clearCacheBtn').addEventListener('click', function() {
+  try {
+    const keep = ['CSD1_THEME', 'CSD1_FONT_SIZE', 'CSD1_COMPACT', 'CSD1_USER', 'CSD1_SHEET_URL'];
+    Object.keys(localStorage).forEach(function(k) {
+      if (!keep.includes(k)) localStorage.removeItem(k);
+    });
+    if (window.CSD1Cache && typeof CSD1Cache.clear === 'function') CSD1Cache.clear();
+  } catch(_) {}
+  location.reload();
+});
+
+// ==================== GENERIC POPUP HELPER ====================
+function makePopup(overlayId, sheetId, triggerEl, closeBtnId) {
+  const ov  = document.getElementById(overlayId);
+  const sh  = document.getElementById(sheetId);
+  const cb  = document.getElementById(closeBtnId);
+  function open()  { ov.classList.add('open'); sh.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function close() { ov.classList.remove('open'); sh.classList.remove('open'); document.body.style.overflow = ''; }
+  triggerEl.addEventListener('click', open);
+  triggerEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  ov.addEventListener('click', close);
+  cb.addEventListener('click', close);
+  let sy = 0;
+  sh.addEventListener('touchstart', e => { sy = e.touches[0].clientY; }, { passive: true });
+  sh.addEventListener('touchend',   e => { if (e.changedTouches[0].clientY - sy > 80) close(); }, { passive: true });
+}
+
+makePopup('connectPopupOverlay', 'connectPopupSheet', document.getElementById('connectCard'), 'connectPopupCloseBtn');
+
+// ==================== CSD1 REPORT POPUP ====================
+makePopup('csd1PopupOverlay', 'csd1PopupSheet', document.getElementById('csd1ReportCard'), 'csd1PopupCloseBtn');
+makePopup('settingsPopupOverlay', 'settingsPopupSheet', document.getElementById('settingsCard'), 'settingsPopupCloseBtn');
+
+// ==================== SETTINGS PROFILE + NOTIFICATIONS ====================
+(function() {
+  const CSD1_DEFAULT_API = 'https://script.google.com/macros/s/AKfycbzRTP16rrmz3tUN7FqDQse7f1fDOzXx6pMuBDd6R3r5s_cnoELkVAy5opLWmwj2Unyypg/exec';
+  const SEEN_KEY = 'CSD1_NOTIF_SEEN_AT';
+
+  const STATUS_META = {
+    pending:    { label: '⏳ รอดำเนินการ', cls: 'notif-status-pending' },
+    processing: { label: '🔄 กำลังดำเนินการ', cls: 'notif-status-processing' },
+    done:       { label: '✅ สำเร็จ', cls: 'notif-status-done' },
+    cancelled:  { label: '❌ ยกเลิก', cls: 'notif-status-cancelled' },
+  };
+
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val || '—'; }
+  function getApiUrl() {
+    try {
+      const s = localStorage.getItem('CSD1_SHEET_URL');
+      if (s && s.startsWith('https://')) return s;
+    } catch(_) {}
+    return CSD1_DEFAULT_API;
+  }
+
+  function getAuthUser() {
+    try { return JSON.parse(localStorage.getItem('CSD1_USER') || '{}'); } catch(_) { return {}; }
+  }
+
+  function renderHeroGreeting() {
+    const user = getAuthUser();
+    const rawName = String(user.name || user.displayName || '').trim();
+    const firstName = rawName ? rawName.split(/\s+/)[0] : '';
+    const greetingEl = document.getElementById('heroGreeting');
+    const subEl = document.getElementById('heroGreetingSub');
+    if (greetingEl) {
+      greetingEl.textContent = firstName ? `สวัสดี ${firstName}` : 'สวัสดีผู้ใช้งาน';
+    }
+    if (subEl) {
+      subEl.textContent = firstName
+        ? 'เลือกเข้าระบบที่ต้องการได้ทันทีจากเมนูด้านล่าง'
+        : 'เลือกเข้าระบบที่ต้องการได้ทันที ทั้งงานรายงาน งานประสานข้อมูล และงานจองห้องประชุม';
+    }
+    const avatarEl = document.getElementById('heroUserAvatar');
+    if (avatarEl) {
+      const photoUrl = String(user.avatarUrl || user.googlePhoto || '').trim();
+      if (photoUrl) {
+        avatarEl.src = photoUrl;
+        avatarEl.style.display = '';
+      }
+    }
+  }
+
+  renderHeroGreeting();
+
+  async function postHomeApi(payload) {
+    const response = await fetch(getApiUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+    });
+    const rawText = await response.text();
+    let data = {};
+    try {
+      data = rawText ? JSON.parse(rawText) : {};
+    } catch (_) {
+      throw new Error('ระบบตอบกลับไม่ถูกต้อง');
+    }
+    if (!response.ok) throw new Error(data.message || `HTTP ${response.status}`);
+    if (String(data.status || '').toLowerCase() !== 'success') {
+      throw new Error(data.message || 'โหลดข้อมูลคำขอไม่สำเร็จ');
+    }
+    return data;
+  }
+
+  function fmtDate(iso) {
+    try {
+      const d = new Date(iso);
+      const p = n => String(n).padStart(2,'0');
+      return `${d.getDate()}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    } catch(_) { return ''; }
+  }
+
+  function applyNotifRows(shown, myUnit, isAdmin) {
+    const list   = document.getElementById('settingsNotifList');
+    const badge  = document.getElementById('settingsNotifBadge');
+    const seenAt = Number(localStorage.getItem(SEEN_KEY) || 0);
+    if (!shown.length) {
+      list.innerHTML = '<div class="settings-notif-empty">ไม่มีรายการคำขอ</div>';
+      badge.hidden = true;
+      return;
+    }
+    const unreadCount = shown.filter(r => new Date(r.updatedAt || r.submittedAt || 0).getTime() > seenAt && r.status !== 'pending').length;
+    badge.textContent = unreadCount;
+    badge.hidden = (unreadCount === 0);
+    list.innerHTML = shown.map(r => {
+      const sm      = STATUS_META[r.status] || { label: r.status, cls: '' };
+      const ts      = r.updatedAt || r.submittedAt || '';
+      const isUnread = new Date(ts).getTime() > seenAt && r.status !== 'pending';
+      const docLabel = r.docNumber ? `ตช 0026.21/${esc(r.docNumber)}` : esc(r.requestId || '');
+      return `<div class="settings-notif-item${isUnread?' unread':''}">
+        <div class="settings-notif-dot"></div>
+        <div class="settings-notif-body">
+          <div class="settings-notif-text">${docLabel}</div>
+          <div class="settings-notif-sub">${esc(r.typeLabel||'')}${r.unit&&isAdmin?' · '+esc(r.unit):''}${ts?' · '+fmtDate(ts):''}</div>
+        </div>
+        <span class="settings-notif-status ${sm.cls}">${sm.label}</span>
+      </div>`;
+    }).join('');
+  }
+
+  async function renderNotifications(myUnit, isAdmin, _bg) {
+    const list     = document.getElementById('settingsNotifList');
+    const badge    = document.getElementById('settingsNotifBadge');
+    const authUser = getAuthUser();
+    const email    = String(authUser.email || '').trim().toLowerCase();
+    const cacheKey = 'connect|' + email;
+
+    // SWR: show cached data instantly, refresh in background
+    const cached = window.CSD1Cache && CSD1Cache.get(cacheKey);
+    if (cached) {
+      applyNotifRows(Array.isArray(cached.data) ? cached.data : [], myUnit, isAdmin);
+      if (!_bg) setTimeout(() => renderNotifications(myUnit, isAdmin, true), 100);
+      return;
+    }
+
+    if (!_bg) {
+      list.innerHTML = '<div class="settings-notif-empty">กำลังโหลดคำขอ...</div>';
+      badge.hidden = true;
+    }
+
+    try {
+      const data = await postHomeApi({
+        action: 'getConnectRequests',
+        email,
+        sessionToken: String(authUser.sessionToken || '').trim(),
+        limit: 8,
+      });
+      const rows = Array.isArray(data.data) ? data.data : [];
+      if (window.CSD1Cache) CSD1Cache.set(cacheKey, rows);
+      applyNotifRows(rows, myUnit, isAdmin);
+    } catch (_) {
+      if (!_bg) {
+        list.innerHTML = '<div class="settings-notif-empty">โหลดรายการคำขอไม่สำเร็จ</div>';
+        badge.hidden = true;
+      }
+    }
+  }
+
+  async function populateSettingsProfile() {
+    try {
+      const u     = getAuthUser();
+      const name  = String(u.name  || '').trim();
+      const email = String(u.email || '').trim();
+      const unit  = String(u.unit  || '').trim();
+      const role  = String(u.role  || '').trim();
+      const photo = String(u.avatarUrl || u.googlePhoto || '').trim();
+      const isAdmin = !!(u && u.isReportAdmin);
+      const roleMap = {
+        'reporter': 'ผู้บันทึกรายงาน', 'requester': 'ผู้ขอข้อมูล', 'staff': 'เจ้าหน้าที่',
+        'supervisor': 'สารวัตร', 'report_admin': 'ผู้ดูแลรายงาน',
+        'connect_admin': 'ผู้ดูแลระบบหมายเรียก', 'meeting_admin': 'ผู้ดูแลห้องประชุม',
+        'admin': 'ผู้ดูแลระบบ', 'super_admin': 'ผู้ดูแลระบบสูงสุด'
+      };
+      const roleLabel = roleMap[role.toLowerCase()] || (role || '—');
+
+      setText('settingsName',  name  || 'ไม่ระบุชื่อ');
+      setText('settingsEmail', email || '');
+      setText('settingsUnit',  unit  || '—');
+      setText('settingsRole',  roleLabel);
+      setText('settingsUnitDisplay', unit || '—');
+      setText('settingsRoleDisplay', roleLabel);
+
+      const wrap = document.getElementById('settingsAvatarWrap');
+      if (wrap && photo) {
+        wrap.innerHTML = `<img class="settings-avatar" src="${photo.replace(/"/g,'')}" alt="avatar" onerror="this.parentElement.innerHTML='👤'">`;
+      }
+
+      await renderNotifications(unit, isAdmin);
+
+      // mark seen
+      try { localStorage.setItem(SEEN_KEY, Date.now()); } catch(_) {}
+    } catch(_) {}
+  }
+
+  const settingsTrigger = document.getElementById('settingsCard');
+  if (settingsTrigger) {
+    settingsTrigger.addEventListener('click', populateSettingsProfile);
+  }
+
+  document.querySelectorAll('[data-open-settings]').forEach(function(button) {
+    button.addEventListener('click', function() {
+      if (settingsTrigger) settingsTrigger.click();
+    });
+  });
+
+  document.getElementById('settingsNotifList').addEventListener('click', function(e) {
+    if (!e.target.closest('.settings-notif-item')) return;
+    const ov = document.getElementById('settingsPopupOverlay');
+    const sh = document.getElementById('settingsPopupSheet');
+    if (ov) ov.classList.remove('open');
+    if (sh) sh.classList.remove('open');
+    document.body.style.overflow = '';
+    if (typeof window.navigateInApp === 'function') {
+      window.navigateInApp(null, 'connect-status.html');
+    } else {
+      window.location.assign('connect-status.html');
+    }
+  });
+
+  document.getElementById('settingsLogoutBtn').addEventListener('click', function() {
+    if (typeof window.handleSidebarLogout === 'function') {
+      window.handleSidebarLogout();
+    } else {
+      try { localStorage.removeItem('CSD1_USER'); } catch(_) {}
+      setTimeout(() => { location.href = 'index.html'; }, 150);
+    }
+  });
+})();
+
+// ==================== ADMIN MENU VISIBILITY ====================
+(function() {
+  try {
+    const u = JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+    if (u && u.isReportAdmin) {
+      const el = document.getElementById('adminNotificationItem');
+      if (el) el.style.display = '';
+    }
+  } catch(_) {}
+})();
+
+// ==================== PWA LINK INTERCEPTOR ====================
+// ป้องกัน browser navigation bar ใน iOS PWA standalone mode
+(function() {
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (!isStandalone) return;
+  document.addEventListener('click', function(e) {
+    if (e.defaultPrevented) return;
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    let url;
+    try { url = new URL(a.href, location.href); } catch(_) { return; }
+    if (url.origin === location.origin && !a.getAttribute('target')) {
+      e.preventDefault();
+      location.href = url.pathname + url.search + url.hash;
+    }
+  });
+})();
+
+// ============================================================
+//  LOGIN SYSTEM (Google Sign-In)
+// ============================================================
+(function () {
+  const LOGIN_DEFAULT_API = 'https://script.google.com/macros/s/AKfycbzRTP16rrmz3tUN7FqDQse7f1fDOzXx6pMuBDd6R3r5s_cnoELkVAy5opLWmwj2Unyypg/exec';
+
+  function loginNormalizeSheetUrl(raw) {
+    const v = String(raw == null ? '' : raw).trim();
+    if (!v) return LOGIN_DEFAULT_API;
+    const c = /^https?:\/\//i.test(v) ? v : ('https://' + v);
+    try {
+      const p = new URL(c);
+      if (!/^https?:$/i.test(p.protocol)) throw 0;
+      return p.href;
+    } catch (_) { return LOGIN_DEFAULT_API; }
+  }
+
+  function loginGetSheetUrl() {
+    const stored = localStorage.getItem('CSD1_SHEET_URL');
+    return loginNormalizeSheetUrl(stored);
+  }
+
+  function loginShowToast(msg) {
+    const t = document.getElementById('loginPageToast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function revealLoginSettingsLink() {
+    const btn = document.getElementById('loginSettingsBtn');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+
+  window.openLoginSettings = function () {
+    const inp = document.getElementById('loginSheetUrlInput');
+    if (inp) inp.value = loginGetSheetUrl();
+    document.getElementById('loginSettingsModal').classList.add('show');
+  };
+  window.closeLoginSettings = function () {
+    document.getElementById('loginSettingsModal').classList.remove('show');
+  };
+  window.saveLoginSettings = function () {
+    const raw = document.getElementById('loginSheetUrlInput').value;
+    const v = String(raw == null ? '' : raw).trim();
+    if (!v) {
+      localStorage.removeItem('CSD1_SHEET_URL');
+      loginShowToast('ล้างค่า URL แล้ว (ใช้ค่าเริ่มต้น)');
+      window.closeLoginSettings();
+      return;
+    }
+    const normalized = loginNormalizeSheetUrl(v);
+    if (normalized === LOGIN_DEFAULT_API && v !== LOGIN_DEFAULT_API) {
+      loginShowToast('URL ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
+      return;
+    }
+    localStorage.setItem('CSD1_SHEET_URL', normalized);
+    loginShowToast('บันทึก URL สำเร็จ');
+    window.closeLoginSettings();
+  };
+
+  function decodeJwtResponse(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  }
+
+  function pickSessionToken(src) {
+    if (!src || typeof src !== 'object') return '';
+    return String(src.sessionToken || src.session_token || (src.session && src.session.token) || src.token || src.accessToken || '').trim();
+  }
+
+  function normalizeLoginUser(rawUser, fallbackEmail, fallbackProfile) {
+    if (!rawUser || typeof rawUser !== 'object') return null;
+    const nested = rawUser.data && typeof rawUser.data === 'object' ? rawUser.data : {};
+    const merged = Object.assign({}, rawUser, nested);
+    const sessionToken = pickSessionToken(merged);
+    const explicitProvider = String(merged.authProvider || merged.auth_provider || '').trim().toLowerCase();
+    const inferredProvider = fallbackProfile && typeof fallbackProfile === 'object' ? 'google' : '';
+    const email = String(merged.email || fallbackEmail || '').trim().toLowerCase();
+    if (!email || !sessionToken) return null;
+    return {
+      email: email,
+      name: String(merged.name || (fallbackProfile && fallbackProfile.name) || '').trim() || email,
+      position: String(merged.position || '').trim(),
+      unit: String(merged.unit || '').trim(),
+      phone: String(merged.phone || '').trim(),
+      role: String(merged.role || 'user').trim() || 'user',
+      avatarUrl: String(merged.avatarUrl || '').trim(),
+      googlePhoto: String(merged.googlePhoto || (fallbackProfile && fallbackProfile.picture) || '').trim(),
+      authProvider: explicitProvider || inferredProvider || '',
+      sessionToken: sessionToken,
+      sessionExpiresIn: Number(merged.sessionExpiresIn || merged.session_expires_in || 0) || 0,
+      allowedPages: Array.isArray(merged.allowedPages) ? merged.allowedPages : [],
+      canReport: merged.canReport === true,
+      canConnect: merged.canConnect === true,
+      isReportAdmin: merged.isReportAdmin === true,
+      isConnectAdmin: merged.isConnectAdmin === true,
+      isMeetingAdmin: merged.isMeetingAdmin === true,
+      isSuperAdmin: merged.isSuperAdmin === true,
+      isSupervisor: merged.isSupervisor === true
+    };
+  }
+
+  function parseLoginResponseBody(rawText) {
+    const text = String(rawText || '').trim();
+    if (!text) return {};
+    try { return JSON.parse(text); } catch (_) {
+      try { return JSON.parse(text.replace(/^\)\]\}'\s*/, '')); } catch (_) { return {}; }
+    }
+  }
+
+  window.handleCredentialResponse = async function (response) {
+    const responsePayload = decodeJwtResponse(response.credential);
+    const email = String(responsePayload.email || '').trim().toLowerCase();
+    const url = loginGetSheetUrl();
+    const loginError = document.getElementById('loginError');
+
+    if (!url) {
+      loginError.textContent = 'กรุณาตั้งค่า Google Apps Script URL ก่อน';
+      revealLoginSettingsLink();
+      window.openLoginSettings();
+      return;
+    }
+
+    loginError.style.color = 'var(--text-muted)';
+    loginError.textContent = 'กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...';
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'login', email: email, idToken: response.credential })
+      });
+      const rawText = await res.text();
+      const result = parseLoginResponseBody(rawText);
+      const normalizedUser = normalizeLoginUser(result, email, responsePayload);
+      const status = String(result.status || '').toLowerCase();
+      const isSuccess = status === 'success' || status === 'ok';
+
+      if (normalizedUser && (isSuccess || status === '' || result.success === true)) {
+        localStorage.setItem('CSD1_USER', JSON.stringify(normalizedUser));
+        loginError.textContent = '';
+        document.getElementById('loginWrapper').classList.add('hidden');
+        renderHeroGreeting();
+        loginShowToast('ยินดีต้อนรับ ' + normalizedUser.name);
+        // refresh sidebar-account if loaded
+        if (typeof window.refreshSidebarAccount === 'function') window.refreshSidebarAccount();
+      } else {
+        loginError.style.color = 'var(--danger)';
+        const msg = result.message || 'อีเมลนี้ไม่มีสิทธิ์เข้าใช้งานระบบ';
+        if (msg.indexOf('ตรวจสอบโทเคนล้มเหลว') !== -1) {
+          loginError.textContent = msg + ' กรุณาตรวจสอบ URL Google Apps Script ว่าเป็น deployment ล่าสุด';
+          revealLoginSettingsLink();
+        } else {
+          loginError.textContent = msg;
+        }
+      }
+    } catch (err) {
+      loginError.style.color = 'var(--danger)';
+      loginError.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ ตรวจสอบ URL หรืออินเทอร์เน็ต';
+      revealLoginSettingsLink();
+    }
+  };
+
+  function checkLoginAuth() {
+    const userRaw = localStorage.getItem('CSD1_USER');
+    if (!userRaw) {
+      document.getElementById('loginWrapper').classList.remove('hidden');
+      return;
+    }
+    try {
+      const parsed = JSON.parse(userRaw);
+      const normalized = normalizeLoginUser(parsed);
+      if (!normalized) {
+        localStorage.removeItem('CSD1_USER');
+        document.getElementById('loginWrapper').classList.remove('hidden');
+        return;
+      }
+      localStorage.setItem('CSD1_USER', JSON.stringify(normalized));
+    } catch (_) {
+      localStorage.removeItem('CSD1_USER');
+      document.getElementById('loginWrapper').classList.remove('hidden');
+      return;
+    }
+    document.getElementById('loginWrapper').classList.add('hidden');
+  }
+
+  window.handleLogout = function () {
+    localStorage.removeItem('CSD1_USER');
+    loginShowToast('ออกจากระบบแล้ว');
+    setTimeout(function () {
+      document.getElementById('loginWrapper').classList.remove('hidden');
+    }, 400);
+    if (typeof window.refreshSidebarAccount === 'function') window.refreshSidebarAccount();
+  };
+
+  window.addEventListener('load', function () {
+    checkLoginAuth();
+    try {
+      if (sessionStorage.getItem('CSD1_ACCESS_DENIED')) {
+        sessionStorage.removeItem('CSD1_ACCESS_DENIED');
+        setTimeout(function () {
+          loginShowToast('ขออภัย เมนูนี้ไม่อยู่ในสิทธิ์การใช้งานของท่าน');
+        }, 400);
+      }
+    } catch (_) {}
+  });
+})();
+</script>
+<div class="bottom-bar-veil" aria-hidden="true"></div>
+</body>
+</html>

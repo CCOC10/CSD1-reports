@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<script src="page-transition.js"></script>
+<script src="csd1-cache.js"></script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
+<title>จองห้องประชุม ศปก. | CSD1 Family</title>
+<link rel="manifest" href="manifest.webmanifest">
+<script src="app-shell-lock.js"></script>
+<link rel="stylesheet" href="sidebar-account.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(() => {
+  try {
+    const theme = localStorage.getItem('CSD1_THEME');
+    if (theme === 'light' || theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  } catch (_) {}
+})();
+</script>
+<style>
+:root {
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --primary: #0f172a;
+  --primary-deep: #020617;
+  --primary-surface: #172036;
+  --accent: #ffd400;
+  --accent-dim: #c79d00;
+  --accent-soft: rgba(255, 212, 0, 0.14);
+  --info: #38bdf8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 212, 0, 0.22);
+  --card-bg: rgba(15, 23, 42, 0.72);
+  --card-bg-strong: rgba(17, 24, 39, 0.9);
+  --body-bg: radial-gradient(circle at top left, rgba(0, 38, 75, 0.55), transparent 32%), linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 18px 45px rgba(0, 0, 0, 0.35);
+  --overlay: rgba(2, 6, 23, 0.75);
+}
+
+[data-theme="light"] {
+  --primary: #ffffff;
+  --primary-deep: #edf3fb;
+  --primary-surface: #ffffff;
+  --accent: #0f766e;
+  --accent-dim: #115e59;
+  --accent-soft: rgba(15, 118, 110, 0.08);
+  --info: #0284c7;
+  --success: #15803d;
+  --danger: #dc2626;
+  --text: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(15, 118, 110, 0.22);
+  --card-bg: rgba(255, 255, 255, 0.86);
+  --card-bg-strong: rgba(255, 255, 255, 0.98);
+  --body-bg: radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 30%), linear-gradient(160deg, #eef5fb 0%, #f8fbff 56%, #e2ecf7 100%);
+  --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.12);
+  --overlay: rgba(15, 23, 42, 0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background-color: var(--primary-deep);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--body-bg);
+  color: var(--text);
+  min-height: 100dvh;
+  line-height: 1.55;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 18px);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  -webkit-tap-highlight-color: transparent;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+}
+
+.status-bar-veil {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(env(safe-area-inset-top) + 14px);
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  z-index: 99990;
+  pointer-events: none;
+}
+
+.bottom-bar-veil {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(env(safe-area-inset-bottom) + 20px);
+  background: rgba(2, 6, 23, 0.24);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  -webkit-mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  mask-image: linear-gradient(to top, black 40%, transparent 100%);
+  z-index: 4295;
+  pointer-events: none;
+}
+
+[data-theme="light"] .bottom-bar-veil,
+[data-theme="light"] .status-bar-veil {
+  background: rgba(241, 245, 249, 0.28);
+}
+
+.page-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 16px 40px;
+  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.back-link,
+.ghost-btn,
+.primary-btn,
+.secondary-btn {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.back-link,
+.ghost-btn,
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.back-link:hover,
+.ghost-btn:hover,
+.secondary-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.back-link svg,
+.ghost-btn svg,
+.secondary-btn svg,
+.primary-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.hero-card,
+.panel,
+.room-card,
+.agenda-item,
+.toast {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  padding: 24px;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.88), rgba(10, 24, 46, 0.92));
+}
+
+[data-theme="light"] .hero-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(241, 248, 255, 0.98));
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  inset: -24% auto auto -18%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.14), transparent 72%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  margin-top: 16px;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.hero-desc {
+  margin-top: 12px;
+  max-width: 640px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.hero-stat {
+  border-radius: 18px;
+  padding: 14px 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+[data-theme="light"] .hero-stat {
+  border-color: rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.hero-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.hero-stat-value {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.hero-stat-sub {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.today-card {
+  border-radius: 28px;
+  padding: 22px;
+}
+
+.today-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.today-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--success);
+}
+
+.live-pill::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulseDot 1.8s ease infinite;
+}
+
+.timeline {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.timeline-item {
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.timeline-time {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.timeline-title {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.timeline-note {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
+  gap: 18px;
+}
+
+.panel {
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel-title {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.panel-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.room-list {
+  display: grid;
+  gap: 12px;
+}
+
+.room-card {
+  border-radius: 20px;
+  padding: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.room-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.room-card.is-selected {
+  border-color: var(--accent);
+  background: linear-gradient(145deg, rgba(255, 212, 0, 0.12), rgba(255, 255, 255, 0.04));
+}
+
+.room-card.is-static {
+  cursor: default;
+}
+
+.room-card.is-static:hover {
+  transform: none;
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.room-card-top,
+.agenda-meta,
+.form-row,
+.toggle-row,
+.actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.room-name {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.room-floor {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.room-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.room-badge.available {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--success);
+}
+
+.room-badge.busy {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+}
+
+.room-desc {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  padding: 13px 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 4px rgba(255, 212, 0, 0.08);
+}
+
+.field-textarea {
+  min-height: 104px;
+  resize: vertical;
+}
+
+.fixed-room-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.fixed-room-display small {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.dual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.toggle-row {
+  flex-wrap: wrap;
+}
+
+.toggle-chip {
+  position: relative;
+}
+
+.toggle-chip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-chip span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toggle-chip input:checked + span {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.primary-btn,
+.secondary-btn,
+.ghost-btn {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, var(--accent) 0%, #ffe37a 100%);
+  color: #1f2937;
+  border: none;
+  box-shadow: 0 10px 24px rgba(255, 212, 0, 0.24);
+}
+
+[data-theme="light"] .primary-btn {
+  color: #ffffff;
+  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+  box-shadow: 0 10px 24px rgba(20, 184, 166, 0.22);
+}
+
+.primary-btn:hover,
+.secondary-btn:hover,
+.ghost-btn:hover {
+  transform: translateY(-1px);
+}
+
+.secondary-btn {
+  border: 1px solid var(--border);
+}
+
+.helper-text {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.agenda-list {
+  display: grid;
+  gap: 12px;
+}
+
+.agenda-item {
+  border-radius: 18px;
+  padding: 15px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.agenda-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.agenda-item-head,
+.calendar-detail-item-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.agenda-actions,
+.calendar-detail-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.agenda-action-btn,
+.calendar-export-btn {
+  min-height: 38px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.agenda-room {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.agenda-title {
+  margin-top: 7px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.agenda-detail {
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.empty-state {
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 14px;
+}
+
+.toast-wrap {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.toast {
+  min-width: 260px;
+  max-width: min(92vw, 360px);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border-left: 3px solid var(--accent);
+  background: var(--card-bg-strong);
+  box-shadow: var(--shadow-md);
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast-title {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.toast-body {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.calendar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 9000;
+}
+
+.calendar-modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.calendar-modal {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -46%) scale(0.98);
+  width: min(92vw, 920px);
+  max-height: min(88vh, 860px);
+  overflow: auto;
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  background: var(--card-bg-strong);
+  box-shadow: var(--shadow-md);
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9001;
+  background-image: linear-gradient(180deg, rgba(20, 28, 49, 0.98), rgba(10, 18, 34, 0.98));
+  overflow: hidden;
+}
+
+.calendar-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.calendar-modal-head,
+.calendar-toolbar,
+.calendar-nav,
+.calendar-day-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calendar-modal-head {
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.calendar-modal-title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.calendar-modal-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.icon-btn:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.calendar-toolbar {
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.calendar-nav {
+  flex: 1 1 280px;
+}
+
+.calendar-month-label {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.calendar-legend-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.calendar-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.calendar-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.calendar-dot.today {
+  background: var(--accent);
+}
+
+.calendar-dot.busy {
+  background: var(--info);
+}
+
+.calendar-dot.free {
+  background: var(--success);
+}
+
+.calendar-export-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.calendar-grid-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+  gap: 16px;
+}
+
+.calendar-surface,
+.calendar-detail {
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+  padding: 16px;
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calendar-day,
+.calendar-day-empty {
+  min-height: 88px;
+  border-radius: 18px;
+}
+
+.calendar-day {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.calendar-day:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.calendar-day.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(255, 212, 0, 0.16);
+}
+
+.calendar-day.is-today {
+  border-color: rgba(255, 212, 0, 0.36);
+}
+
+.calendar-day.is-weekend .calendar-day-number {
+  color: var(--text-secondary);
+}
+
+.calendar-day.has-booking .calendar-day-number {
+  color: var(--accent);
+}
+
+.calendar-day.is-free {
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.12), rgba(34, 197, 94, 0.04));
+  border-color: rgba(34, 197, 94, 0.18);
+}
+
+.calendar-day.is-free:hover {
+  border-color: rgba(34, 197, 94, 0.32);
+  box-shadow: 0 10px 24px rgba(8, 47, 20, 0.24);
+}
+
+[data-theme="light"] .calendar-day.is-free {
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.03));
+  border-color: rgba(34, 197, 94, 0.16);
+}
+
+.calendar-day-number-wrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.calendar-day-number {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.calendar-day-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.calendar-day-indicators {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+}
+
+.calendar-day-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.calendar-day-indicator.today {
+  background: var(--accent);
+}
+
+.calendar-day-indicator.busy {
+  background: var(--info);
+}
+
+[data-theme="light"] .calendar-day-indicator {
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.calendar-day-empty {
+  background: transparent;
+}
+
+.calendar-detail-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.calendar-detail-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.calendar-detail-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.calendar-detail-item {
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+  padding: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.calendar-detail-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-detail-time {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.calendar-detail-meeting {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.calendar-reminder-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 212, 0, 0.12);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.calendar-detail-note {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .content-grid,
+  .calendar-grid-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .topbar,
+  .hero-stats,
+  .dual-grid,
+  .actions-row {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-stats {
+    display: grid;
+  }
+
+  .back-link,
+  .ghost-btn,
+  .secondary-btn,
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .calendar-toolbar,
+  .calendar-nav,
+  .panel-actions {
+    width: 100%;
+  }
+
+  .calendar-modal {
+    width: min(96vw, 920px);
+    padding: 16px;
+  }
+
+  .calendar-legend,
+  .agenda-item-head,
+  .calendar-detail-item-head,
+  .agenda-actions,
+  .calendar-detail-item-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calendar-day,
+  .calendar-day-empty {
+    min-height: 106px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="status-bar-veil" aria-hidden="true"></div>
+
+<div class="page-shell">
+  <div class="topbar">
+    <a class="back-link" href="index.html" aria-label="กลับหน้าหลัก">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+      <span>กลับหน้าหลัก</span>
+    </a>
+    <button class="ghost-btn" id="jumpToFormBtn" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+      <span>จองห้องทันที</span>
+    </button>
+  </div>
+
+  <section class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">Meeting Center</div>
+      <h1 class="hero-title">จองห้องประชุม ศปก.</h1>
+      <p class="hero-desc">แสดงตารางการใช้งานห้องประชุมอย่างชัดเจน ทั้งช่วงเวลาว่าง รายการประชุม และผู้จอง เพื่อสนับสนุนการวางแผนใช้งานได้อย่างเหมาะสม</p>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-label">สถานะตอนนี้</div>
+          <div class="hero-stat-value" id="currentRoomStatus">-</div>
+          <div class="hero-stat-sub">ห้อง ศปก. ชั้น 3</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">รายการวันนี้</div>
+          <div class="hero-stat-value" id="todayBookingCount">0</div>
+          <div class="hero-stat-sub">รวมของห้องประชุมนี้</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">ผู้จองล่าสุด</div>
+          <div class="hero-stat-value" id="latestOrganizer">-</div>
+          <div class="hero-stat-sub">จากรายการล่าสุดที่บันทึก</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="today-card panel">
+      <div class="today-head">
+        <div>
+          <div class="today-title">ตารางวันนี้</div>
+          <div class="panel-sub" id="todayDateLabel">-</div>
+        </div>
+        <div class="live-pill">พร้อมใช้งาน</div>
+      </div>
+      <div class="timeline" id="todayTimeline"></div>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">ห้องประชุมหลัก</div>
+        </div>
+      </div>
+      <div class="room-list" id="roomList"></div>
+    </div>
+
+    <div class="panel" id="bookingFormSection">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">สร้างรายการจอง</div>
+          <div class="panel-sub">กรอกข้อมูลเพื่อจองห้องประชุมและอัปเดตตารางการใช้งานให้เป็นปัจจุบัน</div>
+        </div>
+      </div>
+
+      <form class="form-grid" id="bookingForm">
+        <div>
+          <label class="field-label" for="bookingRoomName">ห้องประชุม</label>
+          <div class="field-input fixed-room-display" id="bookingRoomName" aria-live="polite">
+            <div>
+              ห้อง ศปก. กก.1 บก.ป.
+              <small>ชั้น 3 · ห้องประชุมประจำหน่วย</small>
+            </div>
+            <span class="room-badge available" id="fixedRoomBadge">ว่างตอนนี้</span>
+          </div>
+        </div>
+
+        <div class="dual-grid">
+          <div>
+            <label class="field-label" for="bookingDate">วันที่ใช้งาน</label>
+            <input class="field-input" id="bookingDate" type="date" required>
+          </div>
+          <div>
+            <label class="field-label" for="bookingAttendees">จำนวนผู้เข้าร่วม</label>
+            <input class="field-input" id="bookingAttendees" type="number" min="1" max="120" value="8" required>
+          </div>
+        </div>
+
+        <div class="dual-grid">
+          <div>
+            <label class="field-label" for="bookingStart">เวลาเริ่ม</label>
+            <input class="field-input" id="bookingStart" type="time" required>
+          </div>
+          <div>
+            <label class="field-label" for="bookingEnd">เวลาสิ้นสุด</label>
+            <input class="field-input" id="bookingEnd" type="time" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label" for="bookingTitle">หัวข้อการประชุม</label>
+          <input class="field-input" id="bookingTitle" type="text" maxlength="120" placeholder="เช่น ประชุมวางแผนปฏิบัติการประจำสัปดาห์" required>
+        </div>
+
+        <div class="dual-grid">
+          <div>
+            <label class="field-label" for="bookingOrganizer">ผู้จอง / ผู้ประสานงาน</label>
+            <input class="field-input" id="bookingOrganizer" type="text" maxlength="80" placeholder="ชื่อผู้ประสานงาน" required>
+          </div>
+          <div>
+            <label class="field-label" for="bookingPhone">เบอร์ติดต่อ</label>
+            <input class="field-input" id="bookingPhone" type="tel" maxlength="20" placeholder="08x-xxx-xxxx">
+          </div>
+        </div>
+
+        <div>
+          <div class="field-label">อุปกรณ์ที่ต้องใช้</div>
+          <div class="toggle-row">
+            <label class="toggle-chip"><input type="checkbox" name="equipment" value="โปรเจคเตอร์"><span>โปรเจคเตอร์</span></label>
+            <label class="toggle-chip"><input type="checkbox" name="equipment" value="ไมค์ประชุม"><span>ไมค์ประชุม</span></label>
+            <label class="toggle-chip"><input type="checkbox" name="equipment" value="Video Call"><span>Video Call</span></label>
+            <label class="toggle-chip"><input type="checkbox" name="equipment" value="เครื่องเสียง"><span>เครื่องเสียง</span></label>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label" for="bookingNote">หมายเหตุเพิ่มเติม</label>
+          <textarea class="field-textarea" id="bookingNote" placeholder="รายละเอียดการเตรียมห้อง, รูปแบบโต๊ะ, ผู้เข้าร่วมภายนอก ฯลฯ"></textarea>
+          <div class="helper-text" id="formStatusHint">กำลังบันทึกตารางสำหรับห้อง ศปก. กก.1 บก.ป. ชั้น 3</div>
+        </div>
+
+        <div class="actions-row">
+          <button class="primary-btn" type="submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>
+            <span>บันทึกการจอง</span>
+          </button>
+          <button class="secondary-btn" id="clearFormBtn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
+            <span>ล้างฟอร์ม</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:18px;">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">รายการจองถัดไป</div>
+        <div class="panel-sub">แสดงรายการจองล่วงหน้าเพื่อช่วยตรวจสอบคิวใช้งานและวางแผนได้ต่อเนื่อง</div>
+      </div>
+      <div class="panel-actions">
+        <button class="ghost-btn" id="openCalendarBtn" type="button">ดูปฏิทินการจอง</button>
+        <button class="ghost-btn" id="clearAllBtn" type="button">ล้างรายการทั้งหมด</button>
+      </div>
+    </div>
+    <div class="agenda-list" id="agendaList"></div>
+  </section>
+</div>
+
+<div class="calendar-modal-overlay" id="calendarModalOverlay" aria-hidden="true"></div>
+<section class="calendar-modal" id="calendarModal" role="dialog" aria-modal="true" aria-labelledby="calendarModalTitle">
+  <div class="calendar-modal-head">
+    <div>
+      <div class="calendar-modal-title" id="calendarModalTitle">ปฏิทินการจองห้องประชุม</div>
+      <div class="calendar-modal-sub">ดูวันว่าง วันมีประชุม และรายละเอียดผู้จองในแต่ละวัน</div>
+    </div>
+    <button class="icon-btn" id="calendarCloseBtn" type="button" aria-label="ปิดปฏิทิน">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+    </button>
+  </div>
+
+  <div class="calendar-toolbar">
+    <div class="calendar-nav">
+      <button class="icon-btn" id="calendarPrevBtn" type="button" aria-label="เดือนก่อนหน้า">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+      </button>
+      <div class="calendar-month-label" id="calendarMonthLabel">-</div>
+      <button class="icon-btn" id="calendarNextBtn" type="button" aria-label="เดือนถัดไป">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+    <button class="ghost-btn" id="calendarTodayBtn" type="button">วันนี้</button>
+  </div>
+
+  <div class="calendar-legend">
+    <div class="calendar-legend-group">
+      <div class="calendar-legend-item"><span class="calendar-dot today"></span><span>วันปัจจุบัน</span></div>
+      <div class="calendar-legend-item"><span class="calendar-dot busy"></span><span>มีรายการจอง</span></div>
+      <div class="calendar-legend-item"><span class="calendar-dot free"></span><span>วันว่าง</span></div>
+    </div>
+    <div class="calendar-export-hint">แตะรายการประชุมเพื่อส่งออกไปยังแอปปฏิทิน พร้อมแจ้งเตือนล่วงหน้า 30 นาที</div>
+  </div>
+
+  <div class="calendar-grid-wrap">
+    <div class="calendar-surface">
+      <div class="calendar-weekdays">
+        <div class="calendar-weekday">อา</div>
+        <div class="calendar-weekday">จ</div>
+        <div class="calendar-weekday">อ</div>
+        <div class="calendar-weekday">พ</div>
+        <div class="calendar-weekday">พฤ</div>
+        <div class="calendar-weekday">ศ</div>
+        <div class="calendar-weekday">ส</div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <div class="calendar-detail">
+      <div class="calendar-detail-title" id="calendarDetailTitle">-</div>
+      <div class="calendar-detail-sub" id="calendarDetailSub">-</div>
+      <div class="calendar-detail-list" id="calendarDetailList"></div>
+    </div>
+  </div>
+</section>
+
+<div class="toast-wrap"><div class="toast" id="toast"><div class="toast-title" id="toastTitle"></div><div class="toast-body" id="toastBody"></div></div></div>
+<div class="bottom-bar-veil" aria-hidden="true"></div>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'CSD1_MEETING_BOOKINGS_V1';
+  const CALENDAR_REMINDER_MINUTES = 30;
+  const CSD1_DEFAULT_API = 'https://script.google.com/macros/s/AKfycbzRTP16rrmz3tUN7FqDQse7f1fDOzXx6pMuBDd6R3r5s_cnoELkVAy5opLWmwj2Unyypg/exec';
+
+  function getApiUrl() {
+    try { var s = localStorage.getItem('CSD1_SHEET_URL'); if (s && s.startsWith('https://')) return s; } catch (_) {}
+    return CSD1_DEFAULT_API;
+  }
+
+  function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem('CSD1_USER') || '{}'); } catch (_) { return {}; }
+  }
+
+  function callApi(action, data) {
+    var user = getCurrentUser();
+    return fetch(getApiUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action: action, email: user.email, sessionToken: user.sessionToken }, data || {}))
+    }).then(function (r) { return r.json(); });
+  }
+  const ROOMS = [
+    {
+      id: 'opsk1-floor3',
+      name: 'ห้อง ศปก. กก.1 บก.ป.',
+      floor: 'ชั้น 3 · ห้องประชุมประจำหน่วย',
+      desc: 'ใช้สำหรับประชุมวางแผนงาน ติดตามคดี ประชุมสรุปผล และใช้งานร่วมกันภายในหน่วย',
+      features: ['จอแสดงผล', 'โต๊ะประชุมหลัก', 'ระบบเสียงพื้นฐาน'],
+      capacity: 18
+    }
+  ];
+
+  let selectedRoomId = ROOMS[0].id;
+  let calendarSelectedIso = getTodayIso();
+  let calendarCursor = new Date();
+  calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
+  let toastTimer = null;
+
+  function hashString(value) {
+    let hash = 0;
+    for (let index = 0; index < value.length; index += 1) {
+      hash = ((hash << 5) - hash) + value.charCodeAt(index);
+      hash |= 0;
+    }
+    return Math.abs(hash).toString(36);
+  }
+
+  function ensureBookingId(booking, index) {
+    return booking.id || ('bk-' + hashString([
+      booking.date || '',
+      booking.start || '',
+      booking.end || '',
+      booking.title || '',
+      booking.organizer || '',
+      String(index)
+    ].join('|')));
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function escapeIcsText(value) {
+    return String(value == null ? '' : value)
+      .replace(/\\/g, '\\\\')
+      .replace(/;/g, '\\;')
+      .replace(/,/g, '\\,')
+      .replace(/\r?\n/g, '\\n');
+  }
+
+  function toIcsUtcStamp(date) {
+    return date.getUTCFullYear()
+      + String(date.getUTCMonth() + 1).padStart(2, '0')
+      + String(date.getUTCDate()).padStart(2, '0')
+      + 'T'
+      + String(date.getUTCHours()).padStart(2, '0')
+      + String(date.getUTCMinutes()).padStart(2, '0')
+      + String(date.getUTCSeconds()).padStart(2, '0')
+      + 'Z';
+  }
+
+  function toIcsLocalDateTime(iso, timeText) {
+    const date = parseIsoDate(iso);
+    const timeParts = String(timeText || '00:00').split(':').map(Number);
+    const hours = Number.isFinite(timeParts[0]) ? timeParts[0] : 0;
+    const minutes = Number.isFinite(timeParts[1]) ? timeParts[1] : 0;
+    return date.getFullYear()
+      + String(date.getMonth() + 1).padStart(2, '0')
+      + String(date.getDate()).padStart(2, '0')
+      + 'T'
+      + String(hours).padStart(2, '0')
+      + String(minutes).padStart(2, '0')
+      + '00';
+  }
+
+  function slugifyFileName(value) {
+    return String(value || 'meeting')
+      .toLowerCase()
+      .replace(/[^a-z0-9ก-๙]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'meeting';
+  }
+
+  function findBookingById(bookingId) {
+    return readBookings().find(function (booking) {
+      return booking.id === bookingId;
+    }) || null;
+  }
+
+  function buildCalendarDescription(booking, room) {
+    const lines = [
+      'ห้องประชุม: ' + room.name + ' ' + room.floor,
+      'หัวข้อ: ' + (booking.title || '-'),
+      'ผู้จอง: ' + (booking.organizer || '-'),
+      'ช่วงเวลา: ' + (booking.start || '-') + ' - ' + (booking.end || '-'),
+      'ผู้เข้าร่วม: ' + (booking.attendees || '-') + ' คน'
+    ];
+
+    if (booking.phone) {
+      lines.push('เบอร์ติดต่อ: ' + booking.phone);
+    }
+
+    if (booking.equipment && booking.equipment.length) {
+      lines.push('อุปกรณ์: ' + booking.equipment.join(', '));
+    }
+
+    if (booking.note) {
+      lines.push('หมายเหตุ: ' + booking.note);
+    }
+
+    return lines.join('\n');
+  }
+
+  function exportBookingToCalendar(bookingId) {
+    const booking = findBookingById(bookingId);
+    if (!booking) {
+      showToast('ไม่พบรายการ', 'ไม่สามารถส่งออกรายการประชุมนี้ได้');
+      return;
+    }
+
+    const room = getRoomById(booking.roomId);
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//CSD1 Family//Meeting Room Calendar//TH',
+      'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      'UID:' + ensureBookingId(booking, 0) + '@csd1-family',
+      'DTSTAMP:' + toIcsUtcStamp(new Date()),
+      'DTSTART:' + toIcsLocalDateTime(booking.date, booking.start),
+      'DTEND:' + toIcsLocalDateTime(booking.date, booking.end),
+      'SUMMARY:' + escapeIcsText(booking.title),
+      'LOCATION:' + escapeIcsText(room.name + ' ' + room.floor),
+      'DESCRIPTION:' + escapeIcsText(buildCalendarDescription(booking, room)),
+      'BEGIN:VALARM',
+      'TRIGGER:-PT' + CALENDAR_REMINDER_MINUTES + 'M',
+      'ACTION:DISPLAY',
+      'DESCRIPTION:' + escapeIcsText('แจ้งเตือนการประชุม ' + booking.title),
+      'END:VALARM',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = slugifyFileName(booking.title) + '-' + booking.date + '.ics';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function () {
+      URL.revokeObjectURL(url);
+    }, 0);
+    showToast('ส่งออกปฏิทินแล้ว', 'สามารถเปิดไฟล์เพื่อนำเข้ากิจกรรมพร้อมแจ้งเตือนล่วงหน้าได้');
+  }
+
+  function bindBookingExportTriggers(container, selector, attributeName) {
+    container.querySelectorAll(selector).forEach(function (element) {
+      const triggerExport = function () {
+        exportBookingToCalendar(element.getAttribute(attributeName));
+      };
+
+      element.addEventListener('click', function (event) {
+        if (event.target.closest('[data-remove-booking-id], [data-export-booking-id]')) {
+          return;
+        }
+        triggerExport();
+      });
+
+      element.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          triggerExport();
+        }
+      });
+    });
+  }
+
+  /* --- bookings cache (localStorage = offline fallback, Sheet = source of truth) --- */
+  var _bookingsCache = null;
+
+  function readBookings() {
+    if (_bookingsCache) return _bookingsCache;
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      var list = raw ? JSON.parse(raw) : [];
+      return Array.isArray(list)
+        ? list.map(function (booking, index) {
+            return Object.assign({}, booking, { id: ensureBookingId(booking, index) });
+          })
+        : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function writeLocalCache(bookings) {
+    _bookingsCache = bookings;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+  }
+
+  function syncBookingsFromServer() {
+    return callApi('getMeetingBookings').then(function (res) {
+      if (res.ok && Array.isArray(res.bookings)) {
+        writeLocalCache(res.bookings);
+        refreshAll();
+      }
+    }).catch(function () { /* offline – use cache */ });
+  }
+
+  function getTodayIso() {
+    const now = new Date();
+    return now.toISOString().slice(0, 10);
+  }
+
+  function formatThaiDate(iso) {
+    try {
+      return new Intl.DateTimeFormat('th-TH', { dateStyle: 'full' }).format(new Date(iso));
+    } catch (_) {
+      return iso || '-';
+    }
+  }
+
+  function getRoomById(roomId) {
+    return ROOMS.find(room => room.id === roomId) || ROOMS[0];
+  }
+
+  function toIsoDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + day;
+  }
+
+  function parseIsoDate(iso) {
+    const parts = String(iso || '').split('-').map(Number);
+    if (parts.length !== 3 || parts.some(function (part) { return !part; })) {
+      return new Date();
+    }
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+
+  function formatMonthYear(date) {
+    try {
+      return new Intl.DateTimeFormat('th-TH', { month: 'long', year: 'numeric' }).format(date);
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function sortBookings(bookings) {
+    return bookings.slice().sort(function (a, b) {
+      const aKey = [a.date || '', a.start || '', a.roomId || ''].join('|');
+      const bKey = [b.date || '', b.start || '', b.roomId || ''].join('|');
+      return aKey.localeCompare(bKey, 'th');
+    });
+  }
+
+  function isOverlap(aStart, aEnd, bStart, bEnd) {
+    return aStart < bEnd && bStart < aEnd;
+  }
+
+  function collectEquipment() {
+    return Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(function (item) {
+      return item.value;
+    });
+  }
+
+  function showToast(title, body) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastBody').textContent = body;
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 2600);
+  }
+
+  function syncRoomSelect() {
+    const room = getRoomById(selectedRoomId);
+    document.getElementById('bookingRoomName').dataset.roomId = room.id;
+  }
+
+  function renderRooms() {
+    const bookings = readBookings();
+    const today = getTodayIso();
+    const nowTime = new Date().toTimeString().slice(0, 5);
+    const roomList = document.getElementById('roomList');
+    const room = getRoomById(selectedRoomId);
+    const roomBookings = bookings.filter(function (booking) {
+      return booking.roomId === room.id && booking.date === today;
+    });
+    const busyNow = roomBookings.some(function (booking) {
+      return isOverlap(booking.start, booking.end, nowTime, nowTime);
+    });
+
+    roomList.innerHTML = [
+      '<article class="room-card is-selected is-static" data-room-id="' + room.id + '" aria-label="' + room.name + '">',
+      '  <div class="room-card-top">',
+      '    <div>',
+      '      <div class="room-name">' + room.name + '</div>',
+      '      <div class="room-floor">' + room.floor + ' · รองรับ ' + room.capacity + ' คน</div>',
+      '    </div>',
+      '    <span class="room-badge ' + (busyNow ? 'busy' : 'available') + '">' + (busyNow ? 'กำลังใช้งาน' : 'ว่างตอนนี้') + '</span>',
+      '  </div>',
+      '  <div class="room-desc">' + room.desc + '</div>',
+      '  <div class="chip-row">' + room.features.map(function (feature) { return '<span class="chip">' + feature + '</span>'; }).join('') + '</div>',
+      '</article>'
+    ].join('');
+
+    const fixedBadge = document.getElementById('fixedRoomBadge');
+    if (fixedBadge) {
+      fixedBadge.className = 'room-badge ' + (busyNow ? 'busy' : 'available');
+      fixedBadge.textContent = busyNow ? 'กำลังใช้งาน' : 'ว่างตอนนี้';
+    }
+  }
+
+  function updateSelectedRoomLabel() {
+    const room = getRoomById(selectedRoomId);
+    document.getElementById('bookingRoomName').dataset.roomId = room.id;
+  }
+
+  function updateStats() {
+    const bookings = readBookings();
+    const today = getTodayIso();
+    const nowTime = new Date().toTimeString().slice(0, 5);
+    const todayBookings = bookings.filter(function (booking) {
+      return booking.date === today && booking.roomId === selectedRoomId;
+    });
+
+    const busyNow = todayBookings.some(function (booking) {
+      return isOverlap(booking.start, booking.end, nowTime, nowTime);
+    });
+    const latestBooking = sortBookings(bookings).filter(function (booking) {
+      return booking.roomId === selectedRoomId;
+    }).slice(-1)[0];
+
+    document.getElementById('currentRoomStatus').textContent = busyNow ? 'ใช้งานอยู่' : 'ว่าง';
+    document.getElementById('todayBookingCount').textContent = String(todayBookings.length);
+    document.getElementById('latestOrganizer').textContent = latestBooking ? latestBooking.organizer : '-';
+    document.getElementById('todayDateLabel').textContent = formatThaiDate(today);
+  }
+
+  function renderTimeline() {
+    const timeline = document.getElementById('todayTimeline');
+    const bookings = sortBookings(readBookings()).filter(function (booking) {
+      return booking.date === getTodayIso();
+    });
+
+    if (!bookings.length) {
+      timeline.innerHTML = '<div class="empty-state">ยังไม่มีรายการจองสำหรับวันนี้</div>';
+      return;
+    }
+
+    timeline.innerHTML = bookings.slice(0, 4).map(function (booking) {
+      const room = getRoomById(booking.roomId);
+      return [
+        '<div class="timeline-item">',
+        '  <div class="timeline-time">' + escapeHtml(booking.start) + ' - ' + escapeHtml(booking.end) + '</div>',
+        '  <div class="timeline-title">' + escapeHtml(booking.title) + '</div>',
+        '  <div class="timeline-note">' + escapeHtml(room.name) + ' · ' + escapeHtml(booking.organizer) + ' · ' + escapeHtml(booking.attendees) + ' คน</div>',
+        '</div>'
+      ].join('');
+    }).join('');
+  }
+
+  function renderAgenda() {
+    const agendaList = document.getElementById('agendaList');
+    const bookings = sortBookings(readBookings());
+    var _mu = getCurrentUser();
+    var canDelete = !!(_mu.isMeetingAdmin || _mu.isSuperAdmin);
+    var currentEmail = _mu.email || '';
+
+    if (!bookings.length) {
+      agendaList.innerHTML = '<div class="empty-state">ยังไม่มีรายการจอง ลองสร้างรายการแรกจากฟอร์มด้านบน</div>';
+      return;
+    }
+
+    agendaList.innerHTML = bookings.slice(0, 12).map(function (booking, index) {
+      const room = getRoomById(booking.roomId);
+      const equipmentText = booking.equipment && booking.equipment.length ? booking.equipment.join(' · ') : 'ไม่มีอุปกรณ์เพิ่มเติม';
+      return [
+        '<article class="agenda-item" data-agenda-booking-id="' + escapeHtml(booking.id) + '" tabindex="0" role="button" aria-label="ส่งออกรายการ ' + escapeHtml(booking.title) + ' ไปยังปฏิทิน">',
+        '  <div class="agenda-item-head">',
+        '    <div class="agenda-room">' + escapeHtml(room.name) + '</div>',
+        '    <div class="agenda-actions">',
+        '      <button class="ghost-btn agenda-action-btn" type="button" data-export-booking-id="' + escapeHtml(booking.id) + '">ส่งออกปฏิทิน</button>',
+        ((canDelete || (currentEmail && booking.createdBy === currentEmail)) ? '      <button class="ghost-btn agenda-action-btn" type="button" data-remove-booking-id="' + escapeHtml(booking.id) + '">ลบ</button>' : ''),
+        '    </div>',
+        '  </div>',
+        '  <div class="agenda-title">' + escapeHtml(booking.title) + '</div>',
+        '  <div class="agenda-detail">' + escapeHtml(formatThaiDate(booking.date)) + ' · ' + escapeHtml(booking.start) + ' - ' + escapeHtml(booking.end) + ' · ' + escapeHtml(booking.organizer) + '</div>',
+        '  <div class="agenda-detail">ผู้เข้าร่วม ' + escapeHtml(booking.attendees) + ' คน · ' + escapeHtml(equipmentText) + '</div>',
+        '  <div class="agenda-detail">แตะรายการนี้เพื่อส่งออกไปยังแอปปฏิทิน พร้อมแจ้งเตือนล่วงหน้า ' + CALENDAR_REMINDER_MINUTES + ' นาที</div>',
+        (booking.note ? '  <div class="agenda-detail">หมายเหตุ: ' + escapeHtml(booking.note) + '</div>' : ''),
+        '</article>'
+      ].join('');
+    }).join('');
+
+    bindBookingExportTriggers(agendaList, '[data-agenda-booking-id]', 'data-agenda-booking-id');
+
+    agendaList.querySelectorAll('[data-export-booking-id]').forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.stopPropagation();
+        exportBookingToCalendar(button.getAttribute('data-export-booking-id'));
+      });
+    });
+
+    agendaList.querySelectorAll('[data-remove-booking-id]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var _guard = getCurrentUser();
+        var bookingId = button.getAttribute('data-remove-booking-id');
+        var target = readBookings().find(function (b) { return b.id === bookingId; });
+        var isOwner = target && _guard.email && target.createdBy === _guard.email;
+        if (!_guard.isMeetingAdmin && !_guard.isSuperAdmin && !isOwner) return;
+        button.disabled = true;
+        callApi('deleteMeetingBooking', { bookingId: bookingId }).then(function (res) {
+          if (res.ok) {
+            syncBookingsFromServer();
+            showToast('ลบรายการแล้ว', 'ตารางจองถูกอัปเดตเรียบร้อย');
+          } else {
+            showToast('ไม่สามารถลบได้', res.error || 'กรุณาลองอีกครั้ง');
+          }
+        }).catch(function () {
+          showToast('เครือข่ายขัดข้อง', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้');
+        }).finally(function () {
+          button.disabled = false;
+        });
+      });
+    });
+  }
+
+  function updateHint() {
+    const room = getRoomById(selectedRoomId);
+    document.getElementById('formStatusHint').textContent = 'กำลังบันทึกตารางสำหรับ ' + room.name + ' (' + room.floor + ')';
+  }
+
+  function openCalendarModal() {
+    document.getElementById('calendarModalOverlay').classList.add('show');
+    document.getElementById('calendarModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    renderCalendar();
+  }
+
+  function closeCalendarModal() {
+    document.getElementById('calendarModalOverlay').classList.remove('show');
+    document.getElementById('calendarModal').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  function renderCalendarDetail(bookings) {
+    const dateBookings = sortBookings(bookings).filter(function (booking) {
+      return booking.date === calendarSelectedIso;
+    });
+    document.getElementById('calendarDetailTitle').textContent = formatThaiDate(calendarSelectedIso);
+    document.getElementById('calendarDetailSub').textContent = dateBookings.length
+      ? 'มี ' + dateBookings.length + ' รายการในวันนี้ และสามารถแตะเพื่อส่งออกเข้าปฏิทินได้'
+      : 'ยังไม่มีการจองในวันนี้';
+
+    const detailList = document.getElementById('calendarDetailList');
+    if (!dateBookings.length) {
+      detailList.innerHTML = '<div class="empty-state">วันนี้ยังไม่มีการจอง ห้องประชุมว่างสำหรับใช้งาน</div>';
+      return;
+    }
+
+    detailList.innerHTML = dateBookings.map(function (booking) {
+      const equipmentText = booking.equipment && booking.equipment.length ? booking.equipment.join(' · ') : 'ไม่มีอุปกรณ์เพิ่มเติม';
+      return [
+        '<div class="calendar-detail-item" data-calendar-booking-id="' + escapeHtml(booking.id) + '" tabindex="0" role="button" aria-label="ส่งออกรายการ ' + escapeHtml(booking.title) + ' ไปยังปฏิทิน">',
+        '  <div class="calendar-detail-item-head">',
+        '    <div>',
+        '      <div class="calendar-detail-time">' + escapeHtml(booking.start) + ' - ' + escapeHtml(booking.end) + '</div>',
+        '      <div class="calendar-detail-meeting">' + escapeHtml(booking.title) + '</div>',
+        '    </div>',
+        '    <div class="calendar-detail-item-actions">',
+        '      <span class="calendar-reminder-tag">เตือนล่วงหน้า ' + CALENDAR_REMINDER_MINUTES + ' นาที</span>',
+        '      <button class="ghost-btn calendar-export-btn" type="button" data-export-booking-id="' + escapeHtml(booking.id) + '">ส่งออกปฏิทิน</button>',
+        '    </div>',
+        '  </div>',
+        '  <div class="calendar-detail-note">ผู้จอง: ' + escapeHtml(booking.organizer) + (booking.phone ? ' · ' + escapeHtml(booking.phone) : '') + '</div>',
+        '  <div class="calendar-detail-note">ผู้เข้าร่วม ' + escapeHtml(booking.attendees) + ' คน · ' + escapeHtml(equipmentText) + '</div>',
+        (booking.note ? '  <div class="calendar-detail-note">หมายเหตุ: ' + escapeHtml(booking.note) + '</div>' : ''),
+        '</div>'
+      ].join('');
+    }).join('');
+
+    bindBookingExportTriggers(detailList, '[data-calendar-booking-id]', 'data-calendar-booking-id');
+
+    detailList.querySelectorAll('[data-export-booking-id]').forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.stopPropagation();
+        exportBookingToCalendar(button.getAttribute('data-export-booking-id'));
+      });
+    });
+  }
+
+  function renderCalendar() {
+    const bookings = readBookings();
+    const grid = document.getElementById('calendarGrid');
+    const monthLabel = document.getElementById('calendarMonthLabel');
+    const start = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
+    const end = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 0);
+    const leading = start.getDay();
+    const cells = [];
+
+    monthLabel.textContent = formatMonthYear(start);
+
+    for (let index = 0; index < leading; index += 1) {
+      cells.push('<div class="calendar-day-empty" aria-hidden="true"></div>');
+    }
+
+    for (let day = 1; day <= end.getDate(); day += 1) {
+      const date = new Date(start.getFullYear(), start.getMonth(), day);
+      const iso = toIsoDate(date);
+      const bookingCount = bookings.filter(function (booking) {
+        return booking.date === iso;
+      }).length;
+      const isToday = iso === getTodayIso();
+      const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+      const classes = [
+        'calendar-day',
+        bookingCount ? 'has-booking' : '',
+        bookingCount ? '' : 'is-free',
+        isToday ? 'is-today' : '',
+        isWeekend ? 'is-weekend' : '',
+        iso === calendarSelectedIso ? 'is-selected' : ''
+      ].filter(Boolean).join(' ');
+      const daySummary = [
+        'วันที่ ' + day,
+        isToday ? 'วันปัจจุบัน' : '',
+        bookingCount ? 'มี ' + bookingCount + ' รายการจอง' : 'วันว่าง'
+      ].filter(Boolean).join(' · ');
+      const indicatorDots = [
+        isToday ? '    <span class="calendar-day-indicator today" aria-hidden="true"></span>' : '',
+        bookingCount ? '    <span class="calendar-day-indicator busy" aria-hidden="true"></span>' : ''
+      ].filter(Boolean).join('');
+
+      cells.push([
+        '<button class="' + classes + '" type="button" data-calendar-date="' + iso + '" aria-label="' + daySummary + '">',
+        '  <div class="calendar-day-number-wrap">',
+        '    <div class="calendar-day-number">' + day + '</div>',
+        '  </div>',
+        '  <div class="calendar-day-meta">',
+        '    <div class="calendar-day-indicators" aria-hidden="true">',
+        indicatorDots,
+        '    </div>',
+        '    <span class="sr-only">' + daySummary + '</span>',
+        '  </div>',
+        '</button>'
+      ].join(''));
+    }
+
+    grid.innerHTML = cells.join('');
+    grid.querySelectorAll('[data-calendar-date]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        calendarSelectedIso = button.getAttribute('data-calendar-date');
+        renderCalendar();
+      });
+    });
+
+    renderCalendarDetail(bookings);
+  }
+
+  function hydrateDefaults() {
+    const form = document.getElementById('bookingForm');
+    const user = (function () {
+      try {
+        return JSON.parse(localStorage.getItem('CSD1_USER') || '{}');
+      } catch (_) {
+        return {};
+      }
+    })();
+
+    document.getElementById('bookingDate').value = getTodayIso();
+    document.getElementById('bookingStart').value = '09:00';
+    document.getElementById('bookingEnd').value = '10:00';
+    document.getElementById('bookingOrganizer').value = user.name || '';
+    document.getElementById('bookingPhone').value = user.phone || '';
+    form.reset();
+    document.getElementById('bookingDate').value = getTodayIso();
+    document.getElementById('bookingStart').value = '09:00';
+    document.getElementById('bookingEnd').value = '10:00';
+    document.getElementById('bookingOrganizer').value = user.name || '';
+    document.getElementById('bookingPhone').value = user.phone || '';
+    document.getElementById('bookingAttendees').value = '8';
+    syncRoomSelect();
+    updateSelectedRoomLabel();
+    updateHint();
+  }
+
+  function refreshAll() {
+    updateStats();
+    renderRooms();
+    renderTimeline();
+    renderAgenda();
+    renderCalendar();
+  }
+
+  document.getElementById('bookingForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    var user = getCurrentUser();
+    var payload = {
+      id: 'bk-' + Date.now().toString(36) + '-' + hashString(Math.random().toString(36).slice(2)),
+      roomId: selectedRoomId,
+      date: document.getElementById('bookingDate').value,
+      start: document.getElementById('bookingStart').value,
+      end: document.getElementById('bookingEnd').value,
+      title: document.getElementById('bookingTitle').value.trim(),
+      organizer: document.getElementById('bookingOrganizer').value.trim(),
+      phone: document.getElementById('bookingPhone').value.trim(),
+      attendees: document.getElementById('bookingAttendees').value,
+      note: document.getElementById('bookingNote').value.trim(),
+      equipment: collectEquipment(),
+      createdAt: new Date().toISOString(),
+      createdBy: user.email || ''
+    };
+
+    if (!payload.roomId || !payload.date || !payload.start || !payload.end || !payload.title || !payload.organizer) {
+      showToast('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลที่จำเป็นให้ครบก่อนบันทึก');
+      return;
+    }
+
+    if (payload.start >= payload.end) {
+      showToast('ช่วงเวลาไม่ถูกต้อง', 'เวลาเริ่มต้องน้อยกว่าเวลาสิ้นสุด');
+      return;
+    }
+
+    var submitBtn = document.querySelector('#bookingForm button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    callApi('submitMeetingBooking', { booking: payload }).then(function (res) {
+      if (res.ok) {
+        syncBookingsFromServer();
+        hydrateDefaults();
+        document.getElementById('bookingTitle').value = '';
+        document.getElementById('bookingNote').value = '';
+        showToast('บันทึกสำเร็จ', 'เพิ่มรายการจองห้องประชุมเรียบร้อยแล้ว');
+      } else {
+        showToast('ไม่สามารถบันทึกได้', res.error || 'กรุณาลองอีกครั้ง');
+      }
+    }).catch(function () {
+      showToast('เครือข่ายขัดข้อง', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองอีกครั้ง');
+    }).finally(function () {
+      if (submitBtn) submitBtn.disabled = false;
+    });
+  });
+
+  document.getElementById('clearFormBtn').addEventListener('click', function () {
+    hydrateDefaults();
+    document.getElementById('bookingTitle').value = '';
+    document.getElementById('bookingNote').value = '';
+    showToast('ล้างฟอร์มแล้ว', 'พร้อมเริ่มกรอกข้อมูลใหม่');
+  });
+
+  (function () {
+    var meetingUser = getCurrentUser();
+    // Page-level access guard
+    if (!meetingUser || !meetingUser.email || !meetingUser.sessionToken) {
+      window.location.replace('index.html');
+      return;
+    }
+    const _pages = Array.isArray(meetingUser.allowedPages) ? meetingUser.allowedPages : [];
+    if (!_pages.includes('meeting')) {
+      try { sessionStorage.setItem('CSD1_ACCESS_DENIED', '1'); } catch (_) {}
+      window.location.replace('index.html');
+      return;
+    }
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    if (clearAllBtn) clearAllBtn.style.display = meetingUser.isMeetingAdmin ? '' : 'none';
+  })();
+
+  document.getElementById('clearAllBtn').addEventListener('click', function () {
+    var mu = getCurrentUser();
+    if (!mu.isMeetingAdmin) return;
+    var all = readBookings();
+    if (!all.length) return;
+    var pending = all.map(function (b) { return callApi('deleteMeetingBooking', { bookingId: b.id }); });
+    Promise.all(pending).then(function () {
+      syncBookingsFromServer();
+      showToast('ล้างรายการทั้งหมด', 'ข้อมูลการจองถูกลบแล้ว');
+    }).catch(function () {
+      showToast('เกิดข้อผิดพลาด', 'ลบบางรายการไม่สำเร็จ กรุณาลองอีกครั้ง');
+    });
+  });
+
+  document.getElementById('openCalendarBtn').addEventListener('click', openCalendarModal);
+  document.getElementById('calendarCloseBtn').addEventListener('click', closeCalendarModal);
+  document.getElementById('calendarModalOverlay').addEventListener('click', closeCalendarModal);
+
+  document.getElementById('calendarPrevBtn').addEventListener('click', function () {
+    calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() - 1, 1);
+    renderCalendar();
+  });
+
+  document.getElementById('calendarNextBtn').addEventListener('click', function () {
+    calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + 1, 1);
+    renderCalendar();
+  });
+
+  document.getElementById('calendarTodayBtn').addEventListener('click', function () {
+    calendarSelectedIso = getTodayIso();
+    const today = parseIsoDate(calendarSelectedIso);
+    calendarCursor = new Date(today.getFullYear(), today.getMonth(), 1);
+    renderCalendar();
+  });
+
+  document.getElementById('jumpToFormBtn').addEventListener('click', function () {
+    document.getElementById('bookingFormSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  hydrateDefaults();
+  refreshAll();
+  syncBookingsFromServer();
+})();
+
+// Prevent browser navigation bar in iOS PWA standalone mode.
+(function () {
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
+  if (!isStandalone) return;
+  document.addEventListener('click', function (event) {
+    if (event.defaultPrevented) return;
+    const link = event.target.closest('a[href]');
+    if (!link) return;
+    let url;
+    try {
+      url = new URL(link.href, location.href);
+    } catch (_) {
+      return;
+    }
+    if (url.origin === location.origin && !link.getAttribute('target')) {
+      event.preventDefault();
+      location.href = url.pathname + url.search + url.hash;
+    }
+  });
+})();
+</script>
+<script src="connect-mobile-nav.js"></script>
+<script src="sidebar-account.js"></script>
+</body>
+</html>

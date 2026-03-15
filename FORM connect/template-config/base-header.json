@@ -1,0 +1,79 @@
+{
+  "page": {
+    "width": 595,
+    "height": 842
+  },
+  "sharedFields": {
+    "doc_number_line": {
+      "x": 73,
+      "y": 90,
+      "w": 150,
+      "h": 24,
+      "align": "left",
+      "size": 16,
+      "maxLines": 1,
+      "clearBackground": false
+    },
+    "issue_date_full": {
+      "x": 174,
+      "y": 156,
+      "w": 252,
+      "h": 20,
+      "align": "center",
+      "size": 16,
+      "maxLines": 1
+    }
+  },
+  "bodyStart": {
+    "x": 54,
+    "y": 294,
+    "w": 487
+  },
+  "labelBlock": {
+    "labelX": 54,
+    "labelWidth": 38,
+    "bodyX": 98,
+    "bodyWidth": 438,
+    "gapAfter": 2
+  },
+  "list": {
+    "gapBefore": 6,
+    "gapAfter": 8,
+    "startX": 74,
+    "numberColumnWidth": 18,
+    "contentWidth": 450,
+    "sublineIndent": 24,
+    "itemGap": 2
+  },
+  "closingBlock": {
+    "gapBefore": 8,
+    "x": 98,
+    "w": 438
+  },
+  "signatureBlock": {
+    "gapBefore": 4,
+    "x": 315,
+    "w": 175,
+    "centerX": 320,
+    "imageFitWidth": 118,
+    "imageFitHeight": 30,
+    "groupGap": 10,
+    "row1Height": 30,
+    "rankTopOffset": 6,
+    "imageTopOffset": 0,
+    "nameGap": 2,
+    "positionGap": 2
+  },
+  "contactBlock": {
+    "gapBefore": 4,
+    "x": 54,
+    "w": 487
+  },
+  "font": {
+    "size": 16,
+    "lineHeight": 16.2,
+    "paragraphIndent": 23,
+    "paragraphGap": 1
+  },
+  "flowBottomLimit": 826
+}
