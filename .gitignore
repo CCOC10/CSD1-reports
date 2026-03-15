@@ -7,3 +7,6 @@ backend/generated/
 
 # macOS
 .DS_Store
+
+# IDE / tool config
+.claude/
