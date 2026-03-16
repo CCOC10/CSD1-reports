@@ -2107,6 +2107,16 @@ button, input, select, textarea { font: inherit; }
       return;
     }
 
+    // ตรวจเวลาซ้ำในฝั่ง client
+    var list = readBookings();
+    var conflict = list.find(function (booking) {
+      return booking.roomId === payload.roomId && booking.date === payload.date && payload.start < booking.end && payload.end > booking.start;
+    });
+    if (conflict) {
+      showToast('ห้องประชุมไม่ว่าง', 'ช่วงเวลานี้มีการจองแล้ว กรุณาตรวจสอบเวลาจองใหม่อีกครั้ง');
+      return;
+    }
+
     var submitBtn = document.querySelector('#bookingForm button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
 
