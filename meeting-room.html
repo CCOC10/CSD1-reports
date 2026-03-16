@@ -1737,7 +1737,20 @@ button, input, select, textarea { font: inherit; }
   }
 
   function isOverlap(aStart, aEnd, bStart, bEnd) {
+    // Normalize time string before compare
+    aStart = normalizeTimeString(aStart);
+    aEnd = normalizeTimeString(aEnd);
+    bStart = normalizeTimeString(bStart);
+    bEnd = normalizeTimeString(bEnd);
     return aStart < bEnd && bStart < aEnd;
+  }
+
+  function normalizeTimeString(time) {
+    // Convert '9:0', '09:0', '9:00' to '09:00'
+    const parts = String(time || '').split(':');
+    const h = parts[0] ? String(parts[0]).padStart(2, '0') : '00';
+    const m = parts[1] ? String(parts[1]).padStart(2, '0') : '00';
+    return h + ':' + m;
   }
 
   function collectEquipment() {
@@ -1895,9 +1908,13 @@ button, input, select, textarea { font: inherit; }
         var isOwner = target && _guard.email && target.createdBy === _guard.email;
         if (!_guard.isMeetingAdmin && !_guard.isSuperAdmin && !isOwner) return;
         button.disabled = true;
+        // ลบออกจาก local cache และ UI ทันที
+        var bookings = readBookings().filter(function (b) { return b.id !== bookingId; });
+        writeLocalCache(bookings);
+        refreshAll();
+        // ส่ง request ลบไป backend เบื้องหลัง
         callApi('deleteMeetingBooking', { bookingId: bookingId }).then(function (res) {
           if (res.status === 'ok') {
-            syncBookingsFromServer();
             showToast('ลบรายการแล้ว', 'ตารางจองถูกอัปเดตเรียบร้อย');
           } else {
             showToast('ไม่สามารถลบได้', res.error || 'กรุณาลองอีกครั้ง');
@@ -2102,6 +2119,9 @@ button, input, select, textarea { font: inherit; }
       return;
     }
 
+    // Normalize time
+    payload.start = normalizeTimeString(payload.start);
+    payload.end = normalizeTimeString(payload.end);
     if (payload.start >= payload.end) {
       showToast('ช่วงเวลาไม่ถูกต้อง', 'เวลาเริ่มต้องน้อยกว่าเวลาสิ้นสุด');
       return;
@@ -2110,7 +2130,10 @@ button, input, select, textarea { font: inherit; }
     // ตรวจเวลาซ้ำในฝั่ง client
     var list = readBookings();
     var conflict = list.find(function (booking) {
-      return booking.roomId === payload.roomId && booking.date === payload.date && payload.start < booking.end && payload.end > booking.start;
+      // Normalize booking times
+      const bStart = normalizeTimeString(booking.start);
+      const bEnd = normalizeTimeString(booking.end);
+      return booking.roomId === payload.roomId && booking.date === payload.date && isOverlap(payload.start, payload.end, bStart, bEnd);
     });
     if (conflict) {
       showToast('ห้องประชุมไม่ว่าง', 'ช่วงเวลานี้มีการจองแล้ว กรุณาตรวจสอบเวลาจองใหม่อีกครั้ง');
@@ -2119,6 +2142,8 @@ button, input, select, textarea { font: inherit; }
 
     var submitBtn = document.querySelector('#bookingForm button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
+    // แสดง popup ทันทีหลังคลิก
+    showToast('กำลังบันทึก...', 'ระบบกำลังบันทึกรายการจองห้องประชุม');
 
     callApi('submitMeetingBooking', { booking: payload }).then(function (res) {
       if (res.status === 'ok') {
