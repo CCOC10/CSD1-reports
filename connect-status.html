@@ -1278,6 +1278,38 @@ tbody tr:hover td { background: rgba(255, 255, 255, 0.04); }
 .toast.ok  { border-color: rgba(34,197,94,0.4); color: #86efac; }
 .toast.err { border-color: rgba(239,68,68,0.4);  color: #f87171; }
 
+/* ==================== IOS SAFARI POPUP ==================== */
+.ios-safari-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10000;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.ios-safari-overlay.show { opacity: 1; pointer-events: auto; }
+.ios-safari-box {
+  background: #1e293b;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 18px;
+  padding: 1.5rem 1.75rem;
+  max-width: 320px;
+  width: calc(100% - 3rem);
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.ios-safari-box .ios-safari-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+.ios-safari-box p {
+  color: #f1f5f9; font-size: 0.95rem; line-height: 1.55;
+  margin: 0 0 1.2rem;
+}
+.ios-safari-box button {
+  background: var(--accent, #3b82f6); color: #fff;
+  border: none; border-radius: 10px;
+  padding: 0.55rem 1.4rem; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer;
+}
+
 /* ==================== MOBILE NAV (ตาม history.html) ==================== */
 .mobile-mini-nav {
   display: none;
@@ -1661,6 +1693,15 @@ tbody tr:hover td { background: rgba(255, 255, 255, 0.04); }
 <!-- Toast -->
 <div class="toast" id="toastEl"></div>
 
+<!-- iOS Safari Popup -->
+<div class="ios-safari-overlay" id="iosSafariOverlay" onclick="closeIosSafariPopup()">
+  <div class="ios-safari-box" onclick="event.stopPropagation()">
+    <div class="ios-safari-icon">🚫</div>
+    <p>Safari บน iOS ไม่รองรับการดาวน์โหลด<br>กรุณาใช้ Chrome หรือเปิดในคอมพิวเตอร์</p>
+    <button onclick="closeIosSafariPopup()">ตกลง</button>
+  </div>
+</div>
+
 <script>
 'use strict';
 
@@ -1918,7 +1959,7 @@ function clearDateQuickActive() {
 }
 
 function downloadFilteredCsv() {
-  if (_isIosSafari) { showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000); return; }
+  if (_isIosSafari) { showIosSafariPopup(); return; }
   if (!filteredRequests.length) {
     showToast('ไม่มีข้อมูลให้ดาวน์โหลด', 'err');
     return;
@@ -2709,7 +2750,7 @@ function saveBlobAsDownload(blob, filename) {
   hideDownloadLoadingModal();
   isDownloadInProgress = false;
   if (_isIosSafari) {
-    showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000);
+    showIosSafariPopup();
     return;
   }
   const objUrl = URL.createObjectURL(blob);
@@ -2741,7 +2782,7 @@ async function fetchDownloadBlob(url, filename) {
 }
 
 async function downloadDriveFile(requestId, url, filename) {
-  if (_isIosSafari) { showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000); return; }
+  if (_isIosSafari) { showIosSafariPopup(); return; }
   if (isDownloadInProgress) {
     showToast('ระบบกำลังดาวน์โหลดไฟล์อยู่ กรุณารอสักครู่', 'err');
     return;
@@ -2779,7 +2820,7 @@ async function downloadDriveFile(requestId, url, filename) {
 }
 
 async function downloadSummonPdf(requestId, filename, fallbackUrl) {
-  if (_isIosSafari) { showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000); return; }
+  if (_isIosSafari) { showIosSafariPopup(); return; }
   const cleanRequestId = String(requestId || '').trim();
   const currentRequest = cleanRequestId
     ? allRequests.find(item => String((item && item.requestId) || '').trim() === cleanRequestId)
@@ -2873,6 +2914,13 @@ function fmtDateTime(iso) {
     const p = n => String(n).padStart(2, '0');
     return `${d.getDate()}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
   } catch(_) { return iso || '—'; }
+}
+
+function showIosSafariPopup() {
+  document.getElementById('iosSafariOverlay').classList.add('show');
+}
+function closeIosSafariPopup() {
+  document.getElementById('iosSafariOverlay').classList.remove('show');
 }
 
 let _toastTimer;
