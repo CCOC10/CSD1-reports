@@ -1360,6 +1360,7 @@ function buildCompactConnectRawState(rawState) {
     caseDetailCustom: rawState.caseDetailCustom,
     caseSearchTerm: rawState.caseSearchTerm,
     adminNoteTag: rawState.adminNoteTag,
+    adminNoteTagLabel: rawState.adminNoteTagLabel,
     adminNoteText: rawState.adminNoteText,
     requestHistoryStatus: rawState.requestHistoryStatus,
     type: rawState.type,
@@ -1431,7 +1432,9 @@ function buildCompactConnectPayload(payload) {
     filePassword: payload.filePassword == null ? "" : String(payload.filePassword),
     phone: payload.phone && typeof payload.phone === "object" ? payload.phone : {},
     bank: payload.bank && typeof payload.bank === "object" ? payload.bank : {},
-    trueMoney: payload.trueMoney && typeof payload.trueMoney === "object" ? payload.trueMoney : {},
+    trueMoney: payload.trueMoney && typeof payload.trueMoney === "object"
+      ? (payload.trueMoney || payload.truemoney)
+      : {},
     tax: payload.tax && typeof payload.tax === "object" ? payload.tax : {},
     files: payload.files && typeof payload.files === "object" ? {
       fileBaseName: normalizeConnectString(payload.files.fileBaseName),
@@ -1942,8 +1945,8 @@ function toConnectRequestResponse(row) {
     docNumberLine: normalizeConnectString(row.doc_number_line),
     casePresetKey: normalizeConnectString(row.case_preset_key),
     caseDetail: normalizeConnectString(row.case_detail),
-    caseDetailCustom: normalizeConnectString(row.case_detail_custom),
-    caseSearchTerm: normalizeConnectString(row.case_search_term),
+    caseDetailCustom: normalizeConnectString(row.caseDetailCustom),
+    caseSearchTerm: normalizeConnectString(row.caseSearchTerm),
     adminNoteTag: normalizeConnectString(row.admin_note_tag),
     adminNoteTagLabel: normalizeConnectString(row.admin_note_tag_label),
     adminNoteText: normalizeConnectString(row.admin_note_text),
@@ -2112,20 +2115,58 @@ function buildConnectRequestRow(payload, authUser, existingRow) {
     tax_type: normalizeConnectString(tax.type),
     tax_id: normalizeConnectString(tax.id),
     tax_name: normalizeConnectString(tax.name),
-    tax_year_start: normalizeConnectNumber(tax.yearStart),
-    tax_year_end: normalizeConnectNumber(tax.yearEnd),
-    file_base_name: normalizeConnectString(files.fileBaseName),
-    pdf_file_name: normalizeConnectString(files.pdfFileName),
-    generated_mode: normalizeConnectString(files.generatedMode),
-    generated_pdf_url: normalizeConnectString(files.generatedPdfUrl) || (existingRow ? normalizeConnectString(existingRow.generated_pdf_url) : ""),
-    generated_docx_url: normalizeConnectString(files.generatedDocxUrl) || (existingRow ? normalizeConnectString(existingRow.generated_docx_url) : ""),
-    generated_warnings_json: safeJsonStringify(files.generatedWarnings),
-    raw_state_json: safeJsonStringify(buildCompactConnectRawState(payload && payload.rawState)),
-    payload_json: safeJsonStringify(compactPayload),
-    status_updated_at_iso: existingRow ? normalizeConnectString(existingRow.status_updated_at_iso) : "",
-    status_updated_by_email: existingRow ? normalizeConnectString(existingRow.status_updated_by_email) : "",
-    status_updated_by_name: existingRow ? normalizeConnectString(existingRow.status_updated_by_name) : "",
-    status_updated_by_role: existingRow ? normalizeConnectString(existingRow.status_updated_by_role) : ""
+    status: normalizeConnectStatus(row.status),
+    statusNote: normalizeConnectString(row.status_note),
+    fileBaseName: normalizeConnectString(row.file_base_name),
+    pdfFileName: normalizeConnectString(row.pdf_file_name),
+    generatedMode: normalizeConnectString(row.generated_mode),
+    generatedPdfUrl: normalizeConnectString(row.generated_pdf_url),
+    generatedDocxUrl: normalizeConnectString(row.generated_docx_url),
+    phone: {
+      network: phoneNetwork,
+      aisSubType: aisSubType,
+      subType: phoneSubType,
+      imei: phoneImei,
+      numbers: phoneNumbers,
+      ipEntries: ipEntries,
+      dateStart: phoneDateStart,
+      dateEnd: phoneDateEnd
+    },
+    bank: {
+      code: bankCode,
+      subType: bankSubType,
+      statementAccType: statementAccType,
+      accounts: bankAccounts,
+      promptPay: bankPromptPay,
+      xxxAmount: xxxAmount,
+      xxxDate: xxxDate,
+      xxxTime: xxxTime,
+      bankAccountName: bankAccountName,
+      atmAccountNo: atmAccountNo,
+      atmDate: atmDate,
+      atmTime: atmTime,
+      atmLocation: atmLocation,
+      atmTerminalId: atmTerminalId,
+      dateStart: bankDateStart,
+      dateEnd: bankDateEnd
+    },
+    trueMoney: {
+      id: trueId,
+      name: trueName,
+      dateStart: trueDateStart,
+      dateEnd: trueDateEnd
+    },
+    tax: {
+      type: taxType,
+      id: taxId,
+      name: taxName,
+      yearStart: taxYearStart,
+      yearEnd: taxYearEnd
+    },
+    statusUpdatedAt: normalizeConnectString(row.status_updated_at_iso),
+    statusUpdatedByEmail: normalizeConnectString(row.status_updated_by_email),
+    statusUpdatedByName: normalizeConnectString(row.status_updated_by_name),
+    statusUpdatedByRole: normalizeConnectString(row.status_updated_by_role)
   };
 
   return CONNECT_REQUEST_HEADERS.map(function(header) {
@@ -3248,7 +3289,7 @@ function handleGetUnitHistory(data) {
     const out = Object.assign({}, row);
     const key = makeChangeRequestTargetKey(
       row["ลำดับ"] || "",
-      (String(row["วันที่บันทึก"] || "") + " " + String(row["เวลาบันทึก"] || "")).trim() || "",
+      (String(row["วันที่บันทึก"] || "") + " " + (String(row["เวลาบันทึก"] || "").trim()).trim()).trim(),
       row["อีเมล"] || "",
       row["ชุดปฏิบัติการ"] || ""
     );
@@ -3300,7 +3341,7 @@ function handleSubmitChangeRequest(data) {
   const reportRows = readReportRows();
   const matchedRow = reportRows.find(function(row) {
     const rowNo = String(row["ลำดับ"] || "").trim();
-    const rowTs = (String(row["วันที่บันทึก"] || "").trim() + " " + String(row["เวลาบันทึก"] || "").trim()).trim();
+    const rowTs = (String(row["วันที่บันทึก"] || "").trim() + " " + (String(row["เวลาบันทึก"] || "").trim()).trim()).trim();
     if (targetNo && rowNo !== targetNo) return false;
     if (targetTimestamp && rowTs !== targetTimestamp) return false;
     return !!(rowNo || rowTs);
@@ -3312,7 +3353,7 @@ function handleSubmitChangeRequest(data) {
 
   const targetKey = makeChangeRequestTargetKey(
     String(matchedRow["ลำดับ"] || targetNo || "").trim(),
-    String((matchedRow["วันที่บันทึก"] || "") + " " + (matchedRow["เวลาบันทึก"] || "") || targetTimestamp || "").trim(),
+    String((matchedRow["วันที่บันทึก"] || "") + " " + (matchedRow["เวลาบันทึก"] || "").trim()).trim(),
     String(matchedRow["อีเมล"] || "").trim(),
     String(matchedRow["ชุดปฏิบัติการ"] || "").trim()
   );
@@ -3326,12 +3367,6 @@ function handleSubmitChangeRequest(data) {
   });
   if (duplicateExists) {
     return jsonResponse({ status: "error", message: "รายการนี้ถูกแจ้งแอดมินแล้ว ไม่สามารถแจ้งซ้ำได้" });
-  }
-
-  const requesterUnit = normalizeUnitKey(String(authUser.unit || "").trim());
-  const targetUnitKey = normalizeUnitKey(String(matchedRow["ชุดปฏิบัติการ"] || "").trim());
-  if (!isReportAdminRole(authUser.role) && requesterUnit && targetUnitKey && requesterUnit !== targetUnitKey) {
-    return jsonResponse({ status: "error", message: "ไม่สามารถส่งคำขอข้ามชุดปฏิบัติการได้" });
   }
 
   const deleteReason = String(data.deleteReason || "").trim();
@@ -3369,7 +3404,7 @@ function handleSubmitChangeRequest(data) {
     String(authUser.name || "").trim(),
     String(authUser.unit || "").trim(),
     String(matchedRow["ลำดับ"] || targetNo || "").trim(),
-    String((matchedRow["วันที่บันทึก"] || "") + " " + (matchedRow["เวลาบันทึก"] || "") || targetTimestamp || "").trim(),
+    String((matchedRow["วันที่บันทึก"] || "") + " " + (matchedRow["เวลาบันทึก"] || "").trim()).trim(),
     String(matchedRow["ผู้รายงาน"] || "").trim(),
     String(matchedRow["อีเมล"] || "").trim(),
     String(matchedRow["ชุดปฏิบัติการ"] || "").trim(),
@@ -3518,7 +3553,7 @@ function handleApproveChangeRequest(data) {
     return jsonResponse({ status: "error", message: "ประเภทคำขอไม่ถูกต้อง" });
   }
 
-  const statusCol = CHANGE_REQUEST_HEADERS.indexOf("status") + 1;
+  const statusCol = CONNECT_REQUEST_HEADERS.indexOf("status") + 1;
   if (decision === "reject") {
     if (statusCol > 0) {
       requestSheet.getRange(found.rowIndex, statusCol).setValue("rejected");
@@ -3722,12 +3757,14 @@ function handleSubmitMeetingBooking(data) {
       var dateIdx = MEETING_BOOKINGS_HEADERS.indexOf("date");
       var startIdx = MEETING_BOOKINGS_HEADERS.indexOf("start");
       var endIdx = MEETING_BOOKINGS_HEADERS.indexOf("end");
+      var bStart = normalizeTimeString(booking.start);
+      var bEnd = normalizeTimeString(booking.end);
       for (var i = 0; i < existing.length; i++) {
         if (String(existing[i][roomIdx]) === String(booking.roomId) &&
             String(existing[i][dateIdx]) === String(booking.date)) {
-          var eStart = String(existing[i][startIdx]);
-          var eEnd = String(existing[i][endIdx]);
-          if (booking.start < eEnd && booking.end > eStart) {
+          var eStart = normalizeTimeString(existing[i][startIdx]);
+          var eEnd = normalizeTimeString(existing[i][endIdx]);
+          if (bStart < eEnd && bEnd > eStart) {
             return jsonResponse({ status: "error", message: "เวลาซ้ำกับรายการเดิม (" + eStart + " - " + eEnd + ")" });
           }
         }
@@ -3784,6 +3821,18 @@ function handleDeleteMeetingBooking(data) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function normalizeTimeString(t) {
+  if (!t) return '';
+  if (typeof t === 'string' && /^\d{2}:\d{2}$/.test(t)) return t;
+  var d = new Date(t);
+  if (!isNaN(d.getTime())) {
+    var h = d.getHours().toString().padStart(2, '0');
+    var m = d.getMinutes().toString().padStart(2, '0');
+    return h + ':' + m;
+  }
+  return String(t).slice(-5); // fallback
 }
 
 function jsonResponse(obj) {
