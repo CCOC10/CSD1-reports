@@ -1223,7 +1223,7 @@ button, input, select, textarea { font: inherit; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 18%;
   display: block;
 }
 
@@ -1778,24 +1778,28 @@ button, input, select, textarea { font: inherit; }
       'END:VCALENDAR'
     ].join('\r\n');
 
+    const fileName = slugifyFileName(booking.title) + '-' + booking.date + '.ics';
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    if (isIOS || isSafari) {
-      // Safari/iOS ไม่รองรับ link.download — เปิด tab ใหม่ให้ระบบจัดการไฟล์ .ics
-      window.open(url, '_blank');
-      setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
-    } else {
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = slugifyFileName(booking.title) + '-' + booking.date + '.ics';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    // Web Share API — รองรับ iOS 15+ (แสดง share sheet พร้อมตัวเลือก "เพิ่มในปฏิทิน")
+    if (navigator.share && navigator.canShare) {
+      const file = new File([blob], fileName, { type: 'text/calendar' });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: booking.title }).catch(function () {});
+        showToast('ส่งออกปฏิทินแล้ว', 'เลือก "เพิ่มในปฏิทิน" จาก share sheet เพื่อนำเข้ากิจกรรม');
+        return;
+      }
     }
+
+    // fallback — desktop / browser ที่รองรับ download attribute
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 0);
     showToast('ส่งออกปฏิทินแล้ว', 'สามารถเปิดไฟล์เพื่อนำเข้ากิจกรรมพร้อมแจ้งเตือนล่วงหน้าได้');
   }
 
