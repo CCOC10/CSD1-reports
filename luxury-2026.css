@@ -5,11 +5,11 @@
   --lux-navy-800: #001a34;
   --lux-navy-700: #00264B;
   --lux-navy-600: #0a2f58;
-  --lux-ink: #eef4ff;
+  --lux-ink: #f8fafc;
   --lux-muted: #a2b1c8;
-  --lux-gold: #FFD400;
-  --lux-gold-soft: rgba(255, 212, 0, 0.18);
-  --lux-gold-line: rgba(255, 212, 0, 0.34);
+  --lux-gold: #bfa100;
+  --lux-gold-soft: rgba(191, 161, 0, 0.18);
+  --lux-gold-line: rgba(191, 161, 0, 0.34);
 }
 
 /* Sidebar + bottom nav shell */

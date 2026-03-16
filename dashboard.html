@@ -32,31 +32,31 @@
 [data-theme="dark"] {
   --primary: #0f172a;
   --primary-deep: #020617;
-  --primary-surface: #1e293b;
+  --primary-surface: #172036;
   --accent: #FFD400;
-  --accent-dim: #b8990a;
-  --accent-glow: rgba(255, 212, 0, 0.5);
-  --accent-glow-soft: rgba(255, 212, 0, 0.15);
+  --accent-dim: #c79d00;
+  --accent-glow: rgba(255, 212, 0, 0.45);
+  --accent-glow-soft: rgba(255, 212, 0, 0.12);
   --success: #22c55e;
   --success-bg: rgba(34,197,94,0.12);
   --danger: #ef4444;
   --danger-bg: rgba(239,68,68,0.12);
-  --text: #f1f5f9;
+  --text: #f8fafc;
   --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
+  --text-muted: #94a3b8;
   --border: rgba(255,255,255,0.08);
   --border-accent: rgba(255,212,0,0.2);
-  --card-bg: rgba(15, 23, 42, 0.7);
-  --card-bg-solid: #1e293b;
-  --input-bg: rgba(0,0,0,0.25);
-  --input-bg-focus: rgba(0,0,0,0.35);
-  --body-bg: linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
-  --header-bg: linear-gradient(135deg, #001029 0%, #000a1a 100%);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-md: 0 8px 25px rgba(0,0,0,0.4);
-  --shadow-lg: 0 15px 40px rgba(0,0,0,0.5);
-  --toast-bg: #1e293b;
-  --overlay: rgba(2, 6, 23, 0.85);
+  --card-bg: rgba(15, 23, 42, 0.72);
+  --card-bg-solid: #172036;
+  --input-bg: rgba(0,0,0,0.22);
+  --input-bg-focus: rgba(0,0,0,0.32);
+  --body-bg: radial-gradient(circle at top left, rgba(0, 38, 75, 0.45), transparent 32%), linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --header-bg: linear-gradient(135deg, #020c1e 0%, #010912 100%);
+  --shadow-sm: 0 4px 14px rgba(0,0,0,0.28);
+  --shadow-md: 0 18px 45px rgba(0,0,0,0.38);
+  --shadow-lg: 0 28px 60px rgba(0,0,0,0.5);
+  --toast-bg: #172036;
+  --overlay: rgba(2, 6, 23, 0.84);
 }
 
 [data-theme="light"] {
@@ -811,9 +811,9 @@ body.nav-open .app-nav-fab {
 .action-pill.ap-reset:hover { border-color: var(--text-muted); color: var(--text); }
 
 .action-pill.ap-image {
-  background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; border-color: #6366f1;
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #021a2e; border-color: #38bdf8;
 }
-.action-pill.ap-image:hover { box-shadow: 0 0 14px rgba(99,102,241,0.45); }
+.action-pill.ap-image:hover { box-shadow: 0 0 14px rgba(56,189,248,0.45); }
 
 .action-pill.ap-csv {
   background: #22c55e; color: #fff; border-color: #22c55e;
@@ -3053,11 +3053,20 @@ function fetchData(user, _bg) {
   const cacheKey = 'reports|' + (canDeepSearch ? 'prv|' + (user.email || '') : 'pub');
 
   function requestRows(payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000); // timeout 20s
     return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    }).then(r => r.json());
+      body: JSON.stringify(payload),
+      signal: controller.signal
+    })
+      .then(r => { clearTimeout(timer); return r.json(); })
+      .catch(err => {
+        clearTimeout(timer);
+        if (err.name === 'AbortError') throw new Error('การเชื่อมต่อใช้เวลานานเกินไป กรุณาตรวจสอบ URL หรือเน็ต');
+        throw err;
+      });
   }
 
   function applyRows(result, useDeepSearch) {
@@ -3086,12 +3095,19 @@ function fetchData(user, _bg) {
 
   if (!_bg) setMobileDataLoading(true);
 
-  const privatePayload = canDeepSearch
-    ? { action: 'getData', email: String(user.email || '').trim(), sessionToken: getSessionToken(user) }
-    : null;
-  const publicPayload = { action: 'getPublicData' };
+  // safety net — ถ้าทุก path พลาด ให้ซ่อน overlay หลัง 25s
+  const safetyTimer = _bg ? null : setTimeout(() => {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay && !overlay.classList.contains('hidden')) {
+      overlay.classList.add('hidden');
+      document.getElementById('dashboardApp').style.display = '';
+      setMobileDataLoading(false);
+      showToast('โหลดข้อมูลไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อ');
+    }
+  }, 25000);
 
   const failLoad = (err) => {
+    if (safetyTimer) clearTimeout(safetyTimer);
     if (_bg) return;
     showToast('โหลดข้อมูลล้มเหลว: ' + (err.message || 'ไม่ทราบสาเหตุ'));
     setMobileDataLoading(false);
@@ -3099,7 +3115,13 @@ function fetchData(user, _bg) {
     document.getElementById('dashboardApp').style.display = '';
   };
 
+  const privatePayload = canDeepSearch
+    ? { action: 'getData', email: String(user.email || '').trim(), sessionToken: getSessionToken(user) }
+    : null;
+  const publicPayload = { action: 'getPublicData' };
+
   function onSuccess(result, useDeepSearch) {
+    if (safetyTimer) clearTimeout(safetyTimer);
     if (window.CSD1Cache) window.CSD1Cache.set(cacheKey, result);
     applyRows(result, useDeepSearch);
   }
@@ -3932,8 +3954,8 @@ function updateUnitChart() {
         {
           label: 'จับตามหมาย',
           data: jabTaamMaiData,
-          backgroundColor: unitLabels.map(u => unitBg('rgba(168,85,247,0.75)', u)),
-          borderColor: unitLabels.map(u => activeUnit && u !== activeUnit ? 'rgba(168,85,247,0.2)' : '#a855f7'),
+          backgroundColor: unitLabels.map(u => unitBg('rgba(20,184,166,0.75)', u)),
+          borderColor: unitLabels.map(u => activeUnit && u !== activeUnit ? 'rgba(20,184,166,0.2)' : '#14b8a6'),
           borderWidth: 1,
           borderRadius: 3
         },

@@ -32,31 +32,31 @@
 [data-theme="dark"] {
   --primary: #0f172a;
   --primary-deep: #020617;
-  --primary-surface: #1e293b;
+  --primary-surface: #172036;
   --accent: #FFD400;
-  --accent-dim: #b8990a;
-  --accent-glow: rgba(255, 212, 0, 0.5);
-  --accent-glow-soft: rgba(255, 212, 0, 0.15);
+  --accent-dim: #c79d00;
+  --accent-glow: rgba(255, 212, 0, 0.45);
+  --accent-glow-soft: rgba(255, 212, 0, 0.12);
   --success: #22c55e;
   --success-bg: rgba(34,197,94,0.12);
   --danger: #ef4444;
   --danger-bg: rgba(239,68,68,0.12);
-  --text: #f1f5f9;
+  --text: #f8fafc;
   --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
+  --text-muted: #94a3b8;
   --border: rgba(255,255,255,0.08);
   --border-accent: rgba(255,212,0,0.2);
-  --card-bg: rgba(15, 23, 42, 0.7);
-  --card-bg-solid: #1e293b;
-  --input-bg: rgba(0,0,0,0.25);
-  --input-bg-focus: rgba(0,0,0,0.35);
-  --body-bg: linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
-  --header-bg: linear-gradient(135deg, #001029 0%, #000a1a 100%);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-md: 0 8px 25px rgba(0,0,0,0.4);
-  --shadow-lg: 0 15px 40px rgba(0,0,0,0.5);
-  --toast-bg: #1e293b;
-  --overlay: rgba(2, 6, 23, 0.85);
+  --card-bg: rgba(15, 23, 42, 0.72);
+  --card-bg-solid: #172036;
+  --input-bg: rgba(0,0,0,0.22);
+  --input-bg-focus: rgba(0,0,0,0.32);
+  --body-bg: radial-gradient(circle at top left, rgba(0, 38, 75, 0.45), transparent 32%), linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --header-bg: linear-gradient(135deg, #020c1e 0%, #010912 100%);
+  --shadow-sm: 0 4px 14px rgba(0,0,0,0.28);
+  --shadow-md: 0 18px 45px rgba(0,0,0,0.38);
+  --shadow-lg: 0 28px 60px rgba(0,0,0,0.5);
+  --toast-bg: #172036;
+  --overlay: rgba(2, 6, 23, 0.84);
 }
 
 [data-theme="light"] {
@@ -812,9 +812,9 @@ body.nav-open .app-nav-fab {
 .action-pill.ap-reset:hover { border-color: var(--text-muted); color: var(--text); }
 
 .action-pill.ap-image {
-  background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; border-color: #6366f1;
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #021a2e; border-color: #38bdf8;
 }
-.action-pill.ap-image:hover { box-shadow: 0 0 14px rgba(99,102,241,0.45); }
+.action-pill.ap-image:hover { box-shadow: 0 0 14px rgba(56,189,248,0.45); }
 
 .action-pill.ap-csv {
   background: #22c55e; color: #fff; border-color: #22c55e;
@@ -1396,9 +1396,9 @@ body.nav-open .app-nav-fab {
 .c-pink .stat-value { color: #ec4899; }
 .c-pink .stat-pct { background: rgba(236,72,153,0.12); color: #ec4899; }
 
-.c-purple { border-left-color: #a855f7; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(168,85,247,0.10) 100%); border-color: rgba(168,85,247,0.2); border-left-color: #a855f7; }
-.c-purple .stat-value { color: #a855f7; }
-.c-purple .stat-pct { background: rgba(168,85,247,0.12); color: #a855f7; }
+.c-purple { border-left-color: #14b8a6; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(20,184,166,0.10) 100%); border-color: rgba(20,184,166,0.2); border-left-color: #14b8a6; }
+.c-purple .stat-value { color: #14b8a6; }
+.c-purple .stat-pct { background: rgba(20,184,166,0.12); color: #14b8a6; }
 
 .c-teal { border-left-color: #14b8a6; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(20,184,166,0.10) 100%); border-color: rgba(20,184,166,0.2); border-left-color: #14b8a6; }
 .c-teal .stat-value { color: #14b8a6; }
@@ -1515,7 +1515,7 @@ body.nav-open .app-nav-fab {
 }
 .stat-list-item.li-green { border-left-color: #22c55e; }
 .stat-list-item.li-blue { border-left-color: #3b82f6; }
-.stat-list-item.li-purple { border-left-color: #a855f7; }
+.stat-list-item.li-purple { border-left-color: #14b8a6; }
 .stat-list-item.li-teal { border-left-color: #14b8a6; }
 .stat-list-item.li-yellow { border-left-color: #FFD400; }
 
@@ -1594,9 +1594,9 @@ body.nav-open .app-nav-fab {
   border: 1px solid rgba(59,130,246,0.2);
 }
 .stats-section-label.sec-media {
-  background: rgba(168,85,247,0.12);
-  color: #a855f7;
-  border: 1px solid rgba(168,85,247,0.2);
+  background: rgba(20,184,166,0.12);
+  color: #14b8a6;
+  border: 1px solid rgba(20,184,166,0.2);
 }
 .media-grid {
   display: grid;
@@ -2812,9 +2812,9 @@ const THAI_MONTH_SHORT = [
 
 const UNIT_STACK_METRICS = [
   { key: 'jabSungNa', label: 'จับซึ่งหน้า', color: '#3b82f6' },
-  { key: 'warrantRegular', label: 'หมายทั่วไป', color: '#6366f1' },
+  { key: 'warrantRegular', label: 'หมายทั่วไป', color: '#38bdf8' },
   { key: 'warrantInTotal', label: 'หมายใน (รวมทั้งเก่าและใหม่)', color: '#8b5cf6' },
-  { key: 'prNews', label: 'ประชาสัมพันธ์ข่าว', color: '#a855f7' },
+  { key: 'prNews', label: 'ประชาสัมพันธ์ข่าว', color: '#14b8a6' },
   { key: 'pressConf', label: 'แถลงข่าว', color: '#ec4899' },
   { key: 'alienInspect', label: 'ตรวจสถานประกอบการ', color: '#14b8a6' },
   { key: 'alienEmployer', label: 'จับกุมนายจ้าง', color: '#22c55e' },
@@ -3912,7 +3912,7 @@ function updateStatsCards() {
         <span class="hero-pill-label">จับซึ่งหน้า</span>
       </div>
       <div class="hero-pill" data-card-key="jabTaamMai">
-        <span class="hero-pill-dot" style="background:#a855f7;box-shadow:0 0 6px rgba(168,85,247,0.5);"></span>
+        <span class="hero-pill-dot" style="background:#14b8a6;box-shadow:0 0 6px rgba(20,184,166,0.5);"></span>
         <span class="hero-pill-val" data-target="${stats.jabTaamMai}">0</span>
         <span class="hero-pill-label">จับตามหมาย</span>
       </div>
@@ -4771,7 +4771,7 @@ function _drawDashboardCanvas(trendImg, unitImg, centerImg, logoLeft, logoRight)
   const BG = '#020617', CARD_BG = '#0f172a', BORDER = 'rgba(255,255,255,0.08)';
   const ACCENT = '#FFD400', TXT = '#f1f5f9', TXT2 = '#94a3b8', MUTED = '#64748b';
   const GREEN = '#22c55e', RED = '#ef4444', BLUE = '#3b82f6';
-  const PURPLE = '#a855f7', ORANGE = '#f97316', PINK = '#ec4899', TEAL = '#14b8a6';
+  const PURPLE = '#14b8a6', ORANGE = '#f97316', PINK = '#ec4899', TEAL = '#14b8a6';
   const CW = W - PAD * 2, CX = PAD, R = 12;
   const HEADER_H = 90, LABEL_H = 26;
   const CARD_SM = 100, CARD_MD = 120, CARD_LG = 220, CHART_H = 280, CENTER_CH = 260;

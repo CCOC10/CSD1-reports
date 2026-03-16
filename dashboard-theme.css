@@ -37,27 +37,27 @@
 }
 
 [data-theme="light"] {
-  --primary: #ffffff;
-  --primary-deep: #ffffff;
-  --primary-surface: #ffffff;
-  --accent: #d4a800;
-  --accent-dim: #a38200;
-  --accent-glow: rgba(180, 140, 0, 0.35);
-  --accent-glow-soft: rgba(180, 140, 0, 0.08);
-  --success: #16a34a;
-  --success-bg: rgba(22,163,74,0.1);
-  --danger: #dc2626;
-  --danger-bg: rgba(220,38,38,0.1);
-  --text: #0f172a;
+  --primary: #f8fafc;
+  --primary-deep: #f1f5f9;
+  --primary-surface: #f8fafc;
+  --accent: #bfa100;
+  --accent-dim: #8c6d00;
+  --accent-glow: rgba(191, 161, 0, 0.45);
+  --accent-glow-soft: rgba(191, 161, 0, 0.12);
+  --success: #15803d;
+  --success-bg: rgba(21,128,61,0.13);
+  --danger: #b91c1c;
+  --danger-bg: rgba(185,28,28,0.13);
+  --text: #1e293b;
   --text-secondary: #334155;
   --text-muted: #64748b;
-  --border: rgba(0,0,0,0.1);
-  --border-accent: rgba(180,140,0,0.25);
-  --card-bg: rgba(255,255,255,0.8);
+  --border: rgba(30,41,59,0.13);
+  --border-accent: rgba(191,161,0,0.32);
+  --card-bg: #f1f5f9;
   --card-bg-solid: #ffffff;
-  --input-bg: rgba(0,0,0,0.04);
-  --input-bg-focus: rgba(0,0,0,0.06);
-  --body-bg: #ffffff;
+  --input-bg: #f8fafc;
+  --input-bg-focus: #e2e8f0;
+  --body-bg: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 56%, #e2ecf7 100%);
   --header-bg: linear-gradient(135deg, #00264B 0%, #001a33 100%);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
   --shadow-md: 0 8px 25px rgba(0,0,0,0.08);

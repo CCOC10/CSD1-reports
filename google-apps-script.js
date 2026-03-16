@@ -2115,58 +2115,20 @@ function buildConnectRequestRow(payload, authUser, existingRow) {
     tax_type: normalizeConnectString(tax.type),
     tax_id: normalizeConnectString(tax.id),
     tax_name: normalizeConnectString(tax.name),
-    status: normalizeConnectStatus(row.status),
-    statusNote: normalizeConnectString(row.status_note),
-    fileBaseName: normalizeConnectString(row.file_base_name),
-    pdfFileName: normalizeConnectString(row.pdf_file_name),
-    generatedMode: normalizeConnectString(row.generated_mode),
-    generatedPdfUrl: normalizeConnectString(row.generated_pdf_url),
-    generatedDocxUrl: normalizeConnectString(row.generated_docx_url),
-    phone: {
-      network: phoneNetwork,
-      aisSubType: aisSubType,
-      subType: phoneSubType,
-      imei: phoneImei,
-      numbers: phoneNumbers,
-      ipEntries: ipEntries,
-      dateStart: phoneDateStart,
-      dateEnd: phoneDateEnd
-    },
-    bank: {
-      code: bankCode,
-      subType: bankSubType,
-      statementAccType: statementAccType,
-      accounts: bankAccounts,
-      promptPay: bankPromptPay,
-      xxxAmount: xxxAmount,
-      xxxDate: xxxDate,
-      xxxTime: xxxTime,
-      bankAccountName: bankAccountName,
-      atmAccountNo: atmAccountNo,
-      atmDate: atmDate,
-      atmTime: atmTime,
-      atmLocation: atmLocation,
-      atmTerminalId: atmTerminalId,
-      dateStart: bankDateStart,
-      dateEnd: bankDateEnd
-    },
-    trueMoney: {
-      id: trueId,
-      name: trueName,
-      dateStart: trueDateStart,
-      dateEnd: trueDateEnd
-    },
-    tax: {
-      type: taxType,
-      id: taxId,
-      name: taxName,
-      yearStart: taxYearStart,
-      yearEnd: taxYearEnd
-    },
-    statusUpdatedAt: normalizeConnectString(row.status_updated_at_iso),
-    statusUpdatedByEmail: normalizeConnectString(row.status_updated_by_email),
-    statusUpdatedByName: normalizeConnectString(row.status_updated_by_name),
-    statusUpdatedByRole: normalizeConnectString(row.status_updated_by_role)
+    tax_year_start: normalizeConnectString(tax.yearStart),
+    tax_year_end: normalizeConnectString(tax.yearEnd),
+    file_base_name: normalizeConnectString(files.fileBaseName),
+    pdf_file_name: normalizeConnectString(files.pdfFileName),
+    generated_mode: normalizeConnectString(files.generatedMode),
+    generated_pdf_url: normalizeConnectString(files.generatedPdfUrl),
+    generated_docx_url: normalizeConnectString(files.generatedDocxUrl),
+    generated_warnings_json: safeJsonStringify(Array.isArray(files.generatedWarnings) ? files.generatedWarnings : []),
+    raw_state_json: safeJsonStringify(compactPayload && compactPayload.rawState),
+    payload_json: safeJsonStringify(compactPayload),
+    status_updated_at_iso: existingRow ? normalizeConnectString(existingRow.status_updated_at_iso) : "",
+    status_updated_by_email: existingRow ? normalizeConnectString(existingRow.status_updated_by_email) : "",
+    status_updated_by_name: existingRow ? normalizeConnectString(existingRow.status_updated_by_name) : "",
+    status_updated_by_role: existingRow ? normalizeConnectString(existingRow.status_updated_by_role) : ""
   };
 
   return CONNECT_REQUEST_HEADERS.map(function(header) {
