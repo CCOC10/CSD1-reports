@@ -1188,10 +1188,10 @@ button, input, select, textarea { font: inherit; }
 /* ── Room Gallery Slideshow ── */
 .room-gallery {
   position: relative;
-  border-radius: 24px;
+  border-radius: 18px;
   overflow: hidden;
-  margin-bottom: 18px;
-  height: 280px;
+  margin-top: 16px;
+  height: 240px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
 }
@@ -1307,8 +1307,8 @@ button, input, select, textarea { font: inherit; }
 
 @media (max-width: 720px) {
   .room-gallery {
-    height: 200px;
-    border-radius: 18px;
+    height: 180px;
+    border-radius: 14px;
   }
 }
 
@@ -1418,21 +1418,6 @@ button, input, select, textarea { font: inherit; }
     </div>
   </section>
 
-  <section class="room-gallery" aria-label="ภาพห้องประชุม">
-    <div class="room-gallery-track" id="galleryTrack">
-      <div class="room-gallery-slide is-active">
-        <img src="meetting01.jpeg" alt="ห้องประชุม ศปก. กก.1 บก.ป." loading="lazy">
-      </div>
-    </div>
-    <div class="room-gallery-overlay">
-      <div class="room-gallery-label">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-        ห้องประชุม ศปก. กก.1 บก.ป. · ชั้น 3
-      </div>
-    </div>
-    <div class="room-gallery-dots" id="galleryDots"></div>
-  </section>
-
   <section class="content-grid">
     <div class="panel">
       <div class="panel-head">
@@ -1441,6 +1426,20 @@ button, input, select, textarea { font: inherit; }
         </div>
       </div>
       <div class="room-list" id="roomList"></div>
+      <div class="room-gallery" aria-label="ภาพห้องประชุม">
+        <div class="room-gallery-track" id="galleryTrack">
+          <div class="room-gallery-slide is-active">
+            <img src="meetting01.jpeg" alt="ห้องประชุม ศปก. กก.1 บก.ป." loading="lazy">
+          </div>
+        </div>
+        <div class="room-gallery-overlay">
+          <div class="room-gallery-label">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            ห้องประชุม ศปก. กก.1 บก.ป. · ชั้น 3
+          </div>
+        </div>
+        <div class="room-gallery-dots" id="galleryDots"></div>
+      </div>
     </div>
 
     <div class="panel" id="bookingFormSection">
