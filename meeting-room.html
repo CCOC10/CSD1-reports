@@ -543,6 +543,8 @@ button, input, select, textarea { font: inherit; }
 .field-select,
 .field-textarea {
   width: 100%;
+  box-sizing: border-box;
+  min-height: 52px;
   border-radius: 16px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.03);
@@ -550,6 +552,8 @@ button, input, select, textarea { font: inherit; }
   padding: 13px 14px;
   outline: none;
   transition: var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .field-input:focus,
@@ -1776,15 +1780,22 @@ button, input, select, textarea { font: inherit; }
 
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = slugifyFileName(booking.title) + '-' + booking.date + '.ics';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 0);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (isIOS || isSafari) {
+      // Safari/iOS ไม่รองรับ link.download — เปิด tab ใหม่ให้ระบบจัดการไฟล์ .ics
+      window.open(url, '_blank');
+      setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+    } else {
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = slugifyFileName(booking.title) + '-' + booking.date + '.ics';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
     showToast('ส่งออกปฏิทินแล้ว', 'สามารถเปิดไฟล์เพื่อนำเข้ากิจกรรมพร้อมแจ้งเตือนล่วงหน้าได้');
   }
 
