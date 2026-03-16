@@ -1066,6 +1066,24 @@ select{
   background:#fff;
   box-shadow:0 18px 44px rgba(0,0,0,0.45);
 }
+.pdf-canvas-container{
+  width:100%;
+  background:#f8fafc;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(148,163,184,0.22);
+}
+.pdf-canvas-container canvas{
+  display:block;
+  width:100%;
+  height:auto;
+  border-bottom:1px solid rgba(148,163,184,0.12);
+}
+.pdf-canvas-container canvas:last-child{ border-bottom:none; }
+.pdf-canvas-loading{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:3rem 1rem;gap:0.75rem;color:var(--text-muted);font-size:0.9rem;
+}
 .doc-preview-loading,
 .doc-preview-error{
   width:595px;
@@ -2348,7 +2366,7 @@ function render(options = {}) {
     case 2: el.innerHTML = step2Html(); break;
     case 3: el.innerHTML = step3Html(); break;
     case 4: el.innerHTML = reviewHtml(); break;
-    case 5: el.innerHTML = successHtml(); break;
+    case 5: el.innerHTML = successHtml(); setTimeout(() => renderPdfPreviewCanvas(S.generatedPdfUrl), 0); break;
     default: el.innerHTML = '';
   }
   requestAnimationFrame(() => {
@@ -4290,11 +4308,9 @@ function successHtml() {
     ${S.generatedPdfUrl ? `
       <div class="card" style="text-align:left;margin-bottom:1rem;padding:0.8rem">
         <div class="review-sec-title" style="margin-bottom:0.75rem">ตัวอย่าง PDF final</div>
-        <iframe
-          src="${esc(generatedPdfSrc)}"
-          title="PDF Preview"
-          style="width:100%;min-height:72vh;border:1px solid rgba(148,163,184,0.22);border-radius:18px;background:#fff"
-        ></iframe>
+        <div id="pdfCanvasContainer" class="pdf-canvas-container">
+          <div class="pdf-canvas-loading"><div class="submit-loading-spinner"></div><span>กำลังโหลด PDF...</span></div>
+        </div>
       </div>
     ` : ''}
     <div class="success-actions">
@@ -4603,6 +4619,65 @@ function postGeneratedPdfServiceWorkerMessage(message, transferables = []) {
     };
     navigator.serviceWorker.controller.postMessage(message, [channel.port2, ...transferables]);
   });
+}
+
+/* ==================== PDF CANVAS PREVIEW (Safari/Mobile compatible) ==================== */
+let _pdfJsLoading = null;
+function loadPdfJs() {
+  if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if (_pdfJsLoading) return _pdfJsLoading;
+  _pdfJsLoading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve(window.pdfjsLib);
+    };
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  return _pdfJsLoading;
+}
+
+async function renderPdfPreviewCanvas(pdfUrl) {
+  const container = document.getElementById('pdfCanvasContainer');
+  if (!container || !pdfUrl) return;
+  try {
+    const pdfjsLib = await loadPdfJs();
+    let pdfData;
+    if (pdfUrl.startsWith('blob:') || pdfUrl.includes('__generated_pdf__')) {
+      const resp = await fetch(pdfUrl);
+      if (!resp.ok) throw new Error('fetch failed');
+      const buf = await resp.arrayBuffer();
+      pdfData = { data: new Uint8Array(buf) };
+    } else {
+      pdfData = { url: pdfUrl };
+    }
+    const pdf = await pdfjsLib.getDocument(pdfData).promise;
+    container.innerHTML = '';
+    const dpr = window.devicePixelRatio || 1;
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 1.5 * dpr });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
+      container.appendChild(canvas);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    }
+  } catch (err) {
+    console.warn('[PDF Preview]', err);
+    if (container) {
+      container.innerHTML = `<div class="pdf-canvas-loading" style="flex-direction:column;gap:0.75rem">
+        <div style="font-size:2rem">📄</div>
+        <div>ดูตัวอย่างไม่ได้ในอุปกรณ์นี้</div>
+        <button class="btn btn-success" onclick="downloadGeneratedPdf()" style="margin-top:0.25rem">⬇️ เปิด / ดาวน์โหลด PDF</button>
+      </div>`;
+    }
+  }
 }
 
 async function createGeneratedPdfViewerUrl(blob, fileName) {
