@@ -2697,23 +2697,18 @@ function triggerDirectDownload(url, filename) {
   a.remove();
 }
 
-const _isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const _isIosSafari = (() => {
+  const ua = navigator.userAgent;
+  const isIos = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  const isSafari = /Safari/.test(ua) && !/Chrome|CriOS|FxiOS|EdgiOS/.test(ua);
+  return isIos && isSafari;
+})();
 
 function saveBlobAsDownload(blob, filename) {
   hideDownloadLoadingModal();
   isDownloadInProgress = false;
-  if (_isIos) {
-    const file = new File([blob], filename, { type: blob.type || 'application/octet-stream' });
-    // Web Share API (iOS 15+, HTTPS) — share sheet ให้เลือก "บันทึกลงไฟล์"
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: filename }).catch(() => {});
-      return;
-    }
-    // Fallback: เปิดไฟล์ใน tab เดิม (blob ต้องอยู่ tab เดิมบน iOS)
-    // ผู้ใช้เห็น PDF ใน Safari viewer แล้วกด share → บันทึกลงไฟล์
-    const objUrl = URL.createObjectURL(blob);
-    window.location.href = objUrl;
-    setTimeout(() => URL.revokeObjectURL(objUrl), 60000);
+  if (_isIosSafari) {
+    showToast('Safari บน iOS ไม่รองรับการดาวน์โหลดโดยตรง กรุณาใช้ Chrome หรือเปิดในคอมพิวเตอร์', 'err', 6000);
     return;
   }
   const objUrl = URL.createObjectURL(blob);
@@ -2745,6 +2740,7 @@ async function fetchDownloadBlob(url, filename) {
 }
 
 async function downloadDriveFile(requestId, url, filename) {
+  if (_isIosSafari) { showToast('Safari บน iOS ไม่รองรับการดาวน์โหลด กรุณาใช้ Chrome หรือเปิดในคอมพิวเตอร์', 'err', 6000); return; }
   if (isDownloadInProgress) {
     showToast('ระบบกำลังดาวน์โหลดไฟล์อยู่ กรุณารอสักครู่', 'err');
     return;
@@ -2782,6 +2778,7 @@ async function downloadDriveFile(requestId, url, filename) {
 }
 
 async function downloadSummonPdf(requestId, filename, fallbackUrl) {
+  if (_isIosSafari) { showToast('Safari บน iOS ไม่รองรับการดาวน์โหลด กรุณาใช้ Chrome หรือเปิดในคอมพิวเตอร์', 'err', 6000); return; }
   const cleanRequestId = String(requestId || '').trim();
   const currentRequest = cleanRequestId
     ? allRequests.find(item => String((item && item.requestId) || '').trim() === cleanRequestId)
@@ -2878,12 +2875,12 @@ function fmtDateTime(iso) {
 }
 
 let _toastTimer;
-function showToast(msg, type = '') {
+function showToast(msg, type = '', duration = 2800) {
   const el = document.getElementById('toastEl');
   el.textContent = msg;
   el.className = 'toast show' + (type ? ' ' + type : '');
   clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => { el.className = 'toast'; }, 2800);
+  _toastTimer = setTimeout(() => { el.className = 'toast'; }, duration);
 }
 
 async function copyFilePassword(password) {
