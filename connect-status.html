@@ -1918,6 +1918,7 @@ function clearDateQuickActive() {
 }
 
 function downloadFilteredCsv() {
+  if (_isIosSafari) { showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000); return; }
   if (!filteredRequests.length) {
     showToast('ไม่มีข้อมูลให้ดาวน์โหลด', 'err');
     return;
@@ -2708,7 +2709,7 @@ function saveBlobAsDownload(blob, filename) {
   hideDownloadLoadingModal();
   isDownloadInProgress = false;
   if (_isIosSafari) {
-    showToast('Safari บน iOS ไม่รองรับการดาวน์โหลดโดยตรง กรุณาใช้ Chrome หรือเปิดในคอมพิวเตอร์', 'err', 6000);
+    showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000);
     return;
   }
   const objUrl = URL.createObjectURL(blob);
@@ -2740,7 +2741,7 @@ async function fetchDownloadBlob(url, filename) {
 }
 
 async function downloadDriveFile(requestId, url, filename) {
-  if (_isIosSafari) { showToast('Safari บน iOS ไม่รองรับการดาวน์โหลด กรุณาใช้ Chrome หรือเปิดในคอมพิวเตอร์', 'err', 6000); return; }
+  if (_isIosSafari) { showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000); return; }
   if (isDownloadInProgress) {
     showToast('ระบบกำลังดาวน์โหลดไฟล์อยู่ กรุณารอสักครู่', 'err');
     return;
@@ -2778,7 +2779,7 @@ async function downloadDriveFile(requestId, url, filename) {
 }
 
 async function downloadSummonPdf(requestId, filename, fallbackUrl) {
-  if (_isIosSafari) { showToast('Safari บน iOS ไม่รองรับการดาวน์โหลด กรุณาใช้ Chrome หรือเปิดในคอมพิวเตอร์', 'err', 6000); return; }
+  if (_isIosSafari) { showToast('Safari iOS ไม่รองรับ ใช้ Chrome แทน', 'err', 5000); return; }
   const cleanRequestId = String(requestId || '').trim();
   const currentRequest = cleanRequestId
     ? allRequests.find(item => String((item && item.requestId) || '').trim() === cleanRequestId)
