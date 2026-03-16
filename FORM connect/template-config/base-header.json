@@ -20,6 +20,7 @@
       "w": 252,
       "h": 20,
       "align": "center",
+      "centerX": 310,
       "size": 16,
       "maxLines": 1
     }
