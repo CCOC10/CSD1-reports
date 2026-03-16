@@ -2697,15 +2697,43 @@ function triggerDirectDownload(url, filename) {
   a.remove();
 }
 
+const _isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+let _iosDownloadWin = null;
+
+function _openIosDownloadWin() {
+  if (_isIos) _iosDownloadWin = window.open('', '_blank');
+}
+
 function saveBlobAsDownload(blob, filename) {
+  hideDownloadLoadingModal();
+  isDownloadInProgress = false;
+  if (_isIos) {
+    const objUrl = URL.createObjectURL(blob);
+    // Web Share API (iOS 15+, HTTPS)
+    const file = new File([blob], filename, { type: blob.type || 'application/octet-stream' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      if (_iosDownloadWin) { _iosDownloadWin.close(); _iosDownloadWin = null; }
+      navigator.share({ files: [file], title: filename }).catch(() => {
+        window.open(objUrl, '_blank');
+      });
+      setTimeout(() => URL.revokeObjectURL(objUrl), 60000);
+      return;
+    }
+    // ใช้ window ที่เปิดไว้ล่วงหน้า (sync gesture) นำทางไปยัง blob URL
+    if (_iosDownloadWin && !_iosDownloadWin.closed) {
+      _iosDownloadWin.location.href = objUrl;
+      _iosDownloadWin = null;
+    } else {
+      window.open(objUrl, '_blank');
+    }
+    setTimeout(() => URL.revokeObjectURL(objUrl), 60000);
+    return;
+  }
   const objUrl = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = objUrl;
   a.download = filename;
-  a.setAttribute('download', filename);
   document.body.appendChild(a);
-  hideDownloadLoadingModal();
-  isDownloadInProgress = false;
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(objUrl), 30000);
@@ -2730,6 +2758,7 @@ async function fetchDownloadBlob(url, filename) {
 }
 
 async function downloadDriveFile(requestId, url, filename) {
+  _openIosDownloadWin();
   if (isDownloadInProgress) {
     showToast('ระบบกำลังดาวน์โหลดไฟล์อยู่ กรุณารอสักครู่', 'err');
     return;
@@ -2767,6 +2796,7 @@ async function downloadDriveFile(requestId, url, filename) {
 }
 
 async function downloadSummonPdf(requestId, filename, fallbackUrl) {
+  _openIosDownloadWin();
   const cleanRequestId = String(requestId || '').trim();
   const currentRequest = cleanRequestId
     ? allRequests.find(item => String((item && item.requestId) || '').trim() === cleanRequestId)

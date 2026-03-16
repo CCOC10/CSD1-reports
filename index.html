@@ -1773,9 +1773,10 @@ button, input, select, textarea { font: inherit; }
   padding: 1rem;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
 }
-.login-modal-overlay.show { opacity: 1; pointer-events: auto; }
+.login-modal-overlay.show { opacity: 1; pointer-events: auto; visibility: visible; }
 .login-modal-card {
   background: var(--card-bg-solid);
   border: 1px solid var(--border);
