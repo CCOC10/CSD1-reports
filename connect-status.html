@@ -1664,6 +1664,7 @@ tbody tr:hover td { background: rgba(255, 255, 255, 0.04); }
 
 const CSD1_DEFAULT_API = 'https://script.google.com/macros/s/AKfycbyrHFyH3SoiRCPWOT1BbVIeNSv4DJqBCrlwTUupp5xGXBGq_ZvXTJBhN9Cb5C7RoSfcug/exec';
 let allRequests = [];
+let supervisorList = [];
 let filteredRequests = [];
 let editingId = null;
 let currentSessionUser = null;
@@ -2168,9 +2169,11 @@ function generateEmailText(r) {
   const docNo    = r.docNumber ? `ตช 0026.21/${r.docNumber}` : 'ตช 0026.21/...';
   const unit     = r.unit || '...';
   const caseText = r.caseDetail || '...';
-  const rawPhone = r.submittedByPhone || r.submitted_by_phone || '';
+  const reqUnit = String(r.unit || '').trim();
+  const sv = supervisorList.find(s => String(s.unit || '').trim() === reqUnit);
+  const rawPhone = (sv && sv.phone) || r.submittedByPhone || r.submitted_by_phone || '';
   const contactPhone = rawPhone ? (emailFormatContactPhone(rawPhone) || rawPhone) : '';
-  const contactName  = r.commander || r.submittedByName || r.submitted_by_name || '';
+  const contactName  = (sv && sv.name) || r.commander || r.submittedByName || r.submitted_by_name || '';
   const lines = getRequestTargetDetailLines(r);
 
   if (r.type === 'bank') {
@@ -2196,8 +2199,8 @@ function generateEmailText(r) {
       '',
       `📄 ${docNo}`,
       `🏢 ${unit}`,
-      ...(contactName ? [`👤 ${contactName}`] : []),
-      ...(contactPhone ? [`📞 โทร. ${contactPhone}`] : []),
+      `👤 ${contactName}`,
+      `📞 โทร. ${contactPhone}`,
       `📧 E-mail : csd1-10@cib.go.th`,
       `🏦 Bank : ธนาคาร${bankName} ${bankCode}`,
     ].join('\n');
@@ -2226,8 +2229,8 @@ function generateEmailText(r) {
       '',
       `📄 ${docNo}`,
       `🏢 ${unit}`,
-      ...(contactName ? [`👤 ${contactName}`] : []),
-      ...(contactPhone ? [`📞 โทร. ${contactPhone}`] : []),
+      `👤 ${contactName}`,
+      `📞 โทร. ${contactPhone}`,
       `📧 E-mail : csd1-10@cib.go.th`,
       `📱 Mobile : ${network}`,
     ].join('\n');
@@ -2988,6 +2991,9 @@ document.getElementById('statusModal').addEventListener('click', e => {
 });
 
 document.getElementById('modalDeleteBtn').style.display = canManageStatus() ? '' : 'none';
+postStatusApi(buildAuthorizedApiPayload('getCommanderInfo')).then(d => {
+  if (d && Array.isArray(d.supervisors)) supervisorList = d.supervisors;
+}).catch(() => {});
 loadRequests().then(() => initColResize());
 
 // ==================== PWA LINK INTERCEPTOR ====================
