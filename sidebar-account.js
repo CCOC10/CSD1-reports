@@ -24,7 +24,7 @@
     floatingFabBound: false
   };
 
-  const SIDEBAR_REFRESH_DEFAULT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzRTP16rrmz3tUN7FqDQse7f1fDOzXx6pMuBDd6R3r5s_cnoELkVAy5opLWmwj2Unyypg/exec';
+  const SIDEBAR_REFRESH_DEFAULT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyrHFyH3SoiRCPWOT1BbVIeNSv4DJqBCrlwTUupp5xGXBGq_ZvXTJBhN9Cb5C7RoSfcug/exec';
   const NOTIFICATION_SEEN_STORAGE_PREFIX = 'CSD1_NOTIFY_SEEN_V1::';
   const CONNECT_NOTIFICATION_SEEN_STORAGE_PREFIX = 'CSD1_CONNECT_NOTIFY_SEEN_V1::';
   const NOTIFICATION_SEEN_MAX = 1200;

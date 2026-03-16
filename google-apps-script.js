@@ -3682,7 +3682,7 @@ function handleGetMeetingBookings(data) {
     return jsonResponse({ status: "ok", bookings: [] });
   }
 
-  const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, MEETING_BOOKINGS_HEADERS.length).getValues();
+  const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, MEETING_BOOKINGS_HEADERS.length).getDisplayValues();
   const bookings = rows.map(function (row) {
     var obj = {};
     MEETING_BOOKINGS_HEADERS.forEach(function (h, i) {
