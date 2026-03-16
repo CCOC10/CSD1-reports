@@ -1328,6 +1328,7 @@ select{
 .btn-map:hover{background:linear-gradient(135deg,rgba(255,212,0,0.15),rgba(255,212,0,0.25));box-shadow:0 0 12px var(--accent-glow-soft);transform:translateY(-1px);}
 .btn-map:active{transform:translateY(0);}
 @media(max-width:500px){.row{grid-template-columns:1fr;}.input-with-btn{flex-direction:column;}.btn-map{justify-content:center;}}
+@media(max-width:768px){.hide-on-mobile{display:none!important;}}
 
 /* ==================== THEME SWITCH ==================== */
 .app-theme-switch{
@@ -4306,7 +4307,7 @@ function successHtml() {
       </span></div>
     </div>
     ${S.generatedPdfUrl ? `
-      <div class="card" style="text-align:left;margin-bottom:1rem;padding:0.8rem">
+      <div class="card hide-on-mobile" style="text-align:left;margin-bottom:1rem;padding:0.8rem">
         <div class="review-sec-title" style="margin-bottom:0.75rem">ตัวอย่าง PDF final</div>
         <div id="pdfCanvasContainer" class="pdf-canvas-container">
           <div class="pdf-canvas-loading"><div class="submit-loading-spinner"></div><span>กำลังโหลด PDF...</span></div>
@@ -4899,7 +4900,7 @@ const PRINT_ASSETS = {
   crest:'print-assets/ครุฑไทย.svg',
   signature:'print-assets/commander-signature.png',
 };
-const PRINT_SIGNER_RANK = 'ว่าที่ พันตำรวจเอก';
+const PRINT_SIGNER_RANK = 'ว่าที่พันตำรวจเอก';
 
 const BANK_PRINT_META = {
   BBL:   { recipient:'กรรมการผู้จัดการใหญ่ ธนาคารกรุงเทพ จำกัด (มหาชน) สำนักงานใหญ่', address:'333 ถนนสีลม แขวงสีลม เขตบางรัก กรุงเทพมหานคร 10500', shortName:'กรุงเทพ' },
@@ -5548,7 +5549,7 @@ function renderTrueMoneyPrintDocument() {
   const bodyHtml = `
     <p class="official-print-paragraph">ด้วยเหตุ เจ้าหน้าที่ตำรวจกองกำกับการ 1 กองบังคับการปราบปราม ได้ดำเนินการสืบสวนเกี่ยวกับ ${esc(getCaseHeadline('คดีที่อยู่ระหว่างการสืบสวนสอบสวน'))} จากการสืบสวนเชื่อได้ว่ามีการใช้งานบัญชีอิเล็กทรอนิกส์ True Money ที่เกี่ยวข้องกับคดี จึงมีความจำเป็นขอตรวจสอบข้อมูล ดังรายละเอียดต่อไปนี้</p>
     ${renderPrintList([
-      { text:'ขอข้อมูลการลงทะเบียนใช้งานบัญชี True Money Wallet', lines:[`เลขอ้างอิง ${esc(S.trueId)} ชื่อบัญชี ${esc(S.trueName)}`] },
+      { text:'ขอข้อมูลการลงทะเบียนใช้งานบัญชี True Money Wallet', lines:[`บัญชีทรูมันนี่เลขที่ ${esc(S.trueId)} ชื่อบัญชี ${esc(S.trueName)}`] },
       { text:`ขอรายการเดินบัญชีและรายละเอียดธุรกรรมทางการเงิน ${periodText}` },
       { text:'ขอข้อมูลหมายเลขโทรศัพท์ อุปกรณ์ที่ใช้ และข้อมูลทางเทคนิคที่เกี่ยวข้องกับการใช้งานบัญชีดังกล่าว' },
     ])}
@@ -5668,7 +5669,7 @@ async function uploadPdfToDrive(blob, fileName) {
 
 function getTemplateIssueDateFull() {
   const parts = getThaiDateParts(new Date());
-  return `วันที่ ${parts.day} เดือน ${parts.month} พุทธศักราช ${parts.year}`;
+  return ` วันที่ ${parts.day} เดือน ${parts.month} พุทธศักราช ${parts.year}`;
 }
 
 function getTemplateCaseHeadline() {
@@ -5926,7 +5927,7 @@ function buildTrueMoneyTemplatePdfPayload() {
       {
         type:'list',
         items:[
-          { text:'ขอข้อมูลการลงทะเบียนใช้งานบัญชี True Money Wallet', lines:[`เลขอ้างอิง ${S.trueId} ชื่อบัญชี ${S.trueName}`] },
+          { text:'ขอข้อมูลการลงทะเบียนใช้งานบัญชี True Money Wallet', lines:[`บัญชีทรูมันนี่เลขที่ ${S.trueId} ชื่อบัญชี ${S.trueName}`] },
           {
             textSegments:[
               { text:'ขอรายการเดินบัญชีและรายละเอียดธุรกรรมทางการเงิน ' },
