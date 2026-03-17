@@ -4799,19 +4799,48 @@ function base64ToBlob(base64, mimeType) {
 }
 
 function triggerFileDownload(blob, fileName) {
-  const href = URL.createObjectURL(blob);
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if (isIOS) {
-    // Safari iOS ไม่รองรับ link.download — เปิดใน tab ใหม่ให้ผู้ใช้ Save to Files
-    const w = window.open(href, '_blank');
-    if (!w) {
-      // popup ถูกบล็อก — fallback: เปิดใน tab เดิม
-      window.location.href = href;
+  const isStandalone = window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches;
+
+  // helper: ดาวน์โหลดผ่าน data URL (ไม่มี origin restriction — ใช้ได้ใน file:// standalone)
+  function downloadViaDataUrl(b, name) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const link = document.createElement('a');
+      link.href = reader.result;
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    };
+    reader.readAsDataURL(b);
+  }
+
+  // Standalone (Add to Dock) หรือ iOS: ใช้ Web Share API ถ้ารองรับ
+  if (isStandalone || isIOS) {
+    if (navigator.canShare) {
+      const file = new File([blob], fileName, { type: blob.type || 'application/pdf' });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: fileName })
+          .catch(err => {
+            // AbortError = ผู้ใช้กด Cancel — ไม่ต้องทำอะไร
+            if (err && err.name !== 'AbortError') {
+              // share ล้มเหลว → fallback data URL
+              downloadViaDataUrl(blob, fileName);
+            }
+          });
+        return;
+      }
     }
-    setTimeout(() => URL.revokeObjectURL(href), 30000);
+    // Web Share ไม่รองรับ → data URL download (หลีกเลี่ยง blob:file:// ที่ standalone บล็อก)
+    downloadViaDataUrl(blob, fileName);
     return;
   }
+
+  // Desktop browser ปกติ
+  const href = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = href;
   link.download = fileName;

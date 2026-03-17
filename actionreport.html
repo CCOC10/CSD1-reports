@@ -28,9 +28,9 @@
 <style>
 /* ==================== THEME VARIABLES ==================== */
 :root {
-  --radius: 16px;
-  --radius-sm: 10px;
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {
@@ -47,18 +47,19 @@
   --danger-bg: rgba(239,68,68,0.12);
   --text: #f1f5f9;
   --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
+  --text-muted: #94a3b8;
   --border: rgba(255,255,255,0.08);
-  --border-accent: rgba(255,212,0,0.2);
-  --card-bg: rgba(15, 23, 42, 0.7);
+  --border-accent: rgba(255,212,0,0.22);
+  --border-strong: rgba(255,212,0,0.22);
+  --card-bg: rgba(15, 23, 42, 0.72);
   --card-bg-solid: #1e293b;
   --input-bg: rgba(0,0,0,0.25);
   --input-bg-focus: rgba(0,0,0,0.35);
-  --body-bg: linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
+  --body-bg: radial-gradient(ellipse 60% 40% at 0% 0%, rgba(0, 60, 130, 0.65) 0%, transparent 60%), radial-gradient(ellipse 40% 30% at 100% 100%, rgba(255, 212, 0, 0.06) 0%, transparent 55%), linear-gradient(160deg, #020617 0%, #0f172a 40%, #0c1a2e 100%);
   --header-bg: transparent;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-md: 0 8px 25px rgba(0,0,0,0.4);
-  --shadow-lg: 0 15px 40px rgba(0,0,0,0.5);
+  --shadow-sm: 0 4px 14px rgba(0,0,0,0.24);
+  --shadow-md: 0 18px 45px rgba(0,0,0,0.35);
+  --shadow-lg: 0 28px 60px rgba(0,0,0,0.5);
   --toast-bg: #1e293b;
   --overlay: rgba(2, 6, 23, 0.85);
 }
@@ -80,15 +81,16 @@
   --text-muted: #64748b;
   --border: rgba(0,0,0,0.1);
   --border-accent: rgba(180,140,0,0.25);
-  --card-bg: rgba(255,255,255,0.8);
+  --border-strong: rgba(180,140,0,0.22);
+  --card-bg: rgba(255,255,255,0.86);
   --card-bg-solid: #ffffff;
   --input-bg: rgba(0,0,0,0.04);
   --input-bg-focus: rgba(0,0,0,0.06);
-  --body-bg: #ffffff;
+  --body-bg: radial-gradient(circle at top left, rgba(255, 212, 0, 0.06), transparent 30%), linear-gradient(160deg, #eef5fb 0%, #f8fbff 50%, #e8f0f9 100%);
   --header-bg: transparent;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md: 0 8px 25px rgba(0,0,0,0.08);
-  --shadow-lg: 0 15px 40px rgba(0,0,0,0.12);
+  --shadow-sm: 0 6px 18px rgba(15,23,42,0.08);
+  --shadow-md: 0 18px 40px rgba(15,23,42,0.12);
+  --shadow-lg: 0 28px 60px rgba(15,23,42,0.18);
   --toast-bg: #1e293b;
   --overlay: rgba(0, 0, 0, 0.5);
 }
@@ -108,7 +110,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   min-height: 100dvh;
-  line-height: 1.6;
+  line-height: 1.55;
   transition: background 0.5s, color 0.3s;
   overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
@@ -120,6 +122,10 @@ body {
 }
 
 /* ==================== ANIMATIONS ==================== */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
@@ -279,19 +285,19 @@ body {
 }
 
 .header h1 {
-  /* เพิ่มขนาดหัวข้อหลักจาก 1.35rem เป็น 1.6rem */
-  font-size: 1.6rem; 
-  margin-top: 0; /* บังคับไม่ให้มีระยะขอบบน */
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-top: 0;
   font-weight: 800;
   color: #FFD400;
-  letter-spacing: 0.03em;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .header p {
-  /* เพิ่มขนาดหัวข้อรองจาก 0.85rem เป็น 0.95rem */
-  font-size: 0.95rem; 
+  font-size: 0.94rem;
   color: #94a3b8;
-  margin-top: 0.1rem; /* ขยับให้ชิดหัวข้อหลักมากขึ้น */
+  margin-top: 0.15rem;
+  letter-spacing: 0.01em;
 }
 
 /* User info bar - Glassmorphism */
@@ -1138,6 +1144,7 @@ body.nav-open .app-nav-fab {
   max-width: 760px;
   margin: 0 auto;
   padding: 1.25rem 1rem 3rem;
+  animation: pageIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ==================== STEPPER ==================== */
@@ -1145,6 +1152,19 @@ body.nav-open .app-nav-fab {
   display: flex;
   justify-content: center;
   margin: 1.25rem 0 1.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 0.85rem 1.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+[data-theme="light"] .stepper {
+  background: rgba(0, 38, 75, 0.05);
+  border-color: rgba(0, 38, 75, 0.1);
 }
 .step {
   flex: 1;
@@ -1195,9 +1215,11 @@ body.nav-open .app-nav-fab {
 }
 .step-label {
   margin-top: 0.4rem;
-  font-size: 0.72rem;
-  font-weight: 500;
+  font-size: 0.68rem;
+  font-weight: 700;
   color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   transition: color 0.3s;
 }
 .step.active .step-label { color: #FFD400; font-weight: 600; }
@@ -1298,43 +1320,67 @@ body.nav-open .app-nav-fab {
 
 /* ==================== CARD ==================== */
 .card {
-  background: var(--card-bg);
+  position: relative;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.55);
   border-radius: var(--radius);
   padding: 1.75rem;
   margin-bottom: 1.25rem;
-  border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-md);
-  animation: fadeIn 0.35s ease;
-  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-top-color: rgba(255, 212, 0, 0.18);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 15%; right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 212, 0, 0.45), transparent);
+  pointer-events: none;
 }
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg), 0 0 20px var(--accent-glow-soft);
-  border-color: var(--border-accent);
+  box-shadow: var(--shadow-md), 0 0 28px rgba(255, 212, 0, 0.05);
+  border-top-color: rgba(255, 212, 0, 0.35);
+}
+[data-theme="light"] .card {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(0, 0, 0, 0.06);
+  border-top-color: rgba(180, 140, 0, 0.22);
+}
+[data-theme="light"] .card::before {
+  background: linear-gradient(90deg, transparent, rgba(180, 140, 0, 0.4), transparent);
 }
 
 .card-title {
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1.19rem;
+  font-weight: 800;
   color: #FFD400;
-  margin-bottom: 1.2rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-accent);
+  border-bottom: 1px solid rgba(255, 212, 0, 0.12);
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-.card-title .icon { font-size: 1.15rem; }
+[data-theme="light"] .card-title { color: #a07800; border-bottom-color: rgba(160,120,0,0.15); }
+.card-title .icon { font-size: 1.1rem; }
 
 /* ==================== FORM FIELDS ==================== */
 .field { margin-bottom: 1rem; }
 .field label {
   display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .field label .req { color: var(--danger); margin-left: 2px; }
 
@@ -2008,18 +2054,28 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 
 .feature-announcement-card {
   width: min(760px, 96vw);
-  border-radius: 24px;
-  border: 1px solid rgba(255, 212, 0, 0.46);
-  background: linear-gradient(180deg, #00264B 0%, #001a33 43%, #020717 43%, #020717 100%);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 212, 0, 0.38);
+  background: linear-gradient(160deg, rgba(0, 22, 58, 0.98) 0%, rgba(5, 18, 44, 0.97) 55%, rgba(2, 10, 30, 0.99) 100%);
   box-shadow:
     0 0 0 1px rgba(255, 212, 0, 0.12),
-    0 28px 70px rgba(0, 0, 0, 0.65),
-    0 0 60px rgba(255, 212, 0, 0.08);
+    0 32px 80px rgba(0, 0, 0, 0.7),
+    0 0 70px rgba(255, 212, 0, 0.08);
   overflow: hidden;
   transform: translateY(24px) scale(0.93);
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   animation: cardBorderGlow 3.2s ease-in-out infinite;
+}
+
+.feature-announcement-card::before {
+  content: '';
+  position: absolute;
+  inset: -35% -15% auto -15%;
+  height: 65%;
+  background: radial-gradient(ellipse, rgba(255, 212, 0, 0.18), transparent 62%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .feature-announcement-card::after {
@@ -2029,6 +2085,7 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
+  z-index: 2;
   background: linear-gradient(
     120deg,
     rgba(255, 255, 255, 0) 0%,
@@ -2084,8 +2141,10 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 1rem;
-  padding: 1.25rem 1.3rem 1rem;
+  padding: 1.6rem 1.5rem 1.25rem;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .feature-announcement-badge {
@@ -2194,7 +2253,13 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 }
 
 .feature-announcement-body {
-  padding: 1rem 1.3rem 1.25rem;
+  padding: 1.1rem 1.5rem 1.4rem;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(255, 212, 0, 0.15);
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .feature-announcement-list {
@@ -2276,12 +2341,12 @@ body.feature-announcement-open > *:not(#featureAnnouncementOverlay) {
 }
 
 [data-theme="light"] .feature-announcement-card {
-  border-color: rgba(255, 212, 0, 0.46);
-  background: linear-gradient(180deg, #00264B 0%, #001a33 43%, #ffffff 43%, #ffffff 100%);
+  border-color: rgba(255, 212, 0, 0.44);
+  background: linear-gradient(160deg, rgba(0, 22, 58, 0.97) 0%, rgba(5, 18, 44, 0.95) 55%, rgba(2, 10, 30, 0.98) 100%);
   box-shadow:
-    0 0 0 1px rgba(255, 212, 0, 0.12),
-    0 26px 60px rgba(0, 0, 0, 0.22),
-    0 0 60px rgba(255, 212, 0, 0.06);
+    0 0 0 1px rgba(255, 212, 0, 0.14),
+    0 28px 65px rgba(0, 0, 0, 0.3),
+    0 0 60px rgba(255, 212, 0, 0.07);
 }
 
 [data-theme="light"] .feature-announcement-close {
@@ -2600,6 +2665,8 @@ input[type="reset"],
 [data-theme="light"] .bottom-bar-veil {
   background: rgba(241, 245, 249, 0.38);
 }
+
+
 </style>
 <link rel="stylesheet" href="sidebar-account.css">
 <link rel="stylesheet" href="buttons-legacy.css">

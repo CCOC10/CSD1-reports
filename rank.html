@@ -2596,7 +2596,7 @@ body.modal-open {
 </button>
 <div class="mobile-nav-fade" aria-hidden="true"></div>
 <nav class="mobile-mini-nav" aria-label="เมนูหลักมือถือ">
-  <a class="mobile-mini-link" href="actionreport.html" onclick="return navigateInApp(event, 'actionreport.html')" title="หน้ากรอกแบบฟอร์ม" aria-label="หน้ากรอกแบบฟอร์ม">
+  <a class="mobile-mini-link" href="actionreport.html" data-requires-login onclick="return navigateInApp(event, 'actionreport.html')" title="หน้ากรอกแบบฟอร์ม" aria-label="หน้ากรอกแบบฟอร์ม">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
     <span>ฟอร์ม</span>
   </a>
@@ -2636,7 +2636,7 @@ body.modal-open {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
       <span>HALL OF FAM</span>
     </a>
-    <a class="app-sidebar-link" href="actionreport.html" onclick="return navigateViaSidebar(event, 'actionreport.html')">
+    <a class="app-sidebar-link" href="actionreport.html" data-requires-login onclick="return navigateViaSidebar(event, 'actionreport.html')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
       <span>หน้ากรอกแบบฟอร์ม</span>
     </a>
@@ -4157,15 +4157,12 @@ if (fabMenu && fabBtn) {
 
 applyTheme(getPreferredTheme());
 (function() {
+  // Public page — no auth redirect
   const _u = getStoredUserSafe();
-  if (!_u || !_u.email || !_u.sessionToken) { window.location.replace('index.html'); return; }
-  const _pages = Array.isArray(_u.allowedPages) ? _u.allowedPages : [];
-  if (!_pages.includes('rank')) {
-    try { sessionStorage.setItem('CSD1_ACCESS_DENIED', '1'); } catch (_) {}
-    window.location.replace('index.html');
-    return;
-  }
-  syncAdminHistoryMenus(_u);
+  syncAdminHistoryMenus(_u || null);
+  document.querySelectorAll('[data-requires-login]').forEach(el => {
+    el.style.display = _u ? '' : 'none';
+  });
   fillUnitOptions();
   updateHeroPeriodText();
   renderScoreWeightTable();

@@ -8,7 +8,7 @@
     page: { width: 595, height: 842 },
     sharedFields: {
       doc_number_line: { x: 73, y: 90, w: 150, h: 24, align: 'left', size: 16, maxLines: 1, clearBackground: false },
-      issue_date_full: { x: 174, y: 156, w: 252, h: 20, align: 'center', centerX: 310, size: 16, maxLines: 1 },
+      issue_date_full: { x: 174, y: 156, w: 252, h: 20, align: 'center', size: 16, maxLines: 1 },
     },
     bodyStart: { x: 54, y: 294, w: 487 },
     labelBlock: {

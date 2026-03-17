@@ -2333,11 +2333,11 @@ body.exporting-dashboard [class*="stat-"] {
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
     <span>หน้าหลัก</span>
   </a>
-  <a class="mobile-mini-link" href="CSD1 connect.html" title="ขอข้อมูล" aria-label="ขอข้อมูล">
+  <a class="mobile-mini-link" href="CSD1 connect.html" data-requires-login title="ขอข้อมูล" aria-label="ขอข้อมูล">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
     <span>ขอข้อมูล</span>
   </a>
-  <a class="mobile-mini-link" href="connect-status.html" title="สถานะ" aria-label="สถานะ">
+  <a class="mobile-mini-link" href="connect-status.html" data-requires-login title="สถานะ" aria-label="สถานะ">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span>สถานะ</span>
   </a>
@@ -2368,7 +2368,7 @@ body.exporting-dashboard [class*="stat-"] {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v3a5 5 0 0 1-10 0z"></path><path d="M5 7H3a3 3 0 0 0 3 3"></path><path d="M19 7h2a3 3 0 0 1-3 3"></path></svg>
       <span>HALL OF FAM</span>
     </a>
-    <a class="app-sidebar-link" href="actionreport.html" onclick="return navigateViaSidebar(event, 'actionreport.html')">
+    <a class="app-sidebar-link" href="actionreport.html" data-requires-login onclick="return navigateViaSidebar(event, 'actionreport.html')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
       <span>หน้ากรอกแบบฟอร์ม</span>
     </a>
@@ -5050,19 +5050,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Re-apply theme to sync sidebar switch state
   applyTheme(getPreferredTheme());
 
-  // Check auth
+  // Public page — no auth redirect
   const user = checkAuth();
-  if (user) {
-    const pages = Array.isArray(user.allowedPages) ? user.allowedPages : [];
-    if (!pages.includes('dashboard')) {
-      try { sessionStorage.setItem('CSD1_ACCESS_DENIED', '1'); } catch (_) {}
-      window.location.replace('index.html');
-      return;
-    }
-  } else {
-    window.location.replace('index.html');
-    return;
-  }
+  document.querySelectorAll('[data-requires-login]').forEach(el => {
+    el.style.display = user ? '' : 'none';
+  });
   deepSearchEnabled = hasDeepSearchSession(user);
   updateSearchModeUI();
 
