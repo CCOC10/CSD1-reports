@@ -143,7 +143,17 @@
     if (!(global.Intl && global.Intl.Segmenter)) return [token];
     try {
       const segmenter = new global.Intl.Segmenter('th', { granularity: 'word' });
-      return Array.from(segmenter.segment(token), item => item.segment).filter(Boolean);
+      const raw = Array.from(segmenter.segment(token), item => item.segment).filter(Boolean);
+      // Merge lone Thai consonants with the following segment — fixes cluster splits like ก+ระทำ→กระทำ
+      const merged = [];
+      for (let i = 0; i < raw.length; i++) {
+        if (/^[\u0E01-\u0E2E]$/.test(raw[i]) && i + 1 < raw.length) {
+          raw[i + 1] = raw[i] + raw[i + 1];
+        } else {
+          merged.push(raw[i]);
+        }
+      }
+      return merged;
     } catch (_) {
       return [token];
     }
@@ -265,6 +275,26 @@
   }
 
   function breakLongToken(font, size, token, maxWidth) {
+    // For Thai text, try breaking at word boundaries before character-level fallback
+    if (/[\u0E00-\u0E7F]/.test(token)) {
+      const words = segmentWordToken(token);
+      if (words.length > 1) {
+        const wordPieces = [];
+        let current = '';
+        words.forEach((word) => {
+          const candidate = current + word;
+          if (!current || measureText(font, size, candidate) <= maxWidth) {
+            current = candidate;
+          } else {
+            if (current) wordPieces.push(current);
+            current = word;
+          }
+        });
+        if (current) wordPieces.push(current);
+        if (wordPieces.length > 1) return wordPieces;
+      }
+    }
+    // Fallback: character-level breaking
     const chars = Array.from(String(token || ''));
     const pieces = [];
     let current = '';

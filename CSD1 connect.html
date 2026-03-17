@@ -334,6 +334,16 @@ body.mobile-loading-data .user-profile-wrap{
 .req{color:var(--danger)!important;}
 .field-label .req{font-size:0.72rem;}
 .field-hint{font-size:0.7rem;color:var(--text-muted);margin-top:0.25rem;}
+.prev-doc-row{display:flex;align-items:stretch;gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.prev-doc-prefix{display:flex;align-items:center;padding:0 0.75rem;background:var(--surface2);color:var(--text-muted);font-size:0.88rem;white-space:nowrap;border-right:1px solid var(--border);user-select:none;}
+.prev-doc-num{flex:1;border:none!important;border-radius:0!important;text-align:left;padding-left:0.75rem;font-size:1.05rem;font-weight:700;letter-spacing:0.1em;min-width:0;outline:none!important;background:transparent;}
+.prev-doc-num:focus{background:var(--surface2);}
+.prev-doc-status{font-size:0.72rem;margin-top:0.3rem;min-height:1.2em;}
+.prev-doc-status.found{color:#22c55e;}
+.prev-doc-status.notfound{color:#f59e0b;}
+.prev-doc-status.loading{color:var(--text-muted);}
+.locked-banner{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.25);border-radius:var(--radius-sm);font-size:0.78rem;color:#ca8a04;font-weight:600;margin-bottom:0.65rem;}
+[data-theme="dark"] .locked-banner{background:rgba(234,179,8,0.08);border-color:rgba(234,179,8,0.2);color:#fbbf24;}
 .case-combobox{position:relative;}
 .case-combo-input-wrap{position:relative;}
 .case-combo-input{
@@ -2148,6 +2158,8 @@ function freshState() {
     step:1, showExtraBanks:false,
     // step 1
     unit:'', commander:'', docNumber:'', caseDetail:'', casePresetKey:'', caseDetailCustom:'', caseSearchTerm:'',
+    investigationType:'no_warrant',
+    prevDocNumber:'', prevDocDate:'', _prevLocked:false,
     adminNoteTag:'', adminNoteText:'', requestHistoryStatus:'',
     // step 2
     type:'',
@@ -2297,6 +2309,7 @@ async function init() {
   }
   render();
   loadCommanderInfo(); // โหลดข้อมูลหัวหน้าหน่วยจาก Google Sheets เดียวกัน
+  preloadConnectDocIndex(); // โหลด doc index ไว้ใน cache (background)
 }
 
 async function handleReprintMode(requestId) {
@@ -2656,6 +2669,12 @@ function getRequestHistoryLabel() {
   return item ? item.label : '';
 }
 
+function getInvestigationTypeLabel() {
+  if (S.investigationType === 'with_warrant') return 'มีหมายจับ';
+  if (S.investigationType === 'no_case') return 'ตรวจสอบ';
+  return 'ไม่มีหมายจับ';
+}
+
 function step1Html() {
   const leader = S.unit ? (unitLeaders[S.unit] || null) : null;
   if (leader && leader.name && !S.commander) S.commander = leader.name;
@@ -2673,6 +2692,39 @@ function step1Html() {
 
   return `
   <div class="card">
+
+    <div class="field">
+      <label>อ้างถึงเรื่องเดิม <span class="req">*</span></label>
+      <div class="field-hint" style="margin-bottom:0.45rem">กรณีขอข้อมูลเพิ่มเติม บัญชีเดิม หรือเบอร์เดิม เพิ่มเติมห้วงเวลาใหม่</div>
+      <div class="pill-group">${requestHistoryPills}</div>
+    </div>
+
+    ${S.requestHistoryStatus === 'requested' ? `
+    <div class="field">
+      <label>เลขหนังสือเดิม <span class="req">*</span></label>
+      <div class="prev-doc-row">
+        <div class="prev-doc-prefix">ตช 0026.21/</div>
+        <input class="prev-doc-num" type="text" inputmode="numeric" maxlength="4" id="f_prevDocNumber"
+          placeholder="0000" value="${esc(S.prevDocNumber)}"
+          oninput="onPrevDocNumberInput(this.value)">
+      </div>
+      <div class="prev-doc-status ${S._prevDocStatus||''}" id="prevDocStatusMsg">${
+        S._prevDocStatus==='found'    ? '✓ พบเลขหนังสือในระบบ — วันที่ถูกเลือกอัตโนมัติ' :
+        S._prevDocStatus==='notfound' ? '⚠ ไม่พบเลขหนังสือนี้ในระบบ — กรุณาระบุวันที่' :
+        S._prevDocStatus==='loading'  ? 'กำลังค้นหา...' : ''
+      }</div>
+    </div>
+    <div class="field">
+      <label>วันที่ออกหมายเดิม <span class="req">*</span></label>
+      ${S._prevDocStatus === 'found'
+        ? `<div class="field-hint" style="font-size:0.88rem;color:var(--text);padding:0.55rem 0.75rem;background:var(--surface2);border-radius:10px;border:1px solid var(--border)">📅 ${thDate(S.prevDocDate)}</div>`
+        : `<input type="date" id="f_prevDocDate" value="${esc(S.prevDocDate)}" onchange="S.prevDocDate=this.value">`
+      }
+    </div>
+    ` : ''}
+
+    <div class="divider"></div>
+
     <div class="card-title"><span class="icon">👮</span> ข้อมูลชุดปฏิบัติการ</div>
 
     <div class="field">
@@ -2689,7 +2741,21 @@ function step1Html() {
     </div>
 
     <div class="field">
-      <label>ข้อหาที่ระบุในหมาย <span class="req">*</span></label>
+      <label>ประเภทการสืบสวน</label>
+      <div class="field-hint" style="margin-bottom:0.45rem">มีผลต่อคำนำในหน้าหมายทุกประเภท — ถ้าไม่เลือกจะใช้ค่าเริ่มต้น "ไม่มีหมายจับ"</div>
+      <div class="pill-group">
+        ${[
+          {key:'no_warrant', label:'🕵️ ไม่มีหมายจับ', color:'#3b82f6'},
+          {key:'with_warrant', label:'⚖️ มีหมายจับ', color:'#f59e0b'},
+          {key:'no_case', label:'🔍 ตรวจสอบ', color:'#64748b'},
+        ].map(item =>
+          `<div class="pill ${S.investigationType===item.key?'active':''}" data-val="${item.key}" style="--pc:${item.color}" onclick="S.investigationType='${item.key}';render()">${item.label}</div>`
+        ).join('')}
+      </div>
+    </div>
+
+    <div class="field">
+      <label>ข้อหาที่ระบุในหมาย</label>
       <div class="case-combobox ${casePresetComboOpen?'open':''}" id="casePresetCombobox">
         <div class="case-combo-input-wrap">
           <input class="case-combo-input" type="text" id="f_casePresetSearch" value="${esc(caseSearchTerm)}"
@@ -2731,11 +2797,6 @@ function step1Html() {
         maxlength="300" oninput="S.adminNoteText=this.value">${esc(S.adminNoteText)}</textarea>
     </div>
 
-    <div class="field">
-      <label>สถานะการขอข้อมูลเดิม <span class="req">*</span></label>
-      <div class="pill-group">${requestHistoryPills}</div>
-    </div>
-
     <div class="btn-row">
       <button class="btn btn-primary" onclick="goStep1()">ถัดไป →</button>
     </div>
@@ -2754,11 +2815,160 @@ async function goStep1() {
     S.caseDetail = preset ? preset.text : '';
   }
   if (!S.unit)       { shake('f_unit');       toast('กรุณาเลือก ชป.','err');           return; }
-  if (!selectedCaseKey) { shake('f_casePresetSearch'); toast('กรุณาเลือกฐานความผิด / ประเภทคดี','err'); return; }
-  if (!S.caseDetail) { shake(selectedCaseKey==='custom' ? 'f_caseDetailCustom' : 'f_casePresetSearch'); toast('กรุณากรอกรายละเอียดเคส','err'); return; }
   if (!S.adminNoteTag) { toast('กรุณาเลือกประเภทโน้ตสำหรับแอดมิน','err'); return; }
-  if (!S.requestHistoryStatus) { toast('กรุณาเลือกสถานะการขอข้อมูลเดิม','err'); return; }
+  if (!S.requestHistoryStatus) { toast('กรุณาเลือกว่าอ้างถึงเรื่องเดิมหรือไม่','err'); return; }
+  if (S.requestHistoryStatus === 'requested') {
+    if (!S.prevDocNumber || !/^\d+$/.test(S.prevDocNumber)) { shake('f_prevDocNumber'); toast('กรุณากรอกเลขหนังสือเดิม','err'); return; }
+    if (!S.prevDocDate) { toast('กรุณาเลือกวันที่ออกหมายเดิม','err'); return; }
+  }
   S.step=2; render();
+}
+
+/* ====================================================
+   DOC INDEX CACHE (sessionStorage, TTL 5 min)
+   ==================================================== */
+const _DOC_IDX_KEY = 'connect_doc_index';
+const _DOC_IDX_TTL = 5 * 60 * 1000;
+
+async function preloadConnectDocIndex() {
+  try {
+    const cached = CSD1Cache.get(_DOC_IDX_KEY);
+    if (cached && (Date.now() - cached.ts) < _DOC_IDX_TTL) return; // ยังสด
+    const data = await postConnectApi(buildAuthorizedApiPayload('getConnectDocIndex', {}));
+    if (data && data.status === 'success' && Array.isArray(data.items)) {
+      CSD1Cache.set(_DOC_IDX_KEY, data.items);
+    }
+  } catch(_) {}
+}
+
+function findDocInIndex(docNumber) {
+  const cached = CSD1Cache.get(_DOC_IDX_KEY);
+  if (!cached || !Array.isArray(cached.data)) return null;
+  const padded = String(docNumber).replace(/\D/g,'').padStart(4,'0');
+  return cached.data.find(item => item.docNum === padded) || null;
+}
+
+function _upsertDocIndexCache(item) {
+  try {
+    const cached = CSD1Cache.get(_DOC_IDX_KEY);
+    if (!cached || !Array.isArray(cached.data)) return;
+    const idx = cached.data.findIndex(x => x.docNum === item.docNum);
+    if (idx >= 0) cached.data[idx] = item; else cached.data.push(item);
+    CSD1Cache.set(_DOC_IDX_KEY, cached.data);
+  } catch(_) {}
+}
+
+/* ====================================================
+   PREV DOC LOOKUP
+   ==================================================== */
+let _prevDocLookupTimer = null;
+let _prevDocLookupVersion = 0;
+
+function _updatePrevDocStatusEl() {
+  const msg = document.getElementById('prevDocStatusMsg');
+  if (!msg) return;
+  msg.className = 'prev-doc-status' + (S._prevDocStatus ? ' '+S._prevDocStatus : '');
+  msg.textContent = S._prevDocStatus === 'found'    ? '✓ พบเลขหนังสือในระบบ — วันที่ถูกเลือกอัตโนมัติ' :
+                    S._prevDocStatus === 'notfound' ? '⚠ ไม่พบเลขหนังสือนี้ในระบบ — กรุณาระบุวันที่' :
+                    S._prevDocStatus === 'loading'  ? 'กำลังค้นหา...' : '';
+}
+
+function onPrevDocNumberInput(value) {
+  const digits = value.replace(/\D/g,'').slice(0,4);
+  if (digits === S.prevDocNumber && S._prevDocStatus === 'found') return;
+  S.prevDocNumber = digits;
+  clearTimeout(_prevDocLookupTimer);
+
+  if (!digits) {
+    S._prevDocStatus = ''; S.prevDocDate = ''; S._prevLocked = false;
+    _updatePrevDocStatusEl(); render(); return;
+  }
+
+  // Instant cache lookup
+  const cached = findDocInIndex(digits);
+  if (cached) {
+    S.prevDocDate = cached.submittedAt ? fmtDate(new Date(cached.submittedAt)) : '';
+    S._prevDocStatus = 'found';
+    applyPrevLockedState(cached);
+    _updatePrevDocStatusEl(); render(); return;
+  }
+
+  // Cache miss — API fallback with debounce
+  S._prevDocStatus = 'loading';
+  _updatePrevDocStatusEl();
+  _prevDocLookupVersion++;
+  const myVersion = _prevDocLookupVersion;
+  _prevDocLookupTimer = setTimeout(() => lookupPrevDocNumber(digits, myVersion), 600);
+}
+
+async function lookupPrevDocNumber(docNumber, version) {
+  try {
+    const data = await postConnectApi(buildAuthorizedApiPayload('lookupConnectDocNumber', { docNumber }));
+    if (version !== _prevDocLookupVersion) return;
+    if (data && data.status === 'success' && data.found) {
+      S.prevDocDate = data.submittedAt ? fmtDate(new Date(data.submittedAt)) : S.prevDocDate;
+      S._prevDocStatus = 'found';
+      if (data.requestId) {
+        try {
+          const raw = await postConnectApi(buildAuthorizedApiPayload('getConnectRequestRawState', { requestId: data.requestId }));
+          if (version !== _prevDocLookupVersion) return;
+          if (raw && raw.rawStateJson) {
+            const prev = JSON.parse(raw.rawStateJson);
+            applyPrevLockedState(prev);
+            // อัปเดต cache สำหรับการใช้งานครั้งต่อไป
+            _upsertDocIndexCache(Object.assign({ docNum: String(docNumber).padStart(4,'0'), requestId: data.requestId, submittedAt: data.submittedAt||'' }, prev));
+          }
+        } catch(_) {}
+      }
+    } else {
+      S._prevDocStatus = 'notfound'; S._prevLocked = false;
+    }
+  } catch(_) {
+    if (version !== _prevDocLookupVersion) return;
+    S._prevDocStatus = 'notfound'; S._prevLocked = false;
+  }
+  render();
+}
+
+function applyPrevLockedState(prev) {
+  if (!prev) return;
+  // ล็อก type
+  S.type = prev.type || S.type;
+  // ล็อก phone fields
+  S.phoneNetwork  = prev.phoneNetwork  || '';
+  S.aisSubType    = prev.aisSubType    || '';
+  S.phoneSubType  = prev.phoneSubType  || '';
+  S.phoneImei     = prev.phoneImei     || '';
+  S.phoneNumbers  = Array.isArray(prev.phoneNumbers)  && prev.phoneNumbers.length  ? prev.phoneNumbers  : [''];
+  S.ipEntries     = Array.isArray(prev.ipEntries)     && prev.ipEntries.length     ? prev.ipEntries     : [{ip:'',date:'',time:'',port:''}];
+  // ล็อก bank fields
+  S.bankCode          = prev.bankCode          || '';
+  S.bankSubType       = prev.bankSubType       || '';
+  S.statementAccType  = prev.statementAccType  || '';
+  S.bankAccounts      = Array.isArray(prev.bankAccounts)     && prev.bankAccounts.length     ? prev.bankAccounts     : [''];
+  S.bankAccountNames  = Array.isArray(prev.bankAccountNames) && prev.bankAccountNames.length ? prev.bankAccountNames : [''];
+  S.bankPromptPay     = prev.bankPromptPay     || '';
+  S.bankAccountName   = prev.bankAccountName   || '';
+  S.atmAccountNo      = prev.atmAccountNo      || '';
+  S.atmDate           = prev.atmDate           || '';
+  S.atmTime           = prev.atmTime           || '';
+  S.atmLocation       = prev.atmLocation       || '';
+  S.atmTerminalId     = prev.atmTerminalId     || '';
+  S.xxxAmount         = prev.xxxAmount         || '';
+  S.xxxDate           = prev.xxxDate           || '';
+  S.xxxTime           = prev.xxxTime           || '';
+  S.xxxAccNo          = prev.xxxAccNo          || '';
+  S.xxxRef            = prev.xxxRef            || '';
+  S.xxxRole           = prev.xxxRole           || '';
+  // ล็อก truemoney fields
+  S.trueId   = prev.trueId   || '';
+  S.trueName = prev.trueName || '';
+  // ล้างห้วงวันที่ทั้งหมด — บังคับผู้ใช้กรอกใหม่
+  S.bankDateStart  = ''; S.bankDateEnd  = '';
+  S.phoneDateStart = ''; S.phoneDateEnd = '';
+  S.trueDateStart  = ''; S.trueDateEnd  = '';
+  // mark locked
+  S._prevLocked = true;
 }
 
 /* ====================================================
@@ -2773,13 +2983,13 @@ function step2Html() {
   ];
   return `
   <div class="section-title">ประเภทข้อมูลที่ขอ</div>
-  <div class="section-subtitle">เลือก 1 ประเภท</div>
+  <div class="section-subtitle">${S._prevLocked ? '🔒 ถูกล็อกตามคำขอเดิม' : 'เลือก 1 ประเภท'}</div>
   <div class="card">
     <div class="pill-group">
       ${types.map(t=>`
-      <div class="pill pill-type ${S.type===t.val?'active':''} ${t.disabled?'disabled':''}" data-val="${t.val}"
-        ${t.disabled?'':'onclick="S.type=\''+t.val+'\';render()"'}
-        style="${t.disabled?'opacity:0.45;pointer-events:none;filter:grayscale(0.5)':''}">
+      <div class="pill pill-type ${S.type===t.val?'active':''} ${t.disabled||S._prevLocked?'disabled':''}" data-val="${t.val}"
+        ${(t.disabled||S._prevLocked)?'':'onclick="S.type=\''+t.val+'\';render()"'}
+        style="${(t.disabled||S._prevLocked)?'opacity:0.45;pointer-events:none;filter:grayscale(0.5)':''}">
         <span class="pt-label">${t.label}</span>
         <span class="pt-desc">${t.disabled?'อยู่ระหว่างปรับปรุง':t.desc}</span>
       </div>`).join('')}
@@ -2810,7 +3020,110 @@ function step3Html() {
 }
 
 /* ---------- PHONE ---------- */
+function phoneHtmlLocked() {
+  const nets = [
+    {val:'AIS',  label:'AIS',         color:'#86efac'},
+    {val:'TRUE', label:'TRUE',        color:'#d40000'},
+    {val:'DTAC', label:'DTAC',        color:'#0078c8'},
+    {val:'CAT',  label:'CAT',         color:'#7b2d8b'},
+    {val:'FINN', label:'FINN MOBILE', color:'#ff6b00'},
+  ];
+  const isAIS = S.phoneNetwork === 'AIS';
+  const isTrueDtac = S.phoneNetwork === 'TRUE' || S.phoneNetwork === 'DTAC';
+  const isIP = isAIS && S.aisSubType === 'IP';
+  const isImeiLookup = isTrueDtac && S.phoneSubType === 'IMEI';
+
+  let html = `
+  <div class="section-title">📱 ขอข้อมูลโทรศัพท์</div>
+  <div class="section-subtitle">🔒 ถูกล็อกตามคำขอเดิม — แก้ไขได้เฉพาะห้วงวันที่</div>
+  <div class="card">
+    <div class="locked-banner">🔒 ข้อมูลถูกล็อกตามคำขอเดิม — แก้ไขได้เฉพาะห้วงวันที่</div>
+    <div class="field">
+      <div class="field-label">เครือข่าย</div>
+      <div class="pill-group" style="pointer-events:none">
+        ${nets.map(n=>`<div class="pill ${S.phoneNetwork===n.val?'active':''}" data-val="${n.val}"
+          style="--pc:${n.color}${S.phoneNetwork!==n.val?';opacity:0.35':''}">${n.label}</div>`).join('')}
+      </div>
+    </div>`;
+
+  if (isAIS) {
+    html += `<div class="field" style="margin-top:0.65rem">
+      <div class="field-label">ประเภทข้อมูล AIS</div>
+      <div class="pill-group" style="pointer-events:none">
+        <div class="pill ${S.aisSubType==='CDR' ?'active':''}" data-val="CDR"  style="--pc:#e31837${S.aisSubType!=='CDR' ?';opacity:0.35':''}">CDR</div>
+        <div class="pill ${S.aisSubType==='BASE'?'active':''}" data-val="BASE" style="--pc:#e31837${S.aisSubType!=='BASE'?';opacity:0.35':''}">เบส</div>
+        <div class="pill ${S.aisSubType==='IP'  ?'active':''}" data-val="IP"   style="--pc:#0078c8${S.aisSubType!=='IP'  ?';opacity:0.35':''}">IP Address</div>
+      </div>
+    </div>`;
+  }
+
+  if (isTrueDtac) {
+    html += `<div class="field" style="margin-top:0.65rem">
+      <div class="field-label">ประเภทข้อมูล</div>
+      <div class="pill-group" style="pointer-events:none">
+        <div class="pill ${S.phoneSubType==='CDR' ?'active':''}" data-val="CDR"  style="--pc:${S.phoneNetwork==='TRUE'?'#d40000':'#0078c8'}${S.phoneSubType!=='CDR' ?';opacity:0.35':''}">CDR</div>
+        <div class="pill ${S.phoneSubType==='IMEI'?'active':''}" data-val="IMEI" style="--pc:#f97316${S.phoneSubType!=='IMEI'?';opacity:0.35':''}">ลอย IMEI</div>
+      </div>
+    </div>`;
+  }
+
+  html += `<div class="divider"></div>`;
+
+  if (isIP) {
+    html += `<div class="field"><div class="field-label">IP Address</div>`;
+    S.ipEntries.forEach((e,i) => {
+      html += `<div class="ip-block">
+        <div class="ip-block-header"><span>IP #${i+1}</span></div>
+        <div class="field"><div class="field-label" style="font-size:0.72rem">IP Address</div>
+          <input type="text" value="${esc(e.ip)}" readonly></div>
+        <div class="field"><div class="field-label" style="font-size:0.72rem">วัน-เวลา</div>
+          <div class="ip-sub-grid">
+            <input type="date" value="${esc(e.date||'')}" readonly>
+            <input type="text" value="${esc(e.time)}" readonly>
+          </div></div>
+        ${e.port?`<div class="field"><div class="field-label" style="font-size:0.72rem">Source Port</div><input type="text" value="${esc(e.port)}" readonly></div>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  } else if (isImeiLookup) {
+    html += `<div class="field"><div class="field-label">หมายเลข IMEI</div>
+      <input type="text" value="${esc(S.phoneImei)}" readonly></div>`;
+  } else {
+    html += `<div class="field"><div class="field-label">เบอร์โทรที่เกี่ยวข้อง</div>
+      <div class="multi-entry">`;
+    S.phoneNumbers.filter(Boolean).forEach(n => {
+      html += `<div class="multi-entry-row"><input type="text" value="${esc(n)}" readonly></div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  if (!isImeiLookup) {
+    html += `<div class="divider"></div>
+    <div class="field">
+      <div class="field-label">ห้วงวันที่ตรวจสอบ <span class="req">*</span></div>
+      <div class="date-grid">
+        <div><div class="field-label" style="font-size:0.7rem">วันเริ่มต้น</div>
+          <input type="date" id="f_phoneDateStart" value="${S.phoneDateStart}" onchange="onPhoneDate('start',this.value)">
+        </div>
+        <div><div class="field-label" style="font-size:0.7rem">ถึงวันที่</div>
+          <input type="date" id="f_phoneDateEnd" value="${S.phoneDateEnd}" onchange="onPhoneDate('end',this.value)">
+        </div>
+      </div>
+      <div class="date-info" style="color:var(--danger)">⚠️ กรุณาระบุห้วงวันที่ใหม่ที่ต้องการขอ</div>
+      <div class="date-info">ตรวจสอบได้สูงสุด 90 วันย้อนหลัง</div>
+    </div>`;
+  }
+
+  html += `</div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="S.step=2;render()">← ย้อนกลับ</button>
+    <button class="btn btn-primary" onclick="validatePhone()">ถัดไป →</button>
+  </div>`;
+  return html;
+}
+
 function phoneHtml() {
+  if (S._prevLocked) return phoneHtmlLocked();
   const nets = [
     {val:'AIS',  label:'AIS',         color:'#86efac'},
     {val:'TRUE', label:'TRUE',        color:'#d40000'},
@@ -2983,6 +3296,14 @@ function onPhoneDate(which, v) {
 }
 
 function validatePhone() {
+  if (S._prevLocked) {
+    const isImeiLookup = (S.phoneNetwork==='TRUE'||S.phoneNetwork==='DTAC') && S.phoneSubType==='IMEI';
+    if (!isImeiLookup) {
+      if (!S.phoneDateStart) { shake('f_phoneDateStart'); toast('กรุณาระบุวันเริ่มต้นห้วงวันที่','err'); return; }
+      if (!S.phoneDateEnd)   { shake('f_phoneDateEnd');   toast('กรุณาระบุวันสิ้นสุดห้วงวันที่','err');   return; }
+    }
+    openReviewStep(); return;
+  }
   if (!S.phoneNetwork) { toast('กรุณาเลือกเครือข่าย','err'); return; }
   const isAIS = S.phoneNetwork==='AIS';
   const isTrueDtac = S.phoneNetwork==='TRUE' || S.phoneNetwork==='DTAC';
@@ -3017,7 +3338,121 @@ function validatePhone() {
 }
 
 /* ---------- BANK ---------- */
+function bankHtmlLocked() {
+  const isKKTB = S.bankCode==='KBANK'||S.bankCode==='KTB';
+  const subType = isKKTB ? S.bankSubType : 'statement';
+  const isExtraBank = BANKS_EXTRA.some(b=>b.code===S.bankCode);
+  const banksToShow = [...BANKS_PRIMARY, ...(isExtraBank?BANKS_EXTRA.filter(b=>b.code===S.bankCode):[])];
+
+  const lockedBankPill = b => `<div class="pill ${S.bankCode===b.code?'active':''}" data-val="${b.code}"
+    style="--pc:${b.color};display:flex;flex-direction:column;align-items:center;padding:0.5rem 0.75rem;min-width:52px${S.bankCode!==b.code?';opacity:0.35':''}">
+    <span style="font-weight:800;font-size:0.75rem">${b.code}</span>
+    <span style="font-size:0.6rem;font-weight:400;opacity:0.8">${b.name}</span>
+  </div>`;
+
+  let html = `
+  <div class="section-title">🏦 ขอข้อมูลธนาคาร</div>
+  <div class="section-subtitle">🔒 ถูกล็อกตามคำขอเดิม — แก้ไขได้เฉพาะห้วงวันที่</div>
+  <div class="card">
+    <div class="locked-banner">🔒 ข้อมูลถูกล็อกตามคำขอเดิม — แก้ไขได้เฉพาะห้วงวันที่</div>
+    <div class="field">
+      <div class="field-label">ธนาคาร</div>
+      <div class="pill-group" style="pointer-events:none">
+        ${banksToShow.map(lockedBankPill).join('')}
+      </div>
+    </div>`;
+
+  if (S.bankCode) {
+    if (isKKTB) {
+      html += `<div class="field" style="margin-top:0.65rem">
+        <div class="field-label">ประเภทข้อมูล</div>
+        <div class="pill-group" style="pointer-events:none">
+          <div class="pill ${S.bankSubType==='statement'?'active':''}" data-val="statement"
+            style="--pc:#22c55e${S.bankSubType!=='statement'?';opacity:0.35':''}">📄 Statement</div>
+          <div class="pill ${S.bankSubType==='atm'?'active':''}" data-val="atm"
+            style="--pc:#f59e0b${S.bankSubType!=='atm'?';opacity:0.35':''}">🏧 ภาพหน้าตู้ ATM</div>
+        </div>
+      </div>`;
+    }
+
+    if (subType === 'atm') {
+      html += `<div class="divider"></div>
+      <div class="field"><div class="field-label">เลขบัญชีที่ใช้ทำรายการ ATM</div>
+        <input type="text" value="${esc(S.atmAccountNo)}" readonly></div>
+      <div class="field"><div class="field-label">ชื่อบัญชีธนาคาร</div>
+        <input type="text" value="${esc(S.bankAccountName)}" readonly></div>
+      <div class="field"><div class="field-label">วัน-เวลาที่ทำรายการ (ที่ตู้)</div>
+        <div class="date-grid">
+          <input type="date" value="${esc(S.atmDate)}" readonly>
+          <input type="text" value="${esc(S.atmTime)}" readonly>
+        </div></div>
+      <div class="field"><div class="field-label">สถานที่ตั้งตู้ ATM</div>
+        <input type="text" value="${esc(S.atmLocation)}" readonly></div>
+      ${S.atmTerminalId?`<div class="field"><div class="field-label">Terminal ID</div><input type="text" value="${esc(S.atmTerminalId)}" readonly></div>`:''}`;
+    } else if (subType === 'statement') {
+      if (isKKTB) {
+        html += `<div class="field" style="margin-top:0.65rem">
+          <div class="field-label">ประเภทบัญชี</div>
+          <div class="pill-group" style="pointer-events:none">
+            <div class="pill ${S.statementAccType==='fullaccount'?'active':''}" data-val="fullaccount"
+              style="--pc:#22c55e${S.statementAccType!=='fullaccount'?';opacity:0.35':''}">เลขบัญชีเต็ม</div>
+            <div class="pill ${S.statementAccType==='promptpay'?'active':''}" data-val="promptpay"
+              style="--pc:#3b82f6${S.statementAccType!=='promptpay'?';opacity:0.35':''}">พร้อมเพย์</div>
+            <div class="pill ${S.statementAccType==='xxx'?'active':''}" data-val="xxx"
+              style="--pc:#ef4444${S.statementAccType!=='xxx'?';opacity:0.35':''}">ข้อมูลติด XXX</div>
+          </div>
+        </div>`;
+      }
+      const accType = isKKTB ? S.statementAccType : 'fullaccount';
+      html += `<div class="divider"></div>`;
+      if (accType==='fullaccount') {
+        S.bankAccounts.forEach((a,i) => {
+          html += `<div class="field"><div class="field-label">บัญชี #${i+1}</div>
+            <input type="text" value="${esc(a)}" readonly style="margin-bottom:0.4rem">
+            <input type="text" value="${esc(S.bankAccountNames[i]||'')}" readonly placeholder="ชื่อบัญชี"></div>`;
+        });
+      } else if (accType==='promptpay') {
+        html += `<div class="field"><div class="field-label">เลขบัตร ปชช. หรือเบอร์พร้อมเพย์</div>
+          <input type="text" value="${esc(S.bankPromptPay)}" readonly></div>
+          <div class="field"><div class="field-label">ชื่อบัญชีพร้อมเพย์</div>
+          <input type="text" value="${esc(S.bankAccountName)}" readonly></div>`;
+      } else if (accType==='xxx') {
+        html += `<div class="field" style="margin-top:0.65rem">
+          <div class="field-label">ธนาคารที่ขอเป็น</div>
+          <div class="pill-group" style="pointer-events:none">
+            <div class="pill ${S.xxxRole==='receiver'?'active':''}" data-val="receiver"
+              style="--pc:#3b82f6${S.xxxRole!=='receiver'?';opacity:0.35':''}">📥 ผู้รับเงิน</div>
+            <div class="pill ${S.xxxRole==='sender'?'active':''}" data-val="sender"
+              style="--pc:#f59e0b${S.xxxRole!=='sender'?';opacity:0.35':''}">📤 ผู้โอนเงิน</div>
+          </div>
+        </div>
+        <div class="field"><div class="field-label">ยอดเงินที่โอน (ตามสลิป)</div>
+          <input type="text" value="${esc(S.xxxAmount)}" readonly></div>
+        <div class="field"><div class="field-label">วัน-เวลาที่ทำรายการ (ตามสลิป)</div>
+          <div class="date-grid">
+            <input type="date" value="${esc(S.xxxDate)}" readonly>
+            <input type="time" value="${esc(S.xxxTime)}" readonly>
+          </div></div>
+        <div class="field"><div class="field-label">เลขบัญชี</div>
+          <input type="text" value="${esc(S.xxxAccNo)}" readonly></div>
+        <div class="field"><div class="field-label">ชื่อบัญชี</div>
+          <input type="text" value="${esc(S.bankAccountName)}" readonly></div>
+        ${S.xxxRef?`<div class="field"><div class="field-label">รหัสธุรกรรม / Ref.</div><input type="text" value="${esc(S.xxxRef)}" readonly></div>`:''}`;
+      }
+    }
+  }
+
+  html += `${bankDateHtml()}
+  </div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="S.step=2;render()">← ย้อนกลับ</button>
+    <button class="btn btn-primary" onclick="validateBank()">ถัดไป →</button>
+  </div>`;
+  return html;
+}
+
 function bankHtml() {
+  if (S._prevLocked) return bankHtmlLocked();
   const isKKTB = S.bankCode==='KBANK'||S.bankCode==='KTB';
   if (isKKTB && !S.bankSubType) S.bankSubType='statement';
   if (isKKTB && S.bankSubType==='statement' && !S.statementAccType) S.statementAccType='fullaccount';
@@ -3095,9 +3530,13 @@ function bankPillHtml(b) {
 }
 
 function bankDateHtml() {
+  const req = S._prevLocked ? ` <span class="req">*</span>` : '';
+  const hint = S._prevLocked
+    ? `<div class="date-info" style="color:var(--danger)">⚠️ กรุณาระบุห้วงวันที่ใหม่ที่ต้องการขอ</div>`
+    : `<div class="date-info">📌 หากไม่ระบุ ระบบจะกำหนดย้อนหลัง 6 เดือน</div>`;
   return `<div class="divider"></div>
   <div class="field">
-    <div class="field-label">ห้วงวันที่ตรวจสอบ</div>
+    <div class="field-label">ห้วงวันที่ตรวจสอบ${req}</div>
     <div class="date-grid">
       <div><div class="field-label" style="font-size:0.7rem">วันเริ่มต้น</div>
         <input type="date" id="f_bankDateStart" value="${S.bankDateStart}" oninput="S.bankDateStart=this.value">
@@ -3106,7 +3545,7 @@ function bankDateHtml() {
         <input type="date" id="f_bankDateEnd" value="${S.bankDateEnd}" oninput="S.bankDateEnd=this.value">
       </div>
     </div>
-    <div class="date-info">📌 หากไม่ระบุ ระบบจะกำหนดย้อนหลัง 6 เดือน</div>
+    ${hint}
   </div>`;
 }
 
@@ -3260,6 +3699,11 @@ function addBankAcc() { if(S.bankAccounts.length<4){S.bankAccounts.push('');S.ba
 function removeBankAcc(i) { S.bankAccounts.splice(i,1);S.bankAccountNames.splice(i,1);render(); }
 
 function validateBank() {
+  if (S._prevLocked) {
+    if (!S.bankDateStart) { shake('f_bankDateStart'); toast('กรุณาระบุวันเริ่มต้นห้วงวันที่','err'); return; }
+    if (!S.bankDateEnd)   { shake('f_bankDateEnd');   toast('กรุณาระบุวันสิ้นสุดห้วงวันที่','err');   return; }
+    openReviewStep(); return;
+  }
   if (!S.bankCode) { toast('กรุณาเลือกธนาคาร','err'); return; }
   const isKKTB = S.bankCode==='KBANK'||S.bankCode==='KTB';
   if (isKKTB && !S.bankSubType) { toast('กรุณาเลือกประเภทข้อมูล','err'); return; }
@@ -3311,6 +3755,39 @@ function validateBank() {
 
 /* ---------- TRUE MONEY ---------- */
 function trueMoneyHtml() {
+  if (S._prevLocked) {
+    return `
+  <div class="section-title">🟠 ขอข้อมูล True Money</div>
+  <div class="section-subtitle">🔒 ถูกล็อกตามคำขอเดิม — แก้ไขได้เฉพาะห้วงวันที่</div>
+  <div class="card">
+    <div class="locked-banner">🔒 ข้อมูลถูกล็อกตามคำขอเดิม — แก้ไขได้เฉพาะห้วงวันที่</div>
+    <div class="field">
+      <div class="field-label">เบอร์ / บัตร ปชช.</div>
+      <input type="text" value="${esc(S.trueId)}" readonly>
+    </div>
+    <div class="field">
+      <div class="field-label">ชื่อบัญชี True Money</div>
+      <input type="text" value="${esc(S.trueName)}" readonly>
+    </div>
+    <div class="divider"></div>
+    <div class="field">
+      <div class="field-label">ห้วงวันที่ตรวจสอบ <span class="req">*</span></div>
+      <div class="date-grid">
+        <div><div class="field-label" style="font-size:0.7rem">วันเริ่มต้น</div>
+          <input type="date" id="f_trueDateStart" value="${S.trueDateStart}" oninput="S.trueDateStart=this.value">
+        </div>
+        <div><div class="field-label" style="font-size:0.7rem">ถึงวันที่</div>
+          <input type="date" id="f_trueDateEnd" value="${S.trueDateEnd}" oninput="S.trueDateEnd=this.value">
+        </div>
+      </div>
+      <div class="date-info" style="color:var(--danger)">⚠️ กรุณาระบุห้วงวันที่ใหม่ที่ต้องการขอ</div>
+    </div>
+  </div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="S.step=2;render()">← ย้อนกลับ</button>
+    <button class="btn btn-primary" onclick="validateTrueMoney()">ถัดไป →</button>
+  </div>`;
+  }
   return `
   <div class="section-title">🟠 ขอข้อมูล True Money</div>
   <div class="section-subtitle">กรอกข้อมูลผู้ถือบัญชี True Money Wallet</div>
@@ -3347,13 +3824,19 @@ function trueMoneyHtml() {
 }
 
 function validateTrueMoney() {
-  S.trueId   = sanitizePhoneOrCitizenId(gv('f_trueId'));
-  S.trueName = gv('f_trueName');
-  if (!S.trueId)   { shake('f_trueId');   toast('กรุณากรอกเบอร์หรือเลขบัตร ปชช.','err'); return; }
-  if (!/^\d{10}$|^\d{13}$/.test(S.trueId)) { shake('f_trueId'); toast('ต้องเป็นเลข 10 หรือ 13 หลัก','err'); return; }
-  if (!S.trueName) { shake('f_trueName'); toast('กรุณากรอกชื่อบัญชี','err'); return; }
-  if (!S.trueDateEnd)   { S.trueDateEnd=fmtDate(new Date()); }
-  if (!S.trueDateStart) { const d=new Date(S.trueDateEnd); d.setMonth(d.getMonth()-6); S.trueDateStart=fmtDate(d); }
+  if (!S._prevLocked) {
+    S.trueId   = sanitizePhoneOrCitizenId(gv('f_trueId'));
+    S.trueName = gv('f_trueName');
+    if (!S.trueId)   { shake('f_trueId');   toast('กรุณากรอกเบอร์หรือเลขบัตร ปชช.','err'); return; }
+    if (!/^\d{10}$|^\d{13}$/.test(S.trueId)) { shake('f_trueId'); toast('ต้องเป็นเลข 10 หรือ 13 หลัก','err'); return; }
+    if (!S.trueName) { shake('f_trueName'); toast('กรุณากรอกชื่อบัญชี','err'); return; }
+    // auto-fill dates only when NOT locked
+    if (!S.trueDateEnd)   { S.trueDateEnd=fmtDate(new Date()); }
+    if (!S.trueDateStart) { const d=new Date(S.trueDateEnd); d.setMonth(d.getMonth()-6); S.trueDateStart=fmtDate(d); }
+  } else {
+    if (!S.trueDateStart) { shake('f_trueDateStart'); toast('กรุณาระบุวันเริ่มต้นห้วงวันที่','err'); return; }
+    if (!S.trueDateEnd)   { shake('f_trueDateEnd');   toast('กรุณาระบุวันสิ้นสุดห้วงวันที่','err');   return; }
+  }
   openReviewStep();
 }
 
@@ -3518,9 +4001,12 @@ function reviewHtml() {
     <div class="review-row"><span class="review-label">ชป.</span><span class="review-value text-accent">${esc(S.unit)}</span></div>
     <div class="review-row"><span class="review-label">หัวหน้า ชป.</span><span class="review-value">${esc(S.commander)}</span></div>
     <div class="review-row"><span class="review-label">เลขหนังสือส่ง</span><span class="review-value">${esc(getDocNumberText())}</span></div>
-    <div class="review-row"><span class="review-label">รายละเอียดเคส</span><span class="review-value">${esc(S.caseDetail)}</span></div>
+    <div class="review-row"><span class="review-label">รายละเอียดเคส</span><span class="review-value">${esc(S.caseDetail || '—')}</span></div>
+    <div class="review-row"><span class="review-label">ประเภทการสืบสวน</span><span class="review-value">${esc(getInvestigationTypeLabel())}</span></div>
     <div class="review-row"><span class="review-label">โน้ตแอดมิน</span><span class="review-value">${esc(getAdminNoteTagLabel())}</span></div>
-    <div class="review-row"><span class="review-label">เคยขอข้อมูล</span><span class="review-value">${esc(getRequestHistoryLabel())}</span></div>
+    <div class="review-row"><span class="review-label">อ้างถึงเรื่องเดิม</span><span class="review-value">${esc(getRequestHistoryLabel())}</span></div>
+    ${S.requestHistoryStatus==='requested' && S.prevDocNumber ? `<div class="review-row"><span class="review-label">เลขหนังสือเดิม</span><span class="review-value">ที่ ตช 0026.21/${esc(S.prevDocNumber)}</span></div>` : ''}
+    ${S.requestHistoryStatus==='requested' && S.prevDocDate ? `<div class="review-row"><span class="review-label">วันที่เดิม</span><span class="review-value">${thDate(S.prevDocDate)}</span></div>` : ''}
     ${S.adminNoteText?`<div class="review-row"><span class="review-label">หมายเหตุเพิ่มเติม</span><span class="review-value">${esc(S.adminNoteText)}</span></div>`:''}
     <div class="divider"></div>
     <div class="review-sec-title">ข้อมูลที่ขอ — ${typeLabel}</div>
@@ -3951,6 +4437,9 @@ function buildCompactConnectRawStateForSubmit() {
     casePresetKey: S.casePresetKey,
     caseDetailCustom: S.caseDetailCustom,
     caseSearchTerm: S.caseSearchTerm,
+    investigationType: S.investigationType,
+    prevDocNumber: S.prevDocNumber,
+    prevDocDate: S.prevDocDate,
     adminNoteTag: S.adminNoteTag,
     adminNoteText: S.adminNoteText,
     requestHistoryStatus: S.requestHistoryStatus,
@@ -4015,6 +4504,9 @@ function buildConnectRequestPayload() {
     caseDetail: S.caseDetail,
     caseDetailCustom: S.caseDetailCustom,
     caseSearchTerm: S.caseSearchTerm,
+    investigationType: S.investigationType,
+    prevDocNumber: S.prevDocNumber,
+    prevDocDate: S.prevDocDate,
     adminNoteTag: S.adminNoteTag,
     adminNoteTagLabel: getAdminNoteTagLabel(),
     adminNoteText: S.adminNoteText,
@@ -4298,7 +4790,7 @@ function successHtml() {
       <div class="review-row"><span class="review-label">เลขหนังสือ</span><span class="review-value">${esc(getDocNumberText())}</span></div>
       <div class="review-row"><span class="review-label">ประเภทข้อมูล</span><span class="review-value">${typeLabel}</span></div>
       <div class="review-row"><span class="review-label">โน้ตแอดมิน</span><span class="review-value">${esc(getAdminNoteTagLabel())}</span></div>
-      <div class="review-row"><span class="review-label">เคยขอข้อมูล</span><span class="review-value">${esc(getRequestHistoryLabel())}</span></div>
+      <div class="review-row"><span class="review-label">อ้างถึงเรื่องเดิม</span><span class="review-value">${esc(getRequestHistoryLabel())}</span></div>
       ${S.adminNoteText?`<div class="review-row"><span class="review-label">หมายเหตุเพิ่มเติม</span><span class="review-value">${esc(S.adminNoteText)}</span></div>`:''}
       <div class="review-row"><span class="review-label">ชื่อไฟล์ PDF</span><span class="review-value">${esc(fileName)}</span></div>
       ${S.generatedWarnings && S.generatedWarnings.length ? `<div class="review-row"><span class="review-label">หมายเหตุระบบ</span><span class="review-value">${esc(S.generatedWarnings[0])}</span></div>` : ''}
@@ -5439,10 +5931,11 @@ function renderBankPrintDocument() {
   const periodText = formatThaiPeriod(S.bankDateStart, S.bankDateEnd, true);
   const accountLines = getBankAccountLines();
   const xxxRoleText = S.xxxRole==='receiver' ? 'รายการรับเงินเข้า' : 'รายการโอนเงินออก';
+  const openAccText = S.requestHistoryStatus === 'requested' ? 'เกี่ยวกับบัญชี' : 'สำเนาคำขอเปิดบัญชี';
   const requestItems = subType === 'atm'
     ? [
         {
-          text:`ขอข้อมูลสำเนาคำขอเปิดบัญชี และรายละเอียดเจ้าของบัญชีธนาคาร${meta.shortName} ดังต่อไปนี้`,
+          text:`ขอข้อมูล${openAccText} และรายละเอียดเจ้าของบัญชีธนาคาร${meta.shortName} ดังต่อไปนี้`,
           lines:accountLines,
         },
         {
@@ -5462,7 +5955,7 @@ function renderBankPrintDocument() {
       ]
     : [
         {
-          text:`ขอข้อมูลสำเนาคำขอเปิดบัญชี ธนาคาร${meta.shortName} ดังต่อไปนี้`,
+          text:`ขอข้อมูล${openAccText} ธนาคาร${meta.shortName} ดังต่อไปนี้`,
           lines:accountLines,
         },
         {
@@ -5704,7 +6197,51 @@ function getTemplateIssueDateFull() {
 function getTemplateCaseHeadline() {
   const headline = normalizeText(getCaseHeadline('คดีที่อยู่ระหว่างการสืบสวนสอบสวน'));
   if (!headline) return 'คดีที่อยู่ระหว่างการสืบสวนสอบสวน';
-  return `“${headline}”`;
+  return `\u201C${headline}\u201D`;
+}
+
+function getInvestigationPreamble() {
+  if (S.investigationType === 'with_warrant') {
+    return `${PRINT_COMPLAINANT} ได้รับมอบหมายจากผู้บังคับบัญชา ให้ทำการสืบสวนจับกุมผู้ต้องหาตามหมายจับ ในคดี ${getTemplateCaseHeadline()}`;
+  }
+  if (S.investigationType === 'no_case') {
+    return `${PRINT_COMPLAINANT} ได้รับมอบหมายจากผู้บังคับบัญชา ให้ทำการสืบสวนคดีอาญา`;
+  }
+  // default: no_warrant
+  return `${PRINT_COMPLAINANT} ได้รับมอบหมายจากผู้บังคับบัญชา ให้ทำการสืบสวนคดีอาญา ในคดี ${getTemplateCaseHeadline()}`;
+}
+
+function getInvestigationReferenceKeyword() {
+  if (S.type === 'bank' || S.type === 'truemoney') {
+    const label = S.type === 'truemoney' ? 'บัญชี True Money' : 'บัญชี';
+    return `มี${label}ที่เกี่ยวข้อง`;
+  }
+  if (S.type === 'tax') return 'มีข้อมูลภาษีที่เกี่ยวข้อง';
+  if (S.type === 'phone') {
+    const isImei = S.phoneSubType === 'IMEI' || (S.phoneNetwork === 'TRUE' && S.phoneSubType === 'IMEI') || (S.phoneNetwork === 'DTAC' && S.phoneSubType === 'IMEI');
+    const isIp = S.phoneNetwork === 'AIS' && S.aisSubType === 'IP';
+    if (isImei) return 'มีโทรศัพท์เคลื่อนที่ที่เกี่ยวข้อง';
+    if (isIp) return 'มีข้อมูล IP Address ที่เกี่ยวข้อง';
+    return 'มีหมายเลขโทรศัพท์ที่เกี่ยวข้อง';
+  }
+  return 'มีข้อมูลที่เกี่ยวข้อง';
+}
+
+function getInvestigationReferenceText() {
+  if (S.requestHistoryStatus !== 'requested' || !S.prevDocNumber) return '';
+  const docNum = String(S.prevDocNumber).padStart(4, '0');
+  const datePart = S.prevDocDate ? ` ลงวันที่ ${formatThaiLongDate(S.prevDocDate)}` : '';
+  const caseHeadline = getTemplateCaseHeadline();
+  let caseText;
+  if (S.investigationType === 'with_warrant') {
+    caseText = `กรณีทำการสืบสวนจับกุมผู้ต้องหาตามหมายจับ ในคดี ${caseHeadline}`;
+  } else if (S.investigationType === 'no_case') {
+    caseText = 'กรณีทำการสืบสวนคดีอาญา';
+  } else {
+    caseText = `กรณีทำการสืบสวนคดีอาญา ในคดี ${caseHeadline}`;
+  }
+  const keyword = getInvestigationReferenceKeyword();
+  return `หนังสือกองกำกับการ 1 กองบังคับการปราบปราม ที่ ตช 0026.21/${docNum}${datePart} ${caseText} ซึ่งจากการสืบสวนพบว่า ${keyword} และต้องการพิสูจน์การกระทำความผิด เพิ่มเติมดังนี้`;
 }
 
 function buildCommonClosingParagraphs(options = {}) {
@@ -5728,7 +6265,15 @@ function buildTemplateBasePayload(options) {
       lines:recipientLines,
     });
   }
-  if (normalizeText(options.reasonText)) {
+  const refText = getInvestigationReferenceText();
+  if (refText) {
+    flowBlocks.push({
+      type:'labelParagraph',
+      labelLines:['อ้างถึง'],
+      text:refText,
+      firstLineIndent:0,
+    });
+  } else if (normalizeText(options.reasonText)) {
     flowBlocks.push({
       type:'labelParagraph',
       labelLines:getPrintLabelLines(options.reasonLabelLines, ['ด้วยเหตุ']),
@@ -5780,10 +6325,11 @@ function buildBankTemplatePdfPayload() {
   const periodText = formatThaiPeriod(S.bankDateStart, S.bankDateEnd, true);
   const accountLines = getTemplateBankAccountLines().map(text => ({ text, bold:true }));
   const xxxRoleText = S.xxxRole==='receiver' ? 'รายการรับเงินเข้า' : 'รายการโอนเงินออก';
+  const openAccText = S.requestHistoryStatus === 'requested' ? 'เกี่ยวกับบัญชี' : 'สำเนาคำขอเปิดบัญชี';
   const requestItems = subType === 'atm'
     ? [
         {
-          text:`ขอข้อมูลสำเนาคำขอเปิดบัญชี และรายละเอียดเจ้าของบัญชีธนาคาร${meta.shortName} ดังต่อไปนี้`,
+          text:`ขอข้อมูล${openAccText} และรายละเอียดเจ้าของบัญชีธนาคาร${meta.shortName} ดังต่อไปนี้`,
           lines:accountLines,
         },
         {
@@ -5803,7 +6349,7 @@ function buildBankTemplatePdfPayload() {
       ]
     : [
         {
-          text:`ขอข้อมูลสำเนาคำขอเปิดบัญชี ธนาคาร${meta.shortName} ดังต่อไปนี้`,
+          text:`ขอข้อมูล${openAccText} ธนาคาร${meta.shortName} ดังต่อไปนี้`,
           lines:accountLines,
         },
         {
@@ -5824,7 +6370,7 @@ function buildBankTemplatePdfPayload() {
     typeConfigUrl:'FORM connect/template-config/bank-general.json',
     recipientName:meta.recipient,
     recipientAddress:meta.address,
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()} ต่อมาจากการสืบสวนเชื่อได้ว่ามีการทำธุรกรรมทางการเงินที่เกี่ยวข้องกับบัญชีธนาคาร${meta.shortName} จึงมีความจำเป็นขอตรวจสอบข้อมูล ดังรายละเอียดต่อไปนี้`,
+    reasonText:`${getInvestigationPreamble()} ต่อมาจากการสืบสวนเชื่อได้ว่ามีการทำธุรกรรมทางการเงินที่เกี่ยวข้องกับบัญชีธนาคาร${meta.shortName} จึงมีความจำเป็นขอตรวจสอบข้อมูล ดังรายละเอียดต่อไปนี้`,
     blocks:[
       { type:'list', items:requestItems },
     ],
@@ -5844,7 +6390,7 @@ function buildPhoneTemplatePdfPayload() {
   return buildTemplateBasePayload({
     recipientName:meta.recipient,
     recipientAddress:'',
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()} จากการสืบสวนทราบว่าผู้มีส่วนเกี่ยวข้องในคดีได้มีการใช้งานหมายเลขโทรศัพท์ ดังต่อไปนี้`,
+    reasonText:`${getInvestigationPreamble()} จากการสืบสวนทราบว่าผู้มีส่วนเกี่ยวข้องในคดีได้มีการใช้งานหมายเลขโทรศัพท์ ดังต่อไปนี้`,
     blocks:[
       {
         type:'lines',
@@ -5875,7 +6421,7 @@ function buildBaseTemplatePdfPayload() {
   return buildTemplateBasePayload({
     recipientName:meta.recipient.replace('(มหาชน)', '').trim(),
     recipientAddress:'',
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()} จากการสืบสวนทราบว่าผู้ต้องหา หรือผู้มีส่วนเกี่ยวข้องในคดี ได้มีการใช้งานโทรศัพท์ ดังต่อไปนี้`,
+    reasonText:`${getInvestigationPreamble()} จากการสืบสวนทราบว่าผู้ต้องหา หรือผู้มีส่วนเกี่ยวข้องในคดี ได้มีการใช้งานโทรศัพท์ ดังต่อไปนี้`,
     blocks:[
       {
         type:'lines',
@@ -5897,7 +6443,7 @@ function buildImeiTemplatePdfPayload() {
   return buildTemplateBasePayload({
     recipientName:meta.recipient,
     recipientAddress:'',
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()} จากการสืบสวนทราบว่ามีโทรศัพท์เคลื่อนที่ที่เกี่ยวข้องกับคดี ดังต่อไปนี้`,
+    reasonText:`${getInvestigationPreamble()} จากการสืบสวนทราบว่ามีโทรศัพท์เคลื่อนที่ที่เกี่ยวข้องกับคดี ดังต่อไปนี้`,
     blocks:[
       {
         type:'lines',
@@ -5925,7 +6471,7 @@ function buildIpTemplatePdfPayload() {
   return buildTemplateBasePayload({
     recipientName:'กรรมการผู้จัดการ บริษัท แอดวานซ์ ไวร์เลส เน็ทเวิร์ค จำกัด (มหาชน)',
     recipientAddress:'',
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()} จากการสืบสวนทราบว่ามีการใช้งานข้อมูลเครือข่ายที่เกี่ยวข้อง ดังต่อไปนี้`,
+    reasonText:`${getInvestigationPreamble()} จากการสืบสวนทราบว่ามีการใช้งานข้อมูลเครือข่ายที่เกี่ยวข้อง ดังต่อไปนี้`,
     blocks:[
       {
         type:'lines',
@@ -5951,7 +6497,7 @@ function buildTrueMoneyTemplatePdfPayload() {
   return buildTemplateBasePayload({
     recipientName:'กรรมการผู้จัดการ บริษัท ทรู มันนี่ จำกัด',
     recipientAddress:'',
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()} จากการสืบสวนเชื่อได้ว่ามีการใช้งานบัญชีอิเล็กทรอนิกส์ True Money ที่เกี่ยวข้องกับคดี จึงมีความจำเป็นขอตรวจสอบข้อมูล ดังรายละเอียดต่อไปนี้`,
+    reasonText:`${getInvestigationPreamble()} จากการสืบสวนเชื่อได้ว่ามีการใช้งานบัญชีอิเล็กทรอนิกส์ True Money ที่เกี่ยวข้องกับคดี จึงมีความจำเป็นขอตรวจสอบข้อมูล ดังรายละเอียดต่อไปนี้`,
     blocks:[
       {
         type:'list',
@@ -5980,7 +6526,7 @@ function buildTaxTemplatePdfPayload() {
   return buildTemplateBasePayload({
     recipientName:'อธิบดีกรมสรรพากร',
     recipientAddress:'',
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()} จึงมีความจำเป็นต้องขอตรวจสอบข้อมูลภาษีของบุคคล/นิติบุคคลที่เกี่ยวข้อง ดังรายละเอียดต่อไปนี้`,
+    reasonText:`${getInvestigationPreamble()} จึงมีความจำเป็นต้องขอตรวจสอบข้อมูลภาษีของบุคคล/นิติบุคคลที่เกี่ยวข้อง ดังรายละเอียดต่อไปนี้`,
     blocks:[
       {
         type:'list',
@@ -6019,7 +6565,7 @@ function buildTemplatePdfPayload() {
   return buildTemplateBasePayload({
     recipientName:'',
     recipientAddress:'',
-    reasonText:`${PRINT_COMPLAINANT} ได้ดำเนินการสืบสวนดำเนินคดี ${getTemplateCaseHeadline()}`,
+    reasonText:`${getInvestigationPreamble()}`,
     blocks:[{ type:'paragraph', text:'คำขอนี้ถูกสร้างจากระบบ CSD1 Connect' }],
   });
 }

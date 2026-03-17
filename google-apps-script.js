@@ -2152,7 +2152,9 @@ function writeConnectRequestRow(sheet, rowValues, existingRowIndex) {
   if (sanitized.truncatedHeaders.length) {
     Logger.log("writeConnectRequestRow: truncated oversized fields => " + sanitized.truncatedHeaders.join(", "));
   }
-  targetSheet.getRange(rowIndex, 1, 1, CONNECT_REQUEST_HEADERS.length).setValues([sanitized.rowValues]);
+  const writeRange = targetSheet.getRange(rowIndex, 1, 1, CONNECT_REQUEST_HEADERS.length);
+  writeRange.setNumberFormat("@");
+  writeRange.setValues([sanitized.rowValues]);
   SpreadsheetApp.flush();
   return rowIndex;
 }
@@ -2785,6 +2787,113 @@ function handleGetConnectRequestRawState(data) {
   });
 }
 
+function handleGetConnectDocIndex(data) {
+  var auth = authorizeRequest(data);
+  if (!auth.ok) return jsonResponse({ status: "error", message: auth.message });
+
+  var sheet = ensureConnectRequestSheet(getConnectRequestSheet());
+  if (!sheet || sheet.getLastRow() < 2) return jsonResponse({ status: "success", items: [] });
+
+  var lastRow = sheet.getLastRow();
+  var numRows = lastRow - 1;
+  var values = sheet.getRange(2, 1, numRows, CONNECT_REQUEST_HEADERS.length).getValues();
+
+  var idxRequestId  = CONNECT_REQUEST_HEADERS.indexOf("request_id");
+  var idxSubmitted  = CONNECT_REQUEST_HEADERS.indexOf("submitted_at_iso");
+  var idxDocNumber  = CONNECT_REQUEST_HEADERS.indexOf("doc_number");
+  var idxRawState   = CONNECT_REQUEST_HEADERS.indexOf("raw_state_json");
+
+  var items = [];
+  for (var i = 0; i < values.length; i++) {
+    var row = values[i];
+    var docNum = String(row[idxDocNumber] || "").trim();
+    if (!docNum) continue;
+
+    var locked = {};
+    var rawStr = String(row[idxRawState] || "");
+    if (rawStr) {
+      try {
+        var raw = JSON.parse(rawStr);
+        locked = {
+          type:             raw.type            || "",
+          investigationType:raw.investigationType|| "",
+          phoneNetwork:     raw.phoneNetwork     || "",
+          aisSubType:       raw.aisSubType       || "",
+          phoneSubType:     raw.phoneSubType     || "",
+          phoneImei:        raw.phoneImei        || "",
+          phoneNumbers:     Array.isArray(raw.phoneNumbers)     ? raw.phoneNumbers     : [],
+          ipEntries:        Array.isArray(raw.ipEntries)        ? raw.ipEntries        : [],
+          bankCode:         raw.bankCode         || "",
+          bankSubType:      raw.bankSubType      || "",
+          statementAccType: raw.statementAccType || "",
+          bankAccounts:     Array.isArray(raw.bankAccounts)     ? raw.bankAccounts     : [],
+          bankAccountNames: Array.isArray(raw.bankAccountNames) ? raw.bankAccountNames : [],
+          bankPromptPay:    raw.bankPromptPay    || "",
+          bankAccountName:  raw.bankAccountName  || "",
+          atmAccountNo:     raw.atmAccountNo     || "",
+          atmDate:          raw.atmDate          || "",
+          atmTime:          raw.atmTime          || "",
+          atmLocation:      raw.atmLocation      || "",
+          atmTerminalId:    raw.atmTerminalId    || "",
+          xxxAmount:        raw.xxxAmount        || "",
+          xxxDate:          raw.xxxDate          || "",
+          xxxTime:          raw.xxxTime          || "",
+          xxxAccNo:         raw.xxxAccNo         || "",
+          xxxRef:           raw.xxxRef           || "",
+          xxxRole:          raw.xxxRole          || "",
+          trueId:           raw.trueId           || "",
+          trueName:         raw.trueName         || "",
+        };
+      } catch(_) {}
+    }
+
+    var item = { docNum: docNum.padStart(4, "0"), requestId: String(row[idxRequestId] || ""), submittedAt: String(row[idxSubmitted] || "") };
+    var keys = Object.keys(locked);
+    for (var k = 0; k < keys.length; k++) item[keys[k]] = locked[keys[k]];
+    items.push(item);
+  }
+
+  return jsonResponse({ status: "success", items: items });
+}
+
+function handleLookupConnectDocNumber(data) {
+  const auth = authorizeRequest(data);
+  if (!auth.ok) {
+    return jsonResponse({ status: "error", message: auth.message });
+  }
+
+  const docNumber = normalizeConnectString(data && data.docNumber);
+  if (!docNumber || !/^\d{1,4}$/.test(docNumber)) {
+    return jsonResponse({ status: "error", message: "เลขหนังสือไม่ถูกต้อง" });
+  }
+
+  const paddedDoc = docNumber.padStart(4, "0");
+  const sheet = ensureConnectRequestSheet(getConnectRequestSheet());
+  if (!sheet || sheet.getLastRow() < 2) {
+    return jsonResponse({ status: "success", found: false });
+  }
+
+  const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, CONNECT_REQUEST_HEADERS.length).getValues();
+  for (var i = 0; i < values.length; i++) {
+    const row = {};
+    for (var j = 0; j < CONNECT_REQUEST_HEADERS.length; j++) {
+      row[CONNECT_REQUEST_HEADERS[j]] = values[i][j] != null ? String(values[i][j]) : "";
+    }
+    const rowDoc = String(row.doc_number || "").trim().padStart(4, "0");
+    if (rowDoc === paddedDoc) {
+      return jsonResponse({
+        status: "success",
+        found: true,
+        requestId: row.request_id || "",
+        submittedAt: row.submitted_at_iso || "",
+        submittedDateTh: row.submitted_date_th || "",
+      });
+    }
+  }
+
+  return jsonResponse({ status: "success", found: false });
+}
+
 function handleUpdateConnectRequestStatus(data) {
   const auth = authorizeRequest(data);
   if (!auth.ok) {
@@ -3046,6 +3155,10 @@ function doPost(e) {
       return handleGetConnectRequestRawState(data);
     } else if (data.action === "reserveConnectDocNumber") {
       return handleReserveConnectDocNumber(data);
+    } else if (data.action === "getConnectDocIndex") {
+      return handleGetConnectDocIndex(data);
+    } else if (data.action === "lookupConnectDocNumber") {
+      return handleLookupConnectDocNumber(data);
     } else if (data.action === "uploadSummonPdf") {
       return handleUploadSummonPdf(data);
     } else if (data.action === "getMeetingBookings") {
