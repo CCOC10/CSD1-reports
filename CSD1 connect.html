@@ -3333,6 +3333,14 @@ function validatePhone() {
   if (!isImeiLookup) {
     if (!S.phoneDateEnd)   { S.phoneDateEnd=fmtDate(new Date()); }
     if (!S.phoneDateStart) { const s=new Date(S.phoneDateEnd); s.setDate(s.getDate()-90); S.phoneDateStart=fmtDate(s); }
+    // Validate start < end
+    const start = new Date(S.phoneDateStart);
+    const end = new Date(S.phoneDateEnd);
+    if (start >= end) {
+      shake('f_phoneDateStart'); shake('f_phoneDateEnd');
+      toast('วันเริ่มต้นต้องมาก่อนถึงวันที่','err');
+      return;
+    }
   }
   openReviewStep();
 }
@@ -3750,6 +3758,14 @@ function validateBank() {
   }
   if (!S.bankDateEnd)   { S.bankDateEnd=fmtDate(new Date()); }
   if (!S.bankDateStart) { const d=new Date(S.bankDateEnd); d.setMonth(d.getMonth()-6); S.bankDateStart=fmtDate(d); }
+  // Validate start < end
+  const start = new Date(S.bankDateStart);
+  const end = new Date(S.bankDateEnd);
+  if (start >= end) {
+    shake('f_bankDateStart'); shake('f_bankDateEnd');
+    toast('วันเริ่มต้นต้องมาก่อนถึงวันที่','err');
+    return;
+  }
   openReviewStep();
 }
 
@@ -3833,11 +3849,27 @@ function validateTrueMoney() {
     // auto-fill dates only when NOT locked
     if (!S.trueDateEnd)   { S.trueDateEnd=fmtDate(new Date()); }
     if (!S.trueDateStart) { const d=new Date(S.trueDateEnd); d.setMonth(d.getMonth()-6); S.trueDateStart=fmtDate(d); }
-  } else {
-    if (!S.trueDateStart) { shake('f_trueDateStart'); toast('กรุณาระบุวันเริ่มต้นห้วงวันที่','err'); return; }
-    if (!S.trueDateEnd)   { shake('f_trueDateEnd');   toast('กรุณาระบุวันสิ้นสุดห้วงวันที่','err');   return; }
-  }
-  openReviewStep();
+    // Validate start < end
+    const start = new Date(S.trueDateStart);
+    const end = new Date(S.trueDateEnd);
+    if (start >= end) {
+      shake('f_trueDateStart'); shake('f_trueDateEnd');
+      toast('วันเริ่มต้นต้องมาก่อนถึงวันที่','err');
+      return;
+    }
+    } else {
+      if (!S.trueDateStart) { shake('f_trueDateStart'); toast('กรุณาระบุวันเริ่มต้นห้วงวันที่','err'); return; }
+      if (!S.trueDateEnd)   { shake('f_trueDateEnd');   toast('กรุณาระบุวันสิ้นสุดห้วงวันที่','err');   return; }
+      // Validate start < end
+      const start = new Date(S.trueDateStart);
+      const end = new Date(S.trueDateEnd);
+      if (start >= end) {
+        shake('f_trueDateStart'); shake('f_trueDateEnd');
+        toast('วันเริ่มต้นต้องมาก่อนถึงวันที่','err');
+        return;
+      }
+    }
+    openReviewStep();
 }
 
 /* ---------- TAX ---------- */
