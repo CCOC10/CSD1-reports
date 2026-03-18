@@ -2392,6 +2392,65 @@ function render(options = {}) {
       window.scrollTo(0, previousScrollY);
     }
     lastRenderedStep = currentStep;
+
+    // เพิ่ม info-box แจ้งเตือนเมื่อ auto-fill
+    if (S._prevLocked && S._prevDocStatus === 'found') {
+      const warn = document.createElement('div');
+      warn.className = 'info-box';
+      warn.style.background = '#fffbe7';
+      warn.style.color = '#b45309';
+      warn.style.fontWeight = '600';
+      warn.style.marginBottom = '0.7rem';
+      warn.innerHTML = 'ข้อมูลถูกเติมอัตโนมัติจากคำขอเดิม กรุณากรอกห้วงเวลาใหม่เท่านั้น';
+      el.prepend(warn);
+    }
+
+    // Lock เฉพาะ input/select/textarea ที่ auto-fill (readonly/disabled) ยกเว้น period, ปุ่มถัดไปใช้งานได้
+    if (S._prevLocked && S._prevDocStatus === 'found') {
+      const lockFields = [
+        'type','phoneNetwork','aisSubType','phoneSubType','phoneImei','phoneNumbers','ipEntries',
+        'bankCode','bankSubType','statementAccType','bankAccounts','bankAccountNames','bankPromptPay','bankAccountName',
+        'atmAccountNo','atmDate','atmTime','atmLocation','atmTerminalId','xxxAmount','xxxDate','xxxTime','xxxAccNo','xxxRef','xxxRole',
+        'trueId','trueName','casePresetKey','caseDetail','caseDetailCustom','unit'
+      ];
+      lockFields.forEach(field => {
+        const input = document.querySelector(`[name="${field}"]`);
+        if (input) {
+          // readonly สำหรับ input/textarea, disabled เฉพาะ select
+          if (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA') {
+            input.setAttribute('readonly','true');
+            input.style.background = '#f3f4f6';
+          } else if (input.tagName === 'SELECT') {
+            input.setAttribute('disabled','true');
+            input.style.background = '#f3f4f6';
+          }
+        }
+      });
+      // pill ประเภทการสืบสวน/โน้ตสำหรับแอดมิน: ให้แสดง active ตามข้อมูลเดิม แต่ไม่ disabled ทั้งกลุ่ม
+      // (แค่ไม่ให้คลิกเปลี่ยน ถ้าต้องการเพิ่ม logic ให้ pill active เฉพาะข้อมูลเดิม)
+      // textarea รายละเอียดโน้ตเพิ่มเติม
+      const adminNoteText = document.getElementById('f_adminNoteText');
+      if (adminNoteText) {
+        adminNoteText.setAttribute('readonly','true');
+        adminNoteText.style.background = '';
+      }
+      // textarea ข้อหา
+      const caseDetailCustom = document.getElementById('f_caseDetailCustom');
+      if (caseDetailCustom) {
+        caseDetailCustom.setAttribute('readonly','true');
+        caseDetailCustom.style.background = '';
+        caseDetailCustom.value = S.caseDetailCustom || '';
+      }
+      // ยกเว้น period
+      ['bankDateStart','bankDateEnd','phoneDateStart','phoneDateEnd','trueDateStart','trueDateEnd'].forEach(field => {
+        const input = document.querySelector(`[name="${field}"]`);
+        if (input) {
+          input.removeAttribute('readonly');
+          input.removeAttribute('disabled');
+          input.style.background = '';
+        }
+      });
+    }
   });
 }
 
@@ -2683,6 +2742,7 @@ function step1Html() {
   const selectedCaseKey = S.casePresetKey || inferCasePresetKey();
   const caseSearchTerm = S.caseSearchTerm || getCasePresetInputLabel(selectedCaseKey);
   const caseComboOptions = buildCasePresetComboOptions(caseSearchTerm, selectedCaseKey);
+  // ปลดล็อค pill-group adminNoteTag เสมอ (ไม่ disabled)
   const adminNotePills = ADMIN_NOTE_TAGS.map(item =>
     `<div class="pill ${S.adminNoteTag===item.key?'active':''}" data-val="${item.key}" style="--pc:${item.color}" onclick="S.adminNoteTag='${item.key}';render()">${item.label}</div>`
   ).join('');
@@ -2894,11 +2954,17 @@ function onPrevDocNumberInput(value) {
   }
 
   // Cache miss — API fallback with debounce
-  S._prevDocStatus = 'loading';
-  _updatePrevDocStatusEl();
-  _prevDocLookupVersion++;
-  const myVersion = _prevDocLookupVersion;
-  _prevDocLookupTimer = setTimeout(() => lookupPrevDocNumber(digits, myVersion), 600);
+    // Show popup only if not triggered by Enter
+    if (digits.length === 4 && !(window._prevDocPopupShown)) {
+      toast('กำลังตรวจสอบหนังสือต้นเรื่อง');
+      window._prevDocPopupShown = true;
+      setTimeout(()=>{window._prevDocPopupShown=false;},1200);
+    }
+    S._prevDocStatus = 'loading';
+    _updatePrevDocStatusEl();
+    _prevDocLookupVersion++;
+    const myVersion = _prevDocLookupVersion;
+    _prevDocLookupTimer = setTimeout(() => lookupPrevDocNumber(digits, myVersion), 600);
 }
 
 async function lookupPrevDocNumber(docNumber, version) {
@@ -2963,6 +3029,41 @@ function applyPrevLockedState(prev) {
   // ล็อก truemoney fields
   S.trueId   = prev.trueId   || '';
   S.trueName = prev.trueName || '';
+  // ล็อกโน้ตสำหรับแอดมิน (normalize key ให้ตรงกับ ADMIN_NOTE_TAGS)
+  const adminNoteKeys = ADMIN_NOTE_TAGS.map(t=>t.key);
+  let tagRaw = prev.adminNoteTag || '';
+  let tag = '';
+  // 1. ตรง key
+  if (adminNoteKeys.includes(tagRaw)) {
+    tag = tagRaw;
+  } else {
+    // 2. ตรง label
+    const foundLabel = ADMIN_NOTE_TAGS.find(t => t.label === tagRaw);
+    if (foundLabel) tag = foundLabel.key;
+    else {
+      // 3. ตรง label แบบ case-insensitive
+      const foundLabelCI = ADMIN_NOTE_TAGS.find(t => t.label.toLowerCase() === tagRaw.toLowerCase());
+      if (foundLabelCI) tag = foundLabelCI.key;
+      else {
+        // 4. ตรง key แบบ case-insensitive
+        const foundKeyCI = ADMIN_NOTE_TAGS.find(t => t.key.toLowerCase() === tagRaw.toLowerCase());
+        if (foundKeyCI) tag = foundKeyCI.key;
+      }
+    }
+  }
+  S.adminNoteTag = tag;
+  // Debug log
+  console.log('applyPrevLockedState: adminNoteTag raw=', tagRaw, 'mapped=', tag);
+  // ล็อกประเภทการสืบสวน (investigationType)
+  S.investigationType = prev.investigationType || '';
+  // ล็อก requestHistoryStatus
+  S.requestHistoryStatus = prev.requestHistoryStatus || 'requested';
+  // ล็อก casePresetKey
+  S.casePresetKey = prev.casePresetKey || '';
+  // ล็อก caseDetail
+  S.caseDetail = prev.caseDetail || '';
+  // ล็อก caseDetailCustom
+  S.caseDetailCustom = prev.caseDetailCustom || '';
   // ล้างห้วงวันที่ทั้งหมด — บังคับผู้ใช้กรอกใหม่
   S.bankDateStart  = ''; S.bankDateEnd  = '';
   S.phoneDateStart = ''; S.phoneDateEnd = '';
