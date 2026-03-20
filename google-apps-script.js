@@ -3628,7 +3628,7 @@ function handleApproveChangeRequest(data) {
     return jsonResponse({ status: "error", message: "ประเภทคำขอไม่ถูกต้อง" });
   }
 
-  const statusCol = CONNECT_REQUEST_HEADERS.indexOf("status") + 1;
+  const statusCol = CHANGE_REQUEST_HEADERS.indexOf("status") + 1;
   if (decision === "reject") {
     if (statusCol > 0) {
       requestSheet.getRange(found.rowIndex, statusCol).setValue("rejected");
