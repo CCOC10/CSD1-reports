@@ -837,6 +837,13 @@ body.nav-open .app-nav-fab {
 }
 .action-pill.ap-report:hover { box-shadow: 0 0 12px var(--accent-glow); }
 
+.action-pill.ap-history {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: #fff;
+  border-color: #a855f7;
+}
+.action-pill.ap-history:hover { box-shadow: 0 0 14px rgba(168,85,247,0.45); }
+
 /* Reset button inside filter bar */
 .filter-reset-btn {
   flex-shrink: 0;
@@ -2597,6 +2604,10 @@ body.exporting-dashboard [class*="stat-"] {
         <button class="action-pill ap-image" onclick="exportTableImage()" title="บันทึกตารางเป็นรูปภาพ">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           บันทึกตาราง
+        </button>
+        <button class="action-pill ap-history" onclick="openHistoryPage(event)" title="ตรวจสอบประวัติการรายงาน">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ประวัติการรายงาน
         </button>
         <button class="action-pill ap-report" onclick="showReportModal()" title="สรุปข้อความรายงาน">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h8"></path><path d="M8 9h2"></path></svg>
